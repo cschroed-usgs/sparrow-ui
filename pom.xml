@@ -244,6 +244,11 @@
 				<configuration>
 					<sourceDirectory>${project.basedir}/src/main/webapp/less</sourceDirectory>
 					<outputDirectory>${project.basedir}/src/main/webapp/css</outputDirectory>
+					<excludes>
+						<exclude>
+							webjars/META-INF/resources/webjars/bootstrap/${version.bootstrap}/less/*.less
+						</exclude>
+					</excludes>
 					<includes>
                         <include>custom.less</include>
                     </includes>
