@@ -1,3 +1,13 @@
+@import "webjars/META-INF/resources/webjars/bootstrap/3.3.4/less/bootstrap.less";
+@import "base.less";
+
+@red:#ff0000;
+@blue:rgb(0,51,102);
+@gray:rgb(245,245,245);
+@border:1px solid rgb(190,190,190);
+@borderRadius:5px;
+@box-shadow:0 0 5px rgba(0,0,0,.1);
+
 /***********************
 Basic Styles
 ***********************/
@@ -45,17 +55,17 @@ Legend Styles
 ***********************/ 
 
 #legend{
-    background:rgb(245,245,245);;
-    border:1px solid rgb(190,190,190);;
+    background:@gray;
+    border:@border;
     width:179px;
     height:225px;
     position:absolute;
     bottom:10px;
     right:10px;
-    border-radius:5px;
+    border-radius:@borderRadius;
     overflow:hidden;
     padding:5px;
-    box-shadow:0 0 5px rgba(0,0,0,.1);
+    box-shadow:@box-shadow;
     }
         
 /***********************
@@ -63,16 +73,16 @@ Model Selector Styles
 ***********************/
 
 #model-selection-container{
-    background:rgb(245,245,245);;
-    border:1px solid rgb(190,190,190);;
-    border-radius:5px;
+    background:@gray;
+    border:@border;
+    border-radius:@borderRadius;
     height:60px;
     width:673px;
     position:absolute;
     top:10px;
     left:10px;
     padding:2px 5px 5px 5px;
-    box-shadow:0 0 5px rgba(0,0,0,.1);
+    box-shadow:@box-shadow;
     }
     
 #model-selection-container p{
@@ -96,7 +106,7 @@ Model Selector Styles
 #model-selection-container a#reset-map{
     float:right;
     font-size:.9em;
-    color:rgb(0,51,102);;
+    color:@blue;
     margin:3px 13px 0 0;
     }
     
@@ -108,8 +118,8 @@ Model Selector Styles
     
 #model-selection-container button#explore-model{
     padding:1px 15px;
-    background:rgb(0,51,102);;
-    border:1px solid rgb(190,190,190);;
+    background:@blue;
+    border:@border;
     color:#fff;
     height:23px;
     border-radius:2px;
@@ -119,8 +129,8 @@ Model Selector Styles
 #model-selection-container button#explore-model:hover,
 #model-selection-container button#explore-model:focus{
     background:#fff;
-    border:1px solid rgb(190,190,190);;
-    color:rgb(0,51,102);;
+    border:@border;
+    color:@blue;
     }
     
 /***********************
@@ -128,17 +138,16 @@ Region Search Styles
 ***********************/
 
 #region-search-container{
-    background:rgb(245,245,245);;
-    border:1px solid rgb(190,190,190);;
-    border-radius:5px;
+    background:@gray;
+    border:@border;
+    border-radius:@borderRadius;
     position:absolute;
     top:80px;
     margin-left:10px;
     width:186px;
     height:60px;
     padding:3px 5px 5px 5px;
-    box-shadow:0 0 5px rgba(0,0,0,.1);
-    display:none;
+    box-shadow:@box-shadow;
     }
         
 #region-search-container .form-control{
@@ -156,14 +165,14 @@ Map Sidebar Styles
     position:absolute;
     top:150px;
     left:10px;
-    box-shadow:0 0 5px rgba(0,0,0,.1);
+    box-shadow:@box-shadow;
     }
 
 #filter-container,
 #download-container{
-    background:rgb(245,245,245);;
-    border:1px solid rgb(190,190,190);;
-    border-radius:5px;
+    background:@gray;
+    border:@border;
+    border-radius:@borderRadius;
     padding:5px;
     }
     
@@ -181,7 +190,7 @@ Map Sidebar Styles
 #filter-container .glyphicon-question-sign{
     font-size:1.1em;
     margin-top:1px;
-    color:rgb(0,51,102);;
+    color:@blue;
     }
     
 #filter-container select{
@@ -193,7 +202,7 @@ button#advanced-options,
 button.advanced-options-item{
     width:100%;
     height:25px;
-    border:1px solid rgb(190,190,190);;
+    border:@border;
     border-radius:3px;
     font-size:.9em;
     }
@@ -206,7 +215,7 @@ button#advanced-options{
     }
     
 button.advanced-options-item{
-    background:rgb(0,51,102);;
+    background:@blue;
     color:#fff;
     margin-top:5px;
     }
@@ -219,7 +228,7 @@ button#advanced-options:focus{
 button.advanced-options-item:hover,
 button.advanced-options-item:focus{
      background:#fff;
-     color:rgb(0,51,102);;
+     color:@blue;
     }  
 
     
@@ -227,7 +236,7 @@ button.advanced-options-item:focus{
     width:186px;
     min-height:58px;
     margin:10px 0;
-    box-shadow:0 0 5px rgba(0,0,0,.1);
+    box-shadow:@box-shadow;
     }
     
 #download-container img{
@@ -258,3 +267,8 @@ button.advanced-options-item:focus{
     }
   
 }/*media query*/
+
+
+
+    
+    
