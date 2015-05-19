@@ -19,13 +19,15 @@
 		String result = props.getProperty(key, "");
 		return result;
 	}
-	boolean development = Boolean.parseBoolean(getProp("development"));
+	boolean development = Boolean.parseBoolean(getProp("sparrow.development"));
 	String version = getProp("application.version");
 	String vJquery = getProp("version.jquery");
 	String vBootstrap = getProp("version.bootstrap");
 	String vFontAwesome = getProp("version.fontawesome");
 	String vOpenlayers = getProp("version.openlayers");
 	String vHandlebars = getProp("version.handlebars");
+	String vUnderscore = getProp("version.underscore");
+	String vBackbone = getProp("version.backbone");
 	String vLog4Js = getProp("version.log4js");
 %>
 <%
@@ -37,11 +39,9 @@
 	<head>
 		<jsp:include page="/WEB-INF/jsp/components/common/meta-tags.jsp" />
 		<title>Sparrow UI</title>
-		<link rel="apple-touch-icon" sizes="57x57" href="<%=baseUrl%>/images/mobileIcons/iphone_usgs_57x57.jpg" />
-		<link rel="apple-touch-icon" sizes="72x72" href="<%=baseUrl%>/images/mobileIcons/ipad_usgs_72x72.jpg" />
-		<link rel="apple-touch-icon" sizes="114x114" href="<%=baseUrl%>/images/mobileIcons/iphone_usgs_114x114.jpg" />
-		<link rel="apple-touch-icon" sizes="144x144" href="<%=baseUrl%>/images/mobileIcons/ipad_usgs_144x144.jpg" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/font-awesome/<%=vFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/openlayers/<%=vOpenlayers%>/ol.css" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= development ? "" : ".min"%>.css" />
         <link href="css/custom.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
@@ -79,8 +79,8 @@
     <!-- Start App Title Area -->
 
             <nav>
-            <h4>SPARROW Surface Water-Quality Modeling </h4>
-            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+            <h4>SPARROW Surface Water-Quality Modeling&nbsp;</h4>
+            <span class="fa fa-lg fa-question" aria-hidden="true"></span>
             <div id="titleButtons">
                 <button>Save Session</button>
                 <button>Help</button>
@@ -91,6 +91,9 @@
 
     <!-- Start Content Area -->
         <div id="map-ui-container">
+			
+			<!--======Map======-->
+            <div id="map-container"></div>
 
             <!--======Model Selection======-->
             <div id="model-selection-container">
@@ -185,10 +188,6 @@
             <div id="legend">
                     <h4>Legend</h4>
             </div>
-
-            <!--======Map======-->
-            <div id="map-container"></div>
-
         </div><!--map-ui-container-->
 
 
@@ -232,16 +231,26 @@
     <!-- END USGS Footer Template -->​
 
         </div><!--container-fluid-->
-
+		
 		<jsp:include page="js/log4javascript/log4javascript.jsp">
-			<jsp:param name="relPath" value="<%=relPath%>" /> 
+			<jsp:param name="relPath" value="" />
 			<jsp:param name="debug-qualifier" value="<%= development%>" />
 		</jsp:include>
-		<%--<script type="text/javascript" src="<%=baseUrl%>/webjars/openlayers/<%=vOpenlayers%>/OpenLayers<%= development ? ".debug" : ""%>.js"></script>--%>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/handlebars/<%=vHandlebars%>/handlebars<%= development ? "" : ".min"%>.js"></script>
+
+		<script type="text/javascript" src="<%= baseUrl%>/webjars/handlebars/<%=vHandlebars%>/handlebars<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="<%=baseUrl%>/webjars/jquery/<%=vJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="<%=baseUrl%>/webjars/bootstrap/<%=vBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
-                <script>
+		<script type="text/javascript" src="<%=baseUrl%>/webjars/openlayers/<%=vOpenlayers%>/ol<%= development ? "-debug" : ""%>.js"></script>
+        <script type="text/javascript" src="<%=baseUrl%>/webjars/underscorejs/<%=vUnderscore%>/underscore<%= development ? "" : "-min"%>.js"></script>
+        <script type="text/javascript" src="<%=baseUrl%>/webjars/backbonejs/<%=vBackbone%>/backbone<%= development ? "" : "-min"%>.js"></script>
+		
+		<script type="text/javascript" src="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= development ? "" : ".min" %>.js"></script>
+			
+		<script type="text/javascript" src="<%=baseUrl%>/js/views/MapView<%= development ? "" : ".min"%>.js"></script>
+		<script type="text/javascript" src="<%=baseUrl%>/js/controller/AppRouter<%= development ? "" : ".min"%>.js"></script>
+		<script type="text/javascript" src="<%=baseUrl%>/js/init<%= development ? "" : ".min"%>.js"></script>
+
+        <script>
                     $(document).ready(function(){
                         var advanced = $('#advanced-options');
                         $(advanced).click(function(){

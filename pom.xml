@@ -125,6 +125,8 @@
 		<version.openlayers>3.4.0</version.openlayers>
 		<version.fontawesome>4.3.0</version.fontawesome>
 		<version.handlebars>3.0.0-1</version.handlebars>
+		<version.underscore>1.8.3</version.underscore>
+		<version.backbone>1.1.2</version.backbone>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
@@ -186,6 +188,16 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>handlebars</artifactId>
 			<version>${version.handlebars}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>underscorejs</artifactId>
+			<version>${version.underscore}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>backbonejs</artifactId>
+			<version>${version.backbone}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -300,6 +312,9 @@
 					<sourceIncludes>
 						<include>*.js</include>
 					</sourceIncludes>
+					<sourceExcludes>
+						<include>init.js</include>
+					</sourceExcludes>
 				</configuration>		
 			</plugin>
 			<plugin>
