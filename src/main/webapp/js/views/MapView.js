@@ -11,8 +11,6 @@ SP.views = SP.views || {};
 
 	SP.views.MapView = Backbone.View.extend({
 
-		CONUS_EXTENT : [-14819398.304233, -92644.611414691, -6718296.2995848, 9632591.3700111],
-
 		render : function() {
 			this.map.setTarget(this.mapDivId);
 			return this;
@@ -24,38 +22,28 @@ SP.views = SP.views || {};
 			this.mapDivId = options.mapDivId;
 			this.map = new ol.Map({
 				view : new ol.View({
-					center : ol.extent.getCenter(this.CONUS_EXTENT),
-					zoom : 4
+					center : ol.extent.getCenter(SP.utils.mapUtils.CONUS_EXTENT),
+					zoom : 4,
+					minZoom : 3
 				}),
 				layers : [
 					new ol.layer.Group({
 						title : 'Base maps',
 						layers : [
-							new ol.layer.Tile({
-								title : 'World Street Map',
-								type: 'base',
-								source : new ol.source.XYZ({
-									url : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map" + ZYX
-								})
-							}),
-							new ol.layer.Tile({
-								title: 'Gray',
-								type: 'base',
-								visible: false,
-								source: new ol.source.Stamen({
-									layer: 'toner'
-								})
-
-							})
+							SP.utils.mapUtils.createStamenTonerBaseLayer(false),
+							SP.utils.mapUtils.createWorldTopoBaseLayer(false),
+							SP.utils.mapUtils.createWorldImageryLayer(false),
+							SP.utils.mapUtils.createWorldStreetMapBaseLayer(true)
 						]
 					})
-				]
+				],
+				controls : ol.control.defaults().extend([
+					new ol.control.ScaleLine(),
+					new ol.control.LayerSwitcher({
+						tipLabel : 'Switch base layers'
+					})
+				])
 			});
-
-			var layerSwitcher = new ol.control.LayerSwitcher({
-				tipLabel :'Switch base layers'
-			});
-			this.map.addControl(layerSwitcher);
 
 			Backbone.View.prototype.initialize.apply(this, arguments);
 			this.render();

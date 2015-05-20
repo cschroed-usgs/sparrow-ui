@@ -245,10 +245,11 @@
         <script type="text/javascript" src="<%=baseUrl%>/webjars/backbonejs/<%=vBackbone%>/backbone<%= development ? "" : "-min"%>.js"></script>
 		
 		<script type="text/javascript" src="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= development ? "" : ".min" %>.js"></script>
-			
+		
+		<script type="text/javascript" src="<%=baseUrl%>/js/utils/mapUtils<%= development ? "" : ".min"%>.js"></script>
+		<script type="text/javascript" src="<%=baseUrl%>/js/init<%= development ? "" : ".min"%>.js"></script>	
 		<script type="text/javascript" src="<%=baseUrl%>/js/views/MapView<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="<%=baseUrl%>/js/controller/AppRouter<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/js/init<%= development ? "" : ".min"%>.js"></script>
 
         <script>
                     $(document).ready(function(){
