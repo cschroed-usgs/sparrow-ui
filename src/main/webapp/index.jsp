@@ -19,7 +19,7 @@
 		String result = props.getProperty(key, "");
 		return result;
 	}
-	boolean development = Boolean.parseBoolean(getProp("sparrow.development"));
+	boolean development = Boolean.parseBoolean(getProp("development"));
 	String version = getProp("application.version");
 	String vJquery = getProp("version.jquery");
 	String vBootstrap = getProp("version.bootstrap");
@@ -29,6 +29,7 @@
 	String vUnderscore = getProp("version.underscore");
 	String vBackbone = getProp("version.backbone");
 	String vLog4Js = getProp("version.log4js");
+	String resourceSuffix = development ? "" : "-" + version + "-min";
 %>
 <%
 	String baseUrl = props.getProperty("sparrow.base.url", request.getContextPath());
@@ -41,7 +42,7 @@
 		<title>Sparrow UI</title>
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/font-awesome/<%=vFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/openlayers/<%=vOpenlayers%>/ol.css" />
-		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= development ? "" : ".min"%>.css" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix %>.css" />
         <link href="css/custom.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
@@ -242,14 +243,15 @@
 		<script type="text/javascript" src="<%=baseUrl%>/webjars/bootstrap/<%=vBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="<%=baseUrl%>/webjars/openlayers/<%=vOpenlayers%>/ol<%= development ? "-debug" : ""%>.js"></script>
         <script type="text/javascript" src="<%=baseUrl%>/webjars/underscorejs/<%=vUnderscore%>/underscore<%= development ? "" : "-min"%>.js"></script>
-        <script type="text/javascript" src="<%=baseUrl%>/webjars/backbonejs/<%=vBackbone%>/backbone<%= development ? "" : "-min"%>.js"></script>
+        <script type="text/javascript" src="<%=baseUrl%>/webjars/backbonejs/<%=vBackbone%>/backbone<%= development ? "" : ".min"%>.js"></script>
+
 		
-		<script type="text/javascript" src="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= development ? "" : ".min" %>.js"></script>
+		<script type="text/javascript" src="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix %>.js"></script>
 		
-		<script type="text/javascript" src="<%=baseUrl%>/js/utils/mapUtils<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/js/init<%= development ? "" : ".min"%>.js"></script>	
-		<script type="text/javascript" src="<%=baseUrl%>/js/views/MapView<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/js/controller/AppRouter<%= development ? "" : ".min"%>.js"></script>
+		<script type="text/javascript" src="<%=baseUrl%>/js/utils/mapUtils<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="<%=baseUrl%>/js/init<%= resourceSuffix %>.js"></script>	
+		<script type="text/javascript" src="<%=baseUrl%>/js/views/MapView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="<%=baseUrl%>/js/controller/AppRouter<%= resourceSuffix %>.js"></script>
 
         <script>
                     $(document).ready(function(){
