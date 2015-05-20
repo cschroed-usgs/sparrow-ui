@@ -134,8 +134,8 @@
             <!--======Map Filter Sidebar======-->
             <div id="map-sidebar-container">
                     <div id="filter-container">
-                    <p>Choose Area of Interest</p>
-                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <p>Choose Area of Interest&nbsp;</p>
+                    <span class="fa fa-question" aria-hidden="true"></span>
                     <select id="state">
                             <option value="state">State</option>
                         <option value="Alabama">Alabama</option>
@@ -154,8 +154,8 @@
                         <option value="">Example</option>
                         <option value="">Example</option>
                     </select>
-                    <p>Choose a Data Series</p>
-                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    <p>Choose a Data Series&nbsp;</p>
+                    <span class="fa fa-question" aria-hidden="true"></span>
                     <select id="data-series">
                             <option value="total yield">Incremental Yield</option>
                         <option value="Incremental Load">Incremental Load</option>
