@@ -46,9 +46,19 @@ Map Area Styles
 #map-container{
     width:100%;
     height:100%;
-    background:url('../img/basemap-topo.png') no-repeat;
-    background-size:cover;
     }
+	
+	.layer-switcher {
+		top: 80px;
+		.panel {
+			margin-bottom: 0px;
+			box-shadow: none;
+		
+			label {
+				margin-left : 4px;
+			}
+		}
+	}
     
 /***********************
 Legend Styles
@@ -60,7 +70,7 @@ Legend Styles
     width:179px;
     height:225px;
     position:absolute;
-    bottom:10px;
+    bottom:40px;
     right:10px;
     border-radius:@borderRadius;
     overflow:hidden;
@@ -79,7 +89,7 @@ Model Selector Styles
     height:60px;
     width:673px;
     position:absolute;
-    top:10px;
+    top:70px;
     left:10px;
     padding:2px 5px 5px 5px;
     box-shadow:@box-shadow;
@@ -142,7 +152,7 @@ Region Search Styles
     border:@border;
     border-radius:@borderRadius;
     position:absolute;
-    top:80px;
+    top:140px;
     margin-left:10px;
     width:186px;
     height:60px;
@@ -163,7 +173,7 @@ Map Sidebar Styles
 ***********************/
 #map-sidebar-container{
     position:absolute;
-    top:150px;
+    top:210px;
     left:10px;
     box-shadow:@box-shadow;
     }
@@ -263,7 +273,7 @@ button.advanced-options-item:focus{
     }
     
     #map-sidebar-container{
-    top:80px;
+		top:140px;
     }
   
 }/*media query*/
