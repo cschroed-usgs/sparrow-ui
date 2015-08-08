@@ -148,12 +148,6 @@
 			<artifactId>dynamicProperties</artifactId>
 			<version>1.0.2</version>
 		</dependency>
-		<!--		<dependency>
-			<groupId>gov.usgs.cida.jslibs</groupId>
-			<artifactId>log4js</artifactId>
-			<version>${version.log4js}</version>
-			<type>war</type>
-		</dependency>-->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
