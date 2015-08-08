@@ -16,3 +16,4 @@ hs_err_pid*
 /target/
 /src/main/webapp/less/webjars/
 /src/main/webapp/css/
+/src/main/webapp/less/bootstrap/

@@ -220,6 +220,18 @@
 	
 	
 	<build>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -231,26 +243,11 @@
 					<goal>process-resources</goal>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin</artifactId>
-				<version>1.5.1</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compress</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<suffix>-${project.version}-min</suffix>
-					<excludes>
-						<exclude>**/js/third-party/</exclude>
-						<exclude>**/custom-min.css</exclude>
-						<exclude>**/custom.css</exclude>
-					</excludes>
-				</configuration>  
-			</plugin>
+			
+			<!-- 
+			The dependency plugin will unpack the bootstrap LESS files so we can
+			use them as dependencies in our LESS during the build phase
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -261,13 +258,50 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
+							<includes>**/less/*, **/less/mixins/*</includes>
+							<excludes>**\/*.gz</excludes>
 							<includeGroupIds>org.webjars</includeGroupIds>
 							<includeArtifactIds>bootstrap</includeArtifactIds>
 							<outputDirectory>src/main/webapp/less/webjars</outputDirectory>
+							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			
+			<!-- 
+			The AntRun tasks will move the boottrap LESS files from a bootstrap-specific 
+			directory to a highest-level location under /less so we can simplify 
+			the compilation process as well as reducing WAR size and depending on
+			knowing the bootstrap version in our LESS files
+			--> 
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<configuration>
+							<target>
+								<mkdir dir="${basedir}/src/main/webapp/less/bootstrap"/>
+								<move 
+									tofile="${basedir}/src/main/webapp/less/bootstrap" 
+									file="${basedir}/src/main/webapp/less/webjars/META-INF/resources/webjars/bootstrap/${version.bootstrap}/less/" 
+								/>
+								<delete dir="${basedir}/src/main/webapp/less/webjars"/>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- 
+			Compile the LESS to CSS. Do not compress since that's done by the
+			YUI compressor plugin later
+			-->
 			<plugin>
 				<groupId>org.lesscss</groupId>
 				<artifactId>lesscss-maven-plugin</artifactId>
@@ -289,16 +323,35 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<suffix>-${project.version}-min</suffix>
+				</configuration>  
+			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.6</version>
 				<configuration>
-					<packagingExcludes>less/webjars/**</packagingExcludes>
+					<!-- Eclude the LESS files from the WAR -->
 					<packagingExcludes>${project.basedir}/src/main/webapp/less</packagingExcludes>
+					<!-- This webapp doesn't use a web.xml (servlet 3.x) -->
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>com.github.searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
@@ -327,18 +380,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>${project.basedir}/src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>${project.basedir}/src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
+
 		<finalName>${project.artifactId}</finalName>
 	</build>
 
