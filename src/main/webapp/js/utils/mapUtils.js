@@ -1,9 +1,9 @@
 /*jslint browser: true */
 /*global ol*/
 define([
-	"openlayers"
-//	"olLayerSwitcher"
-], function (ol/*, olLayerSwitcher*/) {
+	"ol"
+], function (ol) {
+
 	"use strict";
 	var self = {};
 	self.ZYX = '/MapServer/tile/{z}/{y}/{x}';

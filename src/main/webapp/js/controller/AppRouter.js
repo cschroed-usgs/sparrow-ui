@@ -6,7 +6,6 @@ define([
 	'views/MapView'
 ], function (Backbone, logger, MapView) {
 	"use strict";
-	var LOG;
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
 			'': 'mapView'

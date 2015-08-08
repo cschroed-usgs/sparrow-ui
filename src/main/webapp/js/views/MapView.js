@@ -1,13 +1,13 @@
 /*jslint browser: true */
 /*global Backbone*/
 /*global ol*/
-
 define([
 	'backbone',
 	'utils/logger',
-	'openlayers',
-	'utils/mapUtils'
-], function (Backbone, logger, ol, mapUtils) {
+	'ol',
+	'utils/mapUtils',
+	'olLayerSwitcher'
+], function (Backbone, logger, ol, mapUtils, olLayerSwitcher) {
 	"use strict";
 	var view = Backbone.View.extend({
 		render: function () {
@@ -35,10 +35,10 @@ define([
 					})
 				],
 				controls: ol.control.defaults().extend([
-					new ol.control.ScaleLine()
-//						new ol.control.LayerSwitcher({
-//							tipLabel: 'Switch base layers'
-//						})
+					new ol.control.ScaleLine(),
+					new ol.control.LayerSwitcher({
+						tipLabel: 'Switch base layers'
+					})
 				])
 			});
 

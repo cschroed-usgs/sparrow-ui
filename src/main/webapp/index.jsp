@@ -209,7 +209,7 @@
 
 				<p id="usgsfootertext">
 
-                    <a href="http://www.usa.gov/" title="USAGov: Government Made Easy" width="90" height="26" target="_blank"><img id="usa" src="img/usa_gov.png" alt="usa_gov pic"/></a>
+                    <a href="http://www.usa.gov/" title="USAGov: Government Made Easy" id="link-usagov" target="_blank"><img id="usa" src="img/usa_gov.png" alt="usa_gov pic"/></a>
 
                     <a href="http://www.doi.gov/" target="_blank">U.S. Department of the Interior</a> |
 
@@ -217,11 +217,11 @@
 
 					<a href="http://www.doioig.gov/" target="_blank">DOI Inspector General</a>
 
-				<p style="margin: 5px 0 5px 0; padding-left: 5px;">URL: http//cida.usgs.gov/ca_drought</p>
+					<p>URL: http//cida.usgs.gov/ca_drought</p>
 
-                <p style="margin: 5px 0 5px 0; padding-left: 5px;">Contact Information: <a href="mailto:cida_webmaster@usgs.gov?Subject=Hello%20again" target="_top">cida.usgs.gov/sparrow</a></p>
+					<p>Contact Information: <a href="mailto:cida_webmaster@usgs.gov?Subject=Hello%20again" target="_top">cida.usgs.gov/sparrow</a></p>
 
-				<p style="margin: 5px 0 5px 0; padding-left: 5px;">Page last modified: <script>document.write(document.lastModified);</script></p>
+					<p>Page last modified: <script>document.write(document.lastModified);</script></p>
 
 				</p><%-- usgsfootertext --%>
 
@@ -229,28 +229,6 @@
 
 			<%--  END USGS Footer Template ​--%>
         </div><%--container-fluid--%>
-		<%--
-				<jsp:include page="js/log4javascript/log4javascript.jsp">
-					<jsp:param name="relPath" value="" />
-					<jsp:param name="debug-qualifier" value="<%= development%>" />
-				</jsp:include>
-
-
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/handlebars/<%=vHandlebars%>/handlebars<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/jquery/<%=vJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/bootstrap/<%=vBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/openlayers/<%=vOpenlayers%>/ol<%= development ? "-debug" : ""%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/underscorejs/<%=vUnderscore%>/underscore<%= development ? "" : "-min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/backbonejs/<%=vBackbone%>/backbone<%= development ? "" : ".min"%>.js"></script>
-
-
-		<script type="text/javascript" src="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix %>.js"></script>
-
-		<script type="text/javascript" src="<%=baseUrl%>/js/utils/mapUtils<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/js/init<%= resourceSuffix %>.js"></script>	
-		<script type="text/javascript" src="<%=baseUrl%>/js/views/MapView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/js/controller/AppRouter<%= resourceSuffix %>.js"></script>
-		--%>
         <script>
 //					$(document).ready(function () {
 //						var advanced = $('#advanced-options');
@@ -280,18 +258,13 @@
 					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore'],
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
 					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/log4javascript<%= development ? "_uncompressed" : ""%>'],
-								"openlayers": ['<%=baseUrl%>/webjars/openlayers/<%= vOpenlayers%>/ol<%= development ? "-debug" : ""%>'],
-											"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
-													},
-													shim: {
-														"openlayers": {
-															"exports": "ol"
-														},
-														"olLayerSwitcher": {
-															"depends": ["ol"]
-														}
-													}
-												};
+					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "-debug" : ""%>'],
+					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
+					},
+				shim: {
+					"olLayerSwitcher": ["ol"]
+				}
+				};
 		</script>
 		<script data-main="init" src="<%=baseUrl%>/webjars/requirejs/<%= getProp("version.require")%>/require.js"></script>
 	</body>
