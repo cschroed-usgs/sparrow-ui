@@ -10,12 +10,12 @@ paths: {
 },
 wrap: true,
 shim: {
-	"ol" : {
-		exports : "ol"
-	},
 	"olLayerSwitcher":  {
 		deps: ["ol"],
 		exports: "olLayerSwitcher"
+	},
+	"ol" : {
+		exports : "ol"
 	},
 	'sinon' : {
 		'exports' : 'sinon'
