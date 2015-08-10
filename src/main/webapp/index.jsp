@@ -264,7 +264,7 @@
 				shim: {
 					"olLayerSwitcher": ["ol"]
 				}
-				};
+			};
 		</script>
 		<script data-main="init" src="<%=baseUrl%>/webjars/requirejs/<%= getProp("version.require")%>/require.js"></script>
 	</body>

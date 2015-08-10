@@ -26,22 +26,5 @@ define([
 			expect(this.routeSpy.calledOnce).toBeTruthy();
 			expect(this.routeSpy.calledWith(null)).toBeTruthy();
 		});
-//
-//		it("fires the gardens path", function () {
-//			this.router.navigate("gardens", true);
-//			expect(this.routeSpy.calledOnce).toBeTruthy();
-//			expect(this.routeSpy.calledWith(null)).toBeTruthy();
-//		});
-//
-//		it("fires the plant path with a test plant", function () {
-//			this.router.navigate("plant/testPlant", true);
-//			expect(this.routeSpy.calledOnce).toBeTruthy();
-//			expect(this.routeSpy.calledWith("testPlant")).toBeTruthy();
-//		});
-//
-//		it("fires the garden path with a test garden", function () {
-//			this.router.navigate("garden/testGarden", true);
-//			expect(this.routeSpy.calledWith("testGarden")).toBeTruthy();
-//		});
 	});
 });

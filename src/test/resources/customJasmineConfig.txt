@@ -8,15 +8,11 @@ paths: {
 	"ol": ['/webjars/openlayers/${version.openlayers}/ol'],
 	"olLayerSwitcher": ['/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher']
 },
-wrap: true,
 shim: {
-	"olLayerSwitcher":  {
-		deps: ["ol"],
-		exports: "olLayerSwitcher"
-	},
 	"ol" : {
-		exports : "ol"
+		exports: "ol"
 	},
+	"olLayerSwitcher":  ["ol"],
 	'sinon' : {
 		'exports' : 'sinon'
 	}
