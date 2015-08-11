@@ -99,16 +99,15 @@
             <!--======Model Selection======-->
             <div id="model-selection-container">
                 <p>Explore a Model</p>
-                <a href="#" id="reset-map">Reset Map</a>
                 <div id="selection-clear">
                     <select id="regional-model">
-                        <option value="" disabled selected>Select a Regional Model</option>
-                        <option value="">Example</option>
-                        <option value="">Example</option>
+                        <option value="" disabled selected>Select a Constituent</option>
+                        <option value="">Nitrogen</option>
+                        <option value="">Phosphorus</option>
                     </select>
-                    <label  id="or" for="national-model">or</label>
+                    <label  id="or" for="national-model">and</label>
                     <select id="national-model">
-                        <option value="" disabled selected>Select a National Model</option>
+                        <option value="" disabled selected>Select a Model Region</option>
                         <option value="">Example</option>
                         <option value="">Example</option>
                     </select>
@@ -128,12 +127,6 @@
             <!--======Map Filter Sidebar======-->
             <div id="map-sidebar-container">
                     <div id="filter-container">
-                    <p>Choose Constituent&nbsp;</p>
-                    <select id="constituent">
-                        <option value="" disabled selected>Select a Constituent</option>
-                        <option value="Nitrogen">Nitrogen</option>
-                        <option value="Phosphorus">Phosphorus</option>
-                    </select>
                     <p>Choose Area of Interest&nbsp;</p>
                     <span class="fa fa-question" aria-hidden="true"></span>
                     <select id="state">
