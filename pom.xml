@@ -131,7 +131,6 @@
 		<version.sinon>1.7.3</version.sinon>
 		<version.log4js>1.4.13</version.log4js>
 		<version.es5shim>4.0.6</version.es5shim>
-		<filter.bootstrap.location></filter.bootstrap.location>
 	</properties>
     
 	<dependencies>
