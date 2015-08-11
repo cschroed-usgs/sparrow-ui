@@ -98,24 +98,17 @@
 
             <!--======Model Selection======-->
             <div id="model-selection-container">
-                    <p>Explore a Model</p>
+                <p>Explore a Model</p>
                 <a href="#" id="reset-map">Reset Map</a>
                 <div id="selection-clear">
-                    <label for="constituent">1</label>
-                    <select id="constituent">
-                        <option value="" disabled selected>Select a Constituent</option>
-                        <option value="Nitrogen">Nitrogen</option>
-                        <option value="Phosphorus">Phosphorus</option>
-                    </select>
-                    <label for="national-model">2</label>
-                    <select id="national-model">
-                        <option value="" disabled selected>Select a National Model</option>
-                        <option value="">Example</option>
-                        <option value="">Example</option>
-                    </select>
-                    <label  id="or" for="regional-model">or</label>
                     <select id="regional-model">
                         <option value="" disabled selected>Select a Regional Model</option>
+                        <option value="">Example</option>
+                        <option value="">Example</option>
+                    </select>
+                    <label  id="or" for="national-model">or</label>
+                    <select id="national-model">
+                        <option value="" disabled selected>Select a National Model</option>
                         <option value="">Example</option>
                         <option value="">Example</option>
                     </select>
@@ -135,22 +128,28 @@
             <!--======Map Filter Sidebar======-->
             <div id="map-sidebar-container">
                     <div id="filter-container">
+                    <p>Choose Constituent&nbsp;</p>
+                    <select id="constituent">
+                        <option value="" disabled selected>Select a Constituent</option>
+                        <option value="Nitrogen">Nitrogen</option>
+                        <option value="Phosphorus">Phosphorus</option>
+                    </select>
                     <p>Choose Area of Interest&nbsp;</p>
                     <span class="fa fa-question" aria-hidden="true"></span>
                     <select id="state">
-                            <option value="state">State</option>
+                        <option value="state">State</option>
                         <option value="Alabama">Alabama</option>
                         <option value="Alaska">Alaska</option>
                         <option value="Arizona">Arizona</option>
                     </select>
                     <select id="receiving-water-body">
-                            <option value="receiving water body">Receiving Water Body</option>
+                        <option value="receiving water body">Receiving Water Body</option>
                         <option value="Water Body 1">Water Body 1</option>
                         <option value="Water Body 2">Water Body 2</option>
                         <option value="Water Body 3">Water Body 3</option>
                     </select>
                     <select id="watershed">
-                            <option value="watershed">Watershed</option>
+                        <option value="watershed">Watershed</option>
                         <option value="">Example</option>
                         <option value="">Example</option>
                         <option value="">Example</option>
@@ -158,7 +157,7 @@
                     <p>Choose a Data Series&nbsp;</p>
                     <span class="fa fa-question" aria-hidden="true"></span>
                     <select id="data-series">
-                            <option value="total yield">Incremental Yield</option>
+                        <option value="total yield">Incremental Yield</option>
                         <option value="Incremental Load">Incremental Load</option>
                         <option value="Flow-weighted Concentration">Flow-weighted Concentration</option>
                         <option value="Incremental Yield">Total Yield</option>
