@@ -5,7 +5,7 @@ paths: {
 	"underscore": ['/webjars/underscorejs/${version.underscore}/underscore'],
 	"text": ['/webjars/requirejs-text/${version.require.text}/text'],
 	"log4js": ['/webjars/log4javascript/${version.log4js}/log4javascript'],
-	"ol": ['/webjars/openlayers/${version.openlayers}/ol'],
+	"ol": ['/webjars/openlayers/${version.openlayers}/ol-debug'],
 	"olLayerSwitcher": ['/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher']
 },
 shim: {
