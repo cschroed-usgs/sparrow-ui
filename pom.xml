@@ -362,6 +362,7 @@
 				<version>2.7</version>
 				<executions>
 					<execution>
+						<id>move-source-less</id>
 						<phase>process-sources</phase>
 						<configuration>
 							<resources>
@@ -370,6 +371,21 @@
 								</resource>
 							</resources>
 							<outputDirectory>${project.build.directory}/staged-less/</outputDirectory>
+						</configuration>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>move-bootstrap-less</id>
+						<phase>process-sources</phase>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/less-webjars/META-INF/resources/webjars/bootstrap/${version.bootstrap}/less/</directory>
+								</resource>
+							</resources>
+							<outputDirectory>${project.build.directory}/staged-less/bootstrap</outputDirectory>
 						</configuration>
 						<goals>
 							<goal>copy-resources</goal>
@@ -384,7 +400,7 @@
 			the compilation process as well as reducing WAR size and depending on
 			knowing the bootstrap version in our LESS files
 			--> 
-			<plugin>
+<!--			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.8</version>
 				<executions>
@@ -393,12 +409,12 @@
 						<configuration>
 							<target>
 								<mkdir dir="${project.build.directory}/staged-less/bootstrap"/>
-								<!--<move tofile="${project.build.directory}/staged-less/" file="${project.basedir}/src/main/webapp/less/" />-->
+								<move tofile="${project.build.directory}/staged-less/" file="${project.basedir}/src/main/webapp/less/" />
 								<move 
 									tofile="${project.build.directory}/staged-less/bootstrap" 
 									file="${project.build.directory}/less-webjars/META-INF/resources/webjars/bootstrap/${version.bootstrap}/less/" 
 								/>
-								<!--delete dir="${basedir}/src/main/webapp/less/webjars"/ -->
+								delete dir="${basedir}/src/main/webapp/less/webjars"/ 
 							</target>
 						</configuration>
 						<goals>
@@ -406,7 +422,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 			
 			<!-- 
 			Compile the LESS to CSS. Do not compress since that's done by the
