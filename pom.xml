@@ -131,6 +131,7 @@
 		<version.sinon>1.7.3</version.sinon>
 		<version.log4js>1.4.13</version.log4js>
 		<version.es5shim>4.0.6</version.es5shim>
+		<filter.bootstrap.location></filter.bootstrap.location>
 	</properties>
     
 	<dependencies>
@@ -257,7 +258,7 @@
 			</plugin>
 			
 			<!-- Install node locally to speed up RequireJS optimization -->
-			<plugin>
+<!--			<plugin>
 				<groupId>com.github.skwakman.nodejs-maven-plugin</groupId>
 				<artifactId>nodejs-maven-plugin</artifactId>
 				<version>1.0.4</version>
@@ -274,10 +275,10 @@
 						${project.build.directory}/nodejs/
 					</targetDirectory>
 				</configuration>
-			</plugin>
+			</plugin>-->
 			
 			<!-- Optimize RequireJS scripts -->
-			<plugin>
+<!--			<plugin>
 				<groupId>com.github.bringking</groupId>
 				<artifactId>requirejs-maven-plugin</artifactId>
 				<version>2.0.4</version>
@@ -305,7 +306,7 @@
 						true
 					</skip>
 				</configuration>
-			</plugin>
+			</plugin>-->
 			
 			<!-- 
 			The dependency plugin will unpack the bootstrap LESS files so we can
@@ -349,9 +350,30 @@
 							<excludes>**\/*.gz</excludes>
 							<includeGroupIds>org.webjars</includeGroupIds>
 							<includeArtifactIds>bootstrap</includeArtifactIds>
-							<outputDirectory>src/main/webapp/less/webjars</outputDirectory>
+							<outputDirectory>${project.build.directory}/less-webjars</outputDirectory>
 							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/src/main/webapp/less/</directory>
+								</resource>
+							</resources>
+							<outputDirectory>${project.build.directory}/staged-less/</outputDirectory>
+						</configuration>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -370,12 +392,13 @@
 						<phase>process-sources</phase>
 						<configuration>
 							<target>
-								<mkdir dir="${basedir}/src/main/webapp/less/bootstrap"/>
+								<mkdir dir="${project.build.directory}/staged-less/bootstrap"/>
+								<!--<move tofile="${project.build.directory}/staged-less/" file="${project.basedir}/src/main/webapp/less/" />-->
 								<move 
-									tofile="${basedir}/src/main/webapp/less/bootstrap" 
-									file="${basedir}/src/main/webapp/less/webjars/META-INF/resources/webjars/bootstrap/${version.bootstrap}/less/" 
+									tofile="${project.build.directory}/staged-less/bootstrap" 
+									file="${project.build.directory}/less-webjars/META-INF/resources/webjars/bootstrap/${version.bootstrap}/less/" 
 								/>
-								<delete dir="${basedir}/src/main/webapp/less/webjars"/>
+								<!--delete dir="${basedir}/src/main/webapp/less/webjars"/ -->
 							</target>
 						</configuration>
 						<goals>
@@ -394,8 +417,8 @@
 				<artifactId>lesscss-maven-plugin</artifactId>
 				<version>1.7.0.1.1</version>
 				<configuration>
-					<sourceDirectory>${project.basedir}/src/main/webapp/less</sourceDirectory>
-					<outputDirectory>${project.basedir}/src/main/webapp/css</outputDirectory>
+					<sourceDirectory>${project.build.directory}/staged-less</sourceDirectory>
+					<outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
 					<includes>
 						<include>custom.less</include>
 					</includes>
@@ -411,7 +434,7 @@
 				</executions>
 			</plugin>
 			
-			<plugin>
+<!--			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
 				<version>1.5.1</version>
@@ -428,7 +451,7 @@
 						<exclude>**\/r.js</exclude>
 					</excludes>
 				</configuration>  
-			</plugin>
+			</plugin>-->
 			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
