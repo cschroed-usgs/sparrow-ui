@@ -259,10 +259,11 @@
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
 					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/log4javascript<%= development ? "_uncompressed" : ""%>'],
 					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "-debug" : ""%>'],
+					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
 					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
 					},
 				shim: {
-					"olLayerSwitcher": ["ol"]
+					"olLayerSwitcher": ["olshim"]
 				}
 			};
 		</script>
