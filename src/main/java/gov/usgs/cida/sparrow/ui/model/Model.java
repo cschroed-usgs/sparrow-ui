@@ -1,4 +1,4 @@
-package gov.usgs.cida.sparrow.ui.rest.model;
+package gov.usgs.cida.sparrow.ui.model;
 
 /**
  * Represents a Sparrow model

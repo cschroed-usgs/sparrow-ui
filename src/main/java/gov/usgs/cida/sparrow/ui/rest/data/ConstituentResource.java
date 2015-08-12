@@ -1,8 +1,8 @@
 package gov.usgs.cida.sparrow.ui.rest.data;
 
 import com.google.gson.Gson;
-import gov.usgs.cida.sparrow.ui.rest.model.Model;
-import gov.usgs.cida.sparrow.ui.rest.model.ModelUtil;
+import gov.usgs.cida.sparrow.ui.model.Model;
+import gov.usgs.cida.sparrow.ui.model.ModelUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
