@@ -15,10 +15,4 @@ hs_err_pid*
 /nb-configuration.xml
 /target/
 /src/main/webapp/META-INF
-/src/main/webapp/css/bootstrap/
-/src/main/webapp/css/base.css
-/src/main/webapp/css/custom.css.map
-/src/main/webapp/css/header-footer.css.map
-/src/main/webapp/css/custom.css
-/src/main/webapp/css/header-footer.css
-/src/main/webapp/css/base.css.map
+/src/main/webapp/css/
