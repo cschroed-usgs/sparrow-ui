@@ -9,9 +9,6 @@ paths: {
 	"olLayerSwitcher": ['/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher']
 },
 shim: {
-	"ol" : {
-		exports: "ol"
-	},
 	"olLayerSwitcher":  ["ol"],
 	'sinon' : {
 		'exports' : 'sinon'

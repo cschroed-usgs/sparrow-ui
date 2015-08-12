@@ -130,7 +130,6 @@
 		<version.require.text>2.0.14</version.require.text>
 		<version.sinon>1.7.3</version.sinon>
 		<version.log4js>1.4.13</version.log4js>
-		<version.es5shim>4.0.6</version.es5shim>
 	</properties>
     
 	<dependencies>
@@ -406,7 +405,6 @@
 					<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
 					<jsTestSrcDir>${project.basedir}/src/test/js/specs</jsTestSrcDir>
 					<customRunnerConfiguration>file://${project.build.directory}/test-classes/customJasmineConfig.txt</customRunnerConfiguration>
-					<customRunnerTemplate>file://${project.build.directory}/test-classes/customJasmineRunner.html</customRunnerTemplate>
 					<srcDirectoryName>js</srcDirectoryName>
 					<preloadSources>
 						<source>/webjars/requirejs/${version.require}/require.js</source>
