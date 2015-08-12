@@ -7,7 +7,7 @@ define([
 	'ol',
 	'utils/mapUtils',
 	'olLayerSwitcher'
-], function (Backbone, logger, ol, mapUtils, olLayerSwitcher) {
+], function (Backbone, logger, ol, mapUtils) {
 	"use strict";
 	var view = Backbone.View.extend({
 		render: function () {

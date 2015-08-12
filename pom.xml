@@ -214,6 +214,11 @@
 			<artifactId>log4javascript</artifactId>
 			<version>${version.log4js}</version>
 		</dependency>
+		<dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>0.1</version>
+        </dependency>
 	</dependencies>
 	
 	
@@ -252,28 +257,6 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.10</version>
 				<executions>
-					<execution>
-						<id>unpack-js</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<configuration>
-							<includeGroupIds>
-								org.webjars
-							</includeGroupIds>
-							<includeArtifactIds>
-								openlayers,
-								rjs
-							</includeArtifactIds>
-							<includes>
-								**\/ol.js,
-								**\/r.js
-							</includes>
-							<outputDirectory>${project.build.directory}/require-optimization/</outputDirectory>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
 					<execution>
 						<id>unpack-less</id>
 						<phase>generate-sources</phase>
