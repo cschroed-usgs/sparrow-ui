@@ -1,14 +1,19 @@
 /*jslint browser: true*/
 /*global $*/
 /*global log4javascript*/
-
-var SP = SP || {};
-
-$(document).ready(function() {
+define([
+	'controller/AppRouter',
+	'backbone',
+	'utils/logger',
+	'module'
+], function (Router, Backbone, logger, module) {
 	"use strict";
-	
-	SP.logger = log4javascript.getLogger();
+	var router = new Router();
+	var LOG = logger.init();
 
-	SP.appRouter = new SP.controller.AppRouter();
-	Backbone.history.start();
+	Backbone.history.start({root: module.config().contextPath});
+
+	LOG.info("Sparrow UI inititialized");
+
+	return router;
 });

@@ -19,7 +19,7 @@
 		String result = props.getProperty(key, "");
 		return result;
 	}
-	boolean development = Boolean.parseBoolean(getProp("development"));
+	boolean development = true;//Boolean.parseBoolean(getProp("development"));
 	String version = getProp("application.version");
 	String vJquery = getProp("version.jquery");
 	String vBootstrap = getProp("version.bootstrap");
@@ -33,7 +33,6 @@
 %>
 <%
 	String baseUrl = props.getProperty("sparrow.base.url", request.getContextPath());
-	String relPath = baseUrl + "/";
 %>
 
 <html lang="en"> 
@@ -42,8 +41,8 @@
 		<title>Sparrow UI</title>
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/font-awesome/<%=vFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/webjars/openlayers/<%=vOpenlayers%>/ol.css" />
-		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix %>.css" />
-        <link href="css/custom.css" rel="stylesheet" type="text/css">
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>.css" />
+        <link type="text/css" rel="stylesheet" href="<%= baseUrl%>/css/custom.css" />
 	</head>
 	<body>
 
@@ -192,73 +191,75 @@
 
             <div id="usgsfooter">
 
-                    <p id="usgsfooterbar">
+				<p id="usgsfooterbar">
                     <a href="http://www.usgs.gov/laws/accessibility.html" title="Accessibility Policy (Section 508)" target="_blank">Accessibility</a>
                     <a href="http://www.usgs.gov/foia/" title="Freedom of Information Act" target="_blank">FOIA</a>
                     <a href="http://www.usgs.gov/laws/privacy.html" title="Privacy policies of the U.S. Geological Survey." target="_blank">Privacy</a>
                     <a href="http://www.usgs.gov/laws/policies_notices.html" title="Policies and notices that govern information posted on USGS Web sites." target="_blank">Policies and Notices</a>
 
-                            </p><!--usgsfooterbar-->
+				</p><%-- usgsfooterbar --%>
 
 
-                    <p id="usgsfootertext">
+				<p id="usgsfootertext">
 
-                    <a href="http://www.usa.gov/" alt="USA.gov logo" title="USAGov: Government Made Easy" width="90" height="26" target="_blank"><img id="usa" src="img/usa_gov.png" alt="usa_gov pic"/></a>
+                    <a href="http://www.usa.gov/" title="USAGov: Government Made Easy" id="link-usagov" target="_blank"><img id="usa" src="img/usa_gov.png" alt="usa_gov pic"/></a>
 
                     <a href="http://www.doi.gov/" target="_blank">U.S. Department of the Interior</a> |
 
-                            <a href="http://www.usgs.gov/" target="_blank">U.S. Geological Survey</a> |
+					<a href="http://www.usgs.gov/" target="_blank">U.S. Geological Survey</a> |
 
-                            <a href="http://www.doioig.gov/" target="_blank">DOI Inspector General</a>
+					<a href="http://www.doioig.gov/" target="_blank">DOI Inspector General</a>
 
-                    <p style="margin: 5px 0 5px 0; padding-left: 5px;">URL: http//cida.usgs.gov/ca_drought</p>
+					<p>URL: http//cida.usgs.gov/ca_drought</p>
 
-                <p style="margin: 5px 0 5px 0; padding-left: 5px;">Contact Information: <a href="mailto:cida_webmaster@usgs.gov?Subject=Hello%20again" target="_top">cida.usgs.gov/sparrow</a></p>
+					<p>Contact Information: <a href="mailto:cida_webmaster@usgs.gov?Subject=Hello%20again" target="_top">cida.usgs.gov/sparrow</a></p>
 
-                    <p style="margin: 5px 0 5px 0; padding-left: 5px;">Page last modified: <script>document.write(document.lastModified);</script></p>
+					<p>Page last modified: <script>document.write(document.lastModified);</script></p>
 
-            </p><!--usgsfootertext-->
+				</p><%-- usgsfootertext --%>
 
-    </div><!--usgsfooter-->
+			</div><%-- usgsfooter --%>
 
-    <!-- END USGS Footer Template -->​
-
-        </div><!--container-fluid-->
-		
-		<jsp:include page="js/log4javascript/log4javascript.jsp">
-			<jsp:param name="relPath" value="" />
-			<jsp:param name="debug-qualifier" value="<%= development%>" />
-		</jsp:include>
-
-		<script type="text/javascript" src="<%= baseUrl%>/webjars/handlebars/<%=vHandlebars%>/handlebars<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/jquery/<%=vJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/bootstrap/<%=vBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/openlayers/<%=vOpenlayers%>/ol<%= development ? "-debug" : ""%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/underscorejs/<%=vUnderscore%>/underscore<%= development ? "" : "-min"%>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/webjars/backbonejs/<%=vBackbone%>/backbone<%= development ? "" : ".min"%>.js"></script>
-
-		
-		<script type="text/javascript" src="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix %>.js"></script>
-		
-		<script type="text/javascript" src="<%=baseUrl%>/js/utils/mapUtils<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/js/init<%= resourceSuffix %>.js"></script>	
-		<script type="text/javascript" src="<%=baseUrl%>/js/views/MapView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="<%=baseUrl%>/js/controller/AppRouter<%= resourceSuffix %>.js"></script>
-
+			<%--  END USGS Footer Template ​--%>
+        </div><%--container-fluid--%>
         <script>
-                    $(document).ready(function(){
-                        var advanced = $('#advanced-options');
-                        $(advanced).click(function(){
-                           if(advanced.html() === 'Advanced Options'){
-                               advanced.html('Close Advanced Options');
-                           }else if(advanced.html() === 'Closed Advanced Options'){
-                                 advanced.html('Advanced Options');
-                                }else{
-                                    advanced.html('Advanced Options');
-                                }
-                           $('.advanced-toggle').toggle(); 
-                        });
-                    });
-                </script>
+//					$(document).ready(function () {
+//						var advanced = $('#advanced-options');
+//						$(advanced).click(function () {
+//							if (advanced.html() === 'Advanced Options') {
+//								advanced.html('Close Advanced Options');
+//							} else if (advanced.html() === 'Closed Advanced Options') {
+//								advanced.html('Advanced Options');
+//							} else {
+//								advanced.html('Advanced Options');
+//							}
+//							$('.advanced-toggle').toggle();
+//						});
+//					});
+		</script>
+		<script>
+			var require = {
+				config: {
+					'init': {
+						'contextPath': "<%=baseUrl%>/"
+					}
+				},
+				baseUrl: "<%=baseUrl%>/js/",
+				paths: {
+					"jquery": ["<%=baseUrl%>/webjars/jquery/<%= getProp("version.jquery")%>/jquery"],
+					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%= getProp("version.backbone")%>/backbone'],
+					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore'],
+					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
+					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/log4javascript<%= development ? "_uncompressed" : ""%>'],
+					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "-debug" : ""%>'],
+					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
+					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
+					},
+				shim: {
+					"olLayerSwitcher": ["olshim"]
+				}
+			};
+		</script>
+		<script data-main="init" src="<%=baseUrl%>/webjars/requirejs/<%= getProp("version.require")%>/require.js"></script>
 	</body>
 </html>

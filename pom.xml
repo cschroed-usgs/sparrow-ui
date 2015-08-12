@@ -10,6 +10,7 @@
 	<name>Sparrow UI</name>
 	<url>http://cida.usgs.gov/</url>
 	<inceptionYear>2015</inceptionYear>
+	<description></description>
 	<licenses>
 		<license>
 			<name>Public Domain</name>
@@ -117,22 +118,22 @@
 	</organization>
 	
 	<properties>
-		<endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.log4js>1.4.3-3</version.log4js>
 		<version.bootstrap>3.3.5</version.bootstrap>
 		<version.jquery>2.1.4</version.jquery>
 		<version.openlayers>3.5.0</version.openlayers>
-		<version.fontawesome>4.3.0</version.fontawesome>
+		<version.fontawesome>4.3.0-4</version.fontawesome>
 		<version.handlebars>3.0.0-1</version.handlebars>
 		<version.underscore>1.8.3</version.underscore>
 		<version.backbone>1.2.1</version.backbone>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<version.require>2.1.18</version.require>
+		<version.require.text>2.0.14</version.require.text>
+		<version.sinon>1.7.3</version.sinon>
+		<version.log4js>1.4.13</version.log4js>
 	</properties>
     
 	<dependencies>
-		<!--		<dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
@@ -143,26 +144,19 @@
 			<version>2.3.1</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp.jstl</groupId>
-			<artifactId>jstl-api</artifactId>
-			<scope>compile</scope>
-			<version>1.2</version>
-		</dependency>-->
-		<dependency>
 			<groupId>gov.usgs.cida</groupId>
 			<artifactId>dynamicProperties</artifactId>
 			<version>1.0.2</version>
 		</dependency>
 		<dependency>
-			<groupId>gov.usgs.cida.jslibs</groupId>
-			<artifactId>log4js</artifactId>
-			<version>${version.log4js}</version>
-			<type>war</type>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.12</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
@@ -182,7 +176,7 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>font-awesome</artifactId>
-			<version>${version.fontawesome}-4</version>
+			<version>${version.fontawesome}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
@@ -199,63 +193,153 @@
 			<artifactId>backbonejs</artifactId>
 			<version>${version.backbone}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>requirejs</artifactId>
+			<version>${version.require}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>requirejs-text</artifactId>
+			<version>${version.require.text}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>sinonjs</artifactId>
+			<version>${version.sinon}-1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>log4javascript</artifactId>
+			<version>${version.log4js}</version>
+		</dependency>
 	</dependencies>
+	
+	
 	<build>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.3</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
 					<goal>process-resources</goal>
+					<debug>false</debug>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin</artifactId>
-				<version>1.5.1</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compress</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<suffix>-${project.version}-min</suffix>
-					<excludes>
-						<exclude>**/js/third-party/</exclude>
-						<exclude>**/custom-min.css</exclude>
-						<exclude>**/custom.css</exclude>
-					</excludes>
-				</configuration>  
-			</plugin>
+			
+			<!-- 
+			The dependency plugin will unpack the bootstrap LESS files so we can
+			use them as dependencies in our LESS during the build phase.
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.10</version>
 				<executions>
 					<execution>
+						<id>unpack-js</id>
+						<phase>generate-sources</phase>
 						<goals>
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
+							<includeGroupIds>
+								org.webjars
+							</includeGroupIds>
+							<includeArtifactIds>
+								openlayers,
+								rjs
+							</includeArtifactIds>
+							<includes>
+								**\/ol.js,
+								**\/r.js
+							</includes>
+							<outputDirectory>${project.build.directory}/require-optimization/</outputDirectory>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-less</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<includes>**/less/*, **/less/mixins/*</includes>
+							<excludes>**\/*.gz</excludes>
 							<includeGroupIds>org.webjars</includeGroupIds>
 							<includeArtifactIds>bootstrap</includeArtifactIds>
-							<outputDirectory>src/main/webapp/less/webjars</outputDirectory>
+							<outputDirectory>${project.build.directory}/less-webjars</outputDirectory>
+							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>move-source-less</id>
+						<phase>process-sources</phase>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/src/main/webapp/less/</directory>
+								</resource>
+							</resources>
+							<outputDirectory>${project.build.directory}/staged-less/</outputDirectory>
+						</configuration>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>move-bootstrap-less</id>
+						<phase>process-sources</phase>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/less-webjars/META-INF/resources/webjars/bootstrap/${version.bootstrap}/less/</directory>
+								</resource>
+							</resources>
+							<outputDirectory>${project.build.directory}/staged-less/bootstrap</outputDirectory>
+						</configuration>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- 
+			Compile the LESS to CSS. Do not compress since that's done by the
+			YUI compressor plugin later
+			-->
 			<plugin>
 				<groupId>org.lesscss</groupId>
 				<artifactId>lesscss-maven-plugin</artifactId>
 				<version>1.7.0.1.1</version>
 				<configuration>
-					<sourceDirectory>${project.basedir}/src/main/webapp/less</sourceDirectory>
-					<outputDirectory>${project.basedir}/src/main/webapp/css</outputDirectory>
+					<sourceDirectory>${project.build.directory}/staged-less</sourceDirectory>
+					<outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
 					<includes>
 						<include>custom.less</include>
 					</includes>
@@ -270,75 +354,65 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<suffix>-${project.version}-min</suffix>
+				</configuration>  
+			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.6</version>
 				<configuration>
-					<packagingExcludes>less/webjars/**</packagingExcludes>
+					<!-- Eclude the LESS files from the WAR -->
+					<packagingExcludes>
+						${project.basedir}/src/main/webapp/less
+					</packagingExcludes>
+					<!-- This webapp doesn't use a web.xml (servlet 3.x) -->
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>com.github.searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
 				<version>2.0-beta-02</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
 						<goals>
 							<goal>test</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
-					<keepServerAlive>true</keepServerAlive>
-					<webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
-					<webDriverCapabilities>
-						<capability>
-							<name>phantomjs.binary.path</name>
-							<value>${phantomjs.binary}</value>
-						</capability>
-					</webDriverCapabilities>
-					<jsSrcDir>${basedir}/src/main/webapp/js</jsSrcDir>
-					<jsTestSrcDir>${basedir}/src/test/js</jsTestSrcDir>
+					<phantomjs>
+						<version>1.9.7</version>
+					</phantomjs>
+					<debug>true</debug>
+					<specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
+					<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
+					<jsTestSrcDir>${project.basedir}/src/test/js/specs</jsTestSrcDir>
+					<customRunnerConfiguration>file://${project.build.directory}/test-classes/customJasmineConfig.txt</customRunnerConfiguration>
+					<srcDirectoryName>js</srcDirectoryName>
 					<preloadSources>
-						<source>webjars/jquery.js</source>
-						<source>webjars/bootstrap.js</source>
-						<source>webjars/underscore.js</source>
-						<source>webjars/backbone.js</source>
-						<source>webjars/handlebars.js</source>
-						<source>webjars/OpenLayers.js</source>
+						<source>/webjars/requirejs/${version.require}/require.js</source>
 					</preloadSources>
-					<sourceIncludes>
-						<include>*.js</include>
-					</sourceIncludes>
-					<sourceExcludes>
-						<include>init.js</include>
-					</sourceExcludes>
-				</configuration>		
-			</plugin>
-			<plugin>
-				<groupId>com.github.klieber</groupId>
-				<artifactId>phantomjs-maven-plugin</artifactId>
-				<version>0.7</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>install</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<version>1.9.7</version>
 				</configuration>
 			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
+
 		<finalName>${project.artifactId}</finalName>
 	</build>
 

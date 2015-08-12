@@ -1,27 +1,26 @@
 /*jslint browser : true*/
 /*global Backbone*/
-
-var SP = SP || {};
-
-SP.controller = SP.controller || {};
-
-(function() {
+define([
+	'backbone',
+	'utils/logger',
+	'views/MapView'
+], function (Backbone, logger, MapView) {
 	"use strict";
-
-	SP.controller.AppRouter = Backbone.Router.extend({
-
-		routes : {
-			'' :  'mapView'
+	var applicationRouter = Backbone.Router.extend({
+		routes: {
+			'': 'mapView'
 		},
-
-		mapView : function() {
-			var view = new SP.views.MapView({
-				mapDivId : 'map-container'
+		initialize: function () {
+			this.LOG = logger.init();
+			this.on("route:mapView", function () {
+				this.LOG.trace("Routing to map view");
+				
+				new MapView({
+					mapDivId: 'map-container'
+				});
 			});
 		}
 	});
-}());
 
-
-
-
+	return applicationRouter;
+});

@@ -1,0 +1,16 @@
+paths: {
+	"sinon": ['/webjars/sinonjs/${version.sinon}/sinon'],
+	"jquery": ["/webjars/jquery/${version.jquery}/jquery"],
+	"backbone": ['/webjars/backbonejs/${version.backbone}/backbone'],
+	"underscore": ['/webjars/underscorejs/${version.underscore}/underscore'],
+	"text": ['/webjars/requirejs-text/${version.require.text}/text'],
+	"log4js": ['/webjars/log4javascript/${version.log4js}/log4javascript'],
+	"ol": ['/webjars/openlayers/${version.openlayers}/ol-debug'],
+	"olLayerSwitcher": ['/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher']
+},
+shim: {
+	"olLayerSwitcher":  ["ol"],
+	'sinon' : {
+		'exports' : 'sinon'
+	}
+}

@@ -14,5 +14,5 @@
 hs_err_pid*
 /nb-configuration.xml
 /target/
-/src/main/webapp/less/webjars/
+/src/main/webapp/META-INF
 /src/main/webapp/css/
