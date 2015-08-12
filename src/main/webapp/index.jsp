@@ -45,157 +45,150 @@
         <link type="text/css" rel="stylesheet" href="<%= baseUrl%>/css/custom.css" />
 	</head>
 	<body>
-		<div class="container-fluid">
 
-			<%-- BEGIN USGS Header Template --%>
+    <div class="container-fluid">
 
-			<div id="usgscolorband">
+    <!-- BEGIN USGS Header Template --> 
 
-				<div id="usgsheader">
+        <div id="usgscolorband">
 
-					<div id="usgsidentifier">
-						<a href="http://www.usgs.gov/" target="_blank"><img src="img/usgslogo.jpg" alt="USGS - science for a changing world" title="U.S. Geological Survey Home Page"/></a>
-					</div><%-- usgsidentifier --%>
+            <div id="usgsheader">
 
-					<img src="img/banner.png" alt="banner"/>
+                <div id="usgsidentifier">
+                <a href="http://www.usgs.gov/" target="_blank"><img src="img/usgslogo.jpg" alt="USGS - science for a changing world" title="U.S. Geological Survey Home Page"/></a>
+                </div><!--usgsidentifier-->
 
-					<div id="usgsccsabox">
+            <img src="img/banner.png" alt="banner"/>
 
-						<div id="usgsccsa">
-							<a href="http://www.usgs.gov/">USGS Home</a>
-							<br /><a href="http://answers.usgs.gov/cgi-bin/gsanswers?tmplt=2">Contact USGS</a>
-							<br /><a href="http://search.usgs.gov/">Search USGS</a>
-							<br />
-						</div><%-- usgsccsa --%>
+            <div id="usgsccsabox">
 
-					</div><%-- usgsccsabox --%>
+                <div id="usgsccsa">
+                    <a href="http://www.usgs.gov/">USGS Home</a>
+                    <br /><a href="http://answers.usgs.gov/cgi-bin/gsanswers?tmplt=2">Contact USGS</a>
+                    <br /><a href="http://search.usgs.gov/">Search USGS</a>
+                    <br />
+                </div><!--usgsccsa-->
 
-				</div><%-- usgsheader --%>
-			</div><%-- colorband --%>
+            </div><!--usgsccsabox-->
 
-			<%--  END USGS Header Template --%>
+        </div><!--usgsheader-->
+        </div><!--colorband-->
 
-			<%-- Start App Title Area --%>
+    <!-- END USGS Header Template -->
 
-			<nav>
-				<h4>SPARROW Surface Water-Quality Modeling&nbsp;</h4>
-				<span class="fa fa-lg fa-question" aria-hidden="true"></span>
-				<div id="titleButtons">
-					<button>Save Session</button>
-					<button>Help</button>
-				</div>
-			</nav>
+    <!-- Start App Title Area -->
 
-			<%-- END App Title Area --%>
+            <nav>
+            <h4>SPARROW Surface Water-Quality Modeling&nbsp;</h4>
+            <span class="fa fa-lg fa-question" aria-hidden="true"></span>
+            <div id="titleButtons">
+                <button>Save Session</button>
+                <button>Help</button>
+            </div>
+        </nav>
 
-			<%-- Start Content Area --%>
-			<div id="map-ui-container">
+    <!-- END App Title Area -->
 
-				<%-- ======Map====== --%>
-				<div id="map-container"></div>
+    <!-- Start Content Area -->
+        <div id="map-ui-container">
+			
+			<!--======Map======-->
+            <div id="map-container"></div>
 
-				<%-- ======Model Selection====== --%>
-				<div id="model-selection-container">
-					<p>Explore a Model</p>
-					<a href="#" id="reset-map">Reset Map</a>
-					<div id="selection-clear">
-						<label for="constituent">1</label>
-						<select id="constituent">
-							<option value="" disabled selected>Select a Constituent</option>
-							<option value="Nitrogen">Nitrogen</option>
-							<option value="Phosphorus">Phosphorus</option>
-						</select>
-						<label for="national-model">2</label>
-						<select id="national-model">
-							<option value="" disabled selected>Select a National Model</option>
-							<option value="">Example</option>
-							<option value="">Example</option>
-						</select>
-						<label  id="or" for="regional-model">or</label>
-						<select id="regional-model">
-							<option value="" disabled selected>Select a Regional Model</option>
-							<option value="">Example</option>
-							<option value="">Example</option>
-						</select>
-						<button id="explore-model">Explore</button>
-					</div>
-				</div>
+            <!--======Model Selection======-->
+            <div id="model-selection-container">
+                <p>Explore a Model</p>
+                <div id="selection-clear">
+                    <select id="regional-model">
+                        <option value="" disabled selected>Select a Constituent</option>
+                        <option value="">Nitrogen</option>
+                        <option value="">Phosphorus</option>
+                    </select>
+                    <label  id="or" for="national-model">and</label>
+                    <select id="national-model">
+                        <option value="" disabled selected>Select a Model Region</option>
+                        <option value="">Example</option>
+                        <option value="">Example</option>
+                    </select>
+                    <button id="explore-model">Explore</button>
+                </div>
+            </div>
 
-				<%-- ======Region Search====== --%>
-				<div id="region-search-container">
-					<p>Find Area of Interest</p>
-					<div class="input-group">
-						<input type="text" class="form-control" placeholder="Enter HUC, Zipcode, State, Ect...">
-					</div>
-				</div>
+            <!--======Region Search======-->
+            <div id="region-search-container">
+                    <p>Find Area of Interest</p>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Enter HUC, Zipcode, State, Ect...">
+                </div>
+            </div>
 
 
-				<%-- ======Map Filter Sidebar====== --%>
-				<div id="map-sidebar-container">
-					<div id="filter-container">
-						<p>Choose Area of Interest&nbsp;</p>
-						<span class="fa fa-question" aria-hidden="true"></span>
-						<select id="state">
-							<option value="state">State</option>
-							<option value="Alabama">Alabama</option>
-							<option value="Alaska">Alaska</option>
-							<option value="Arizona">Arizona</option>
-						</select>
-						<select id="receiving-water-body">
-							<option value="receiving water body">Receiving Water Body</option>
-							<option value="Water Body 1">Water Body 1</option>
-							<option value="Water Body 2">Water Body 2</option>
-							<option value="Water Body 3">Water Body 3</option>
-						</select>
-						<select id="watershed">
-							<option value="watershed">Watershed</option>
-							<option value="">Example</option>
-							<option value="">Example</option>
-							<option value="">Example</option>
-						</select>
-						<p>Choose a Data Series&nbsp;</p>
-						<span class="fa fa-question" aria-hidden="true"></span>
-						<select id="data-series">
-							<option value="total yield">Incremental Yield</option>
-							<option value="Incremental Load">Incremental Load</option>
-							<option value="Flow-weighted Concentration">Flow-weighted Concentration</option>
-							<option value="Incremental Yield">Total Yield</option>
-						</select>
-						<p>Group Results by:</p>
-						<select id="group-result-by">
-							<option value="">Catchment</option>
-							<option value="">HUC 8</option>
-							<option value="">Tributary Outlet</option>
-							<option value="">Main River Basin</option>
-							<option value="">State</option>
-						</select>
-						<p class="advanced-toggle">Advanced Options</p>
-						<span class="glyphicon glyphicon-question-sign advanced-toggle" aria-hidden="true"></span>
-						<button class="advanced-options-item advanced-toggle" id="change-inputs">Change Inputs</button>
-						<button class="advanced-options-item advanced-toggle" id="downstream-tracking">Downstream Tracking</button>
-						<button id="advanced-options">Advanced Options</button>
-					</div>
-					<div id="download-container">
-						<p>View/Download Data</p>
-						<img src="img/view-icon.png" alt="view data icon" title="View Graph Data"/>
-						<img src="img/download_model-icon.png" alt="Download model icon" title="Download Model Data"/>
-						<img src="img/download-spatial-icon.png" alt="Download spatial icon" title="Download Spatial Data"/>
-						<img src="img/download-calibration-icon.png" alt="Download calibration icon" title="Download Calibration Data"/>
-					</div>
-				</div>
-
-				<div id="legend">
-					<h4>Legend</h4>
-				</div>
-			</div><%-- map-ui-container --%>
+            <!--======Map Filter Sidebar======-->
+            <div id="map-sidebar-container">
+                    <div id="filter-container">
+                    <p>Choose Area of Interest&nbsp;</p>
+                    <span class="fa fa-question" aria-hidden="true"></span>
+                    <select id="state">
+                        <option value="state">State</option>
+                        <option value="Alabama">Alabama</option>
+                        <option value="Alaska">Alaska</option>
+                        <option value="Arizona">Arizona</option>
+                    </select>
+                    <select id="receiving-water-body">
+                        <option value="receiving water body">Receiving Water Body</option>
+                        <option value="Water Body 1">Water Body 1</option>
+                        <option value="Water Body 2">Water Body 2</option>
+                        <option value="Water Body 3">Water Body 3</option>
+                    </select>
+                    <select id="watershed">
+                        <option value="watershed">Watershed</option>
+                        <option value="">Example</option>
+                        <option value="">Example</option>
+                        <option value="">Example</option>
+                    </select>
+                    <p>Choose a Data Series&nbsp;</p>
+                    <span class="fa fa-question" aria-hidden="true"></span>
+                    <select id="data-series">
+                        <option value="total yield">Incremental Yield</option>
+                        <option value="Incremental Load">Incremental Load</option>
+                        <option value="Flow-weighted Concentration">Flow-weighted Concentration</option>
+                        <option value="Incremental Yield">Total Yield</option>
+                    </select>
+                    <p>Group Results by:</p>
+                    <select id="group-result-by">
+                        <option value="">Catchment</option>
+                        <option value="">HUC 8</option>
+                        <option value="">Tributary Outlet</option>
+                        <option value="">Main River Basin</option>
+                        <option value="">State</option>
+                    </select>
+                    <p class="advanced-toggle">Advanced Options</p>
+                    <span class="glyphicon glyphicon-question-sign advanced-toggle" aria-hidden="true"></span>
+                    <button class="advanced-options-item advanced-toggle" id="change-inputs">Change Inputs</button>
+                    <button class="advanced-options-item advanced-toggle" id="downstream-tracking">Downstream Tracking</button>
+                    <button id="advanced-options">Advanced Options</button>
+                </div>
+                <div id="download-container">
+                    <p>View/Download Data</p>
+                    <img src="img/view-icon.png" alt="view data icon" title="View Graph Data"/>
+                    <img src="img/download_model-icon.png" alt="Download model icon" title="Download Model Data"/>
+                    <img src="img/download-spatial-icon.png" alt="Download spatial icon" title="Download Spatial Data"/>
+                    <img src="img/download-calibration-icon.png" alt="Download calibration icon" title="Download Calibration Data"/>
+                </div>
+            </div>
+            
+            <div id="legend">
+                    <h4>Legend</h4>
+            </div>
+        </div><!--map-ui-container-->
 
 
 
-			<%-- END Content Area --%>
+    <!-- END Content Area -->
 
 
+    <!-- BEGIN USGS Footer Template -->
 
-			<%-- BEGIN USGS Footer Template --%>
             <div id="usgsfooter">
 
 				<p id="usgsfooterbar">
