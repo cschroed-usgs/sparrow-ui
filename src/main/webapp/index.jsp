@@ -260,6 +260,6 @@
 				}
 			};
 		</script>
-		<script data-main="init" src="<%=baseUrl%>/webjars/requirejs/<%= getProp("version.require")%>/require.js"></script>
+		<script data-main="init" src="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("require" + (development ? "" : ".min") + ".js") %>"></script>
 	</body>
 </html>
