@@ -215,18 +215,6 @@
 			<artifactId>log4javascript</artifactId>
 			<version>${version.log4js}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>es5-shim</artifactId>
-			<version>${version.es5shim}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>rjs</artifactId>
-			<version>2.1.19</version>
-			<scope>compile</scope>
-		</dependency>
 	</dependencies>
 	
 	
@@ -255,57 +243,6 @@
 					<debug>false</debug>
 				</configuration>
 			</plugin>
-			
-			<!-- Install node locally to speed up RequireJS optimization -->
-<!--			<plugin>
-				<groupId>com.github.skwakman.nodejs-maven-plugin</groupId>
-				<artifactId>nodejs-maven-plugin</artifactId>
-				<version>1.0.4</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>extract</goal>
-						</goals>
-						<phase>process-resources</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<targetDirectory>
-						${project.build.directory}/nodejs/
-					</targetDirectory>
-				</configuration>
-			</plugin>-->
-			
-			<!-- Optimize RequireJS scripts -->
-<!--			<plugin>
-				<groupId>com.github.bringking</groupId>
-				<artifactId>requirejs-maven-plugin</artifactId>
-				<version>2.0.4</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>optimize</goal>
-						</goals>
-						<phase>process-resources</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<filterConfig>true</filterConfig>
-					<optimizerFile>
-						${project.build.directory}/require-optimization/META-INF/resources/webjars/rjs/2.1.19/bin/r.js
-					</optimizerFile>
-					<nodeExecutable>${project.build.directory}/nodejs/node</nodeExecutable>
-					<configFile>
-						${project.basedir}/src/main/resources/require-optimize-config.js
-					</configFile>
-					<optimizerParameters>
-						<parameter>baseUrl=${project.basedir}</parameter>
-					</optimizerParameters>
-					<skip>
-						true
-					</skip>
-				</configuration>
-			</plugin>-->
 			
 			<!-- 
 			The dependency plugin will unpack the bootstrap LESS files so we can
@@ -394,36 +331,6 @@
 			</plugin>
 			
 			<!-- 
-			The AntRun tasks will move the boottrap LESS files from a bootstrap-specific 
-			directory to a highest-level location under /less so we can simplify 
-			the compilation process as well as reducing WAR size and depending on
-			knowing the bootstrap version in our LESS files
-			--> 
-<!--			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<execution>
-						<phase>process-sources</phase>
-						<configuration>
-							<target>
-								<mkdir dir="${project.build.directory}/staged-less/bootstrap"/>
-								<move tofile="${project.build.directory}/staged-less/" file="${project.basedir}/src/main/webapp/less/" />
-								<move 
-									tofile="${project.build.directory}/staged-less/bootstrap" 
-									file="${project.build.directory}/less-webjars/META-INF/resources/webjars/bootstrap/${version.bootstrap}/less/" 
-								/>
-								delete dir="${basedir}/src/main/webapp/less/webjars"/ 
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>-->
-			
-			<!-- 
 			Compile the LESS to CSS. Do not compress since that's done by the
 			YUI compressor plugin later
 			-->
@@ -449,7 +356,7 @@
 				</executions>
 			</plugin>
 			
-<!--			<plugin>
+			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
 				<version>1.5.1</version>
@@ -462,11 +369,8 @@
 				</executions>
 				<configuration>
 					<suffix>-${project.version}-min</suffix>
-					<excludes>
-						<exclude>**\/r.js</exclude>
-					</excludes>
 				</configuration>  
-			</plugin>-->
+			</plugin>
 			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
