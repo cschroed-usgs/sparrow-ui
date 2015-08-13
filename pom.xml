@@ -148,6 +148,37 @@
 			<artifactId>dynamicProperties</artifactId>
 			<version>1.0.2</version>
 		</dependency>
+		
+		<!-- JSON parsing/creation -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		
+		<!-- Jersey -->
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>2.19</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.ext</groupId>
+			<artifactId>jersey-mvc-bean-validation</artifactId>
+			<version>2.19</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.ext</groupId>
+			<artifactId>jersey-mvc-jsp</artifactId>
+			<version>2.19</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-moxy</artifactId>
+			<version>2.19</version>
+		</dependency>
+		
+		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -158,6 +189,8 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.1.3</version>
 		</dependency>
+		
+		<!-- WebJars/JS -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
@@ -214,6 +247,17 @@
 			<artifactId>log4javascript</artifactId>
 			<version>${version.log4js}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator</artifactId>
+			<version>0.1</version>
+		</dependency>
+	 <dependency>
+	  <groupId>commons-collections</groupId>
+	  <artifactId>commons-collections</artifactId>
+	  <version>3.2.1</version>
+	  <type>jar</type>
+	 </dependency>
 	</dependencies>
 	
 	
@@ -252,28 +296,6 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.10</version>
 				<executions>
-					<execution>
-						<id>unpack-js</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<configuration>
-							<includeGroupIds>
-								org.webjars
-							</includeGroupIds>
-							<includeArtifactIds>
-								openlayers,
-								rjs
-							</includeArtifactIds>
-							<includes>
-								**\/ol.js,
-								**\/r.js
-							</includes>
-							<outputDirectory>${project.build.directory}/require-optimization/</outputDirectory>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
 					<execution>
 						<id>unpack-less</id>
 						<phase>generate-sources</phase>
