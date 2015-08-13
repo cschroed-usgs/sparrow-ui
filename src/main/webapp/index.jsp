@@ -77,8 +77,8 @@
     <!-- END USGS Header Template -->
 
     <!-- Start App Title Area -->
-
-            <nav>
+	<div class="page-content-container"></div>
+        <nav>
             <h4>SPARROW Surface Water-Quality Modeling&nbsp;</h4>
             <span class="fa fa-lg fa-question" aria-hidden="true"></span>
             <div id="titleButtons">
@@ -246,12 +246,13 @@
 				},
 				baseUrl: "<%=baseUrl%>/js/",
 				paths: {
-					"jquery": ["<%=baseUrl%>/webjars/jquery/<%= getProp("version.jquery")%>/jquery<%= development ? ".min" : ""%>"],
-					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%= getProp("version.backbone")%>/backbone<%= development ? "-min" : ""%>'],
-					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ? "-min" : ""%>'],
+					"jquery": ["<%=baseUrl%>/webjars/jquery/<%= getProp("version.jquery")%>/jquery<%= development ? "" : ".min" %>"],
+					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%= getProp("version.backbone")%>/backbone<%= development ? "" : "-min"%>'],
+					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ?  "" : "-min"%>'],
+					"handlebars" : ['<%=baseUrl%>/webjars/handlebars/<%= getProp("version.underscore")%>/handlebars<%= development ? "" : ".min"%>'],
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
-					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/log4javascript<%= development ? "_uncompressed" : ""%>'],
-					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "-debug" : ""%>'],
+					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/log4javascript<%= development ? "" : "_uncompressed"%>'],
+					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "" : "-debug"%>'],
 					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
 					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
 					},
