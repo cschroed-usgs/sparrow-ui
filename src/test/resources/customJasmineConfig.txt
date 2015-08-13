@@ -4,7 +4,7 @@ paths: {
 	"jquery": ["/webjars/jquery/${version.jquery}/jquery"],
 	"backbone": ['/webjars/backbonejs/${version.backbone}/backbone'],
 	"underscore": ['/webjars/underscorejs/${version.underscore}/underscore'],
-    "handlebars" : ['/webjars/handlebars/${version.handlebars}/handlebars'],
+	"handlebars" : ['/webjars/handlebars/${version.handlebars}/handlebars'],
 	"text": ['/webjars/requirejs-text/${version.require.text}/text'],
 	"log4js": ['/webjars/log4javascript/${version.log4js}/log4javascript'],
 	"ol": ['/webjars/openlayers/${version.openlayers}/ol-debug'],
