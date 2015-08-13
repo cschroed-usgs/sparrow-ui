@@ -1,7 +1,6 @@
 /*jslint browser:true*/
 /*global expect*/
 /*global jasmine*/
-/*global MapView*/
 
 define([
 	'squire',
@@ -31,9 +30,9 @@ define([
 		});
 
 		it('Expects that a map view is created', function() {
-			this.testView = new HomeView();
+			var testView = new HomeView();
 			expect(mapViewInitializeSpy).toHaveBeenCalled();
-			expect(this.testView.mapView).toBeDefined();
+			expect(testView.mapView).toBeDefined();
 		});
 
 	});
