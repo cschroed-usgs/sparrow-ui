@@ -2,8 +2,8 @@
 define([
 	'backbone',
 	'utils/logger',
-	'views/MapView'
-], function (Backbone, logger, MapView) {
+	'views/HomeView'
+], function (Backbone, logger, HomeView) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
@@ -14,7 +14,9 @@ define([
 			this.on("route:homeView", function () {
 				this.LOG.trace("Routing to home view");
 
-				this.currentView = new HomeView();
+				this.currentView = new HomeView({
+					el : $('#page-content-container')
+				});
 			});
 		}
 	});

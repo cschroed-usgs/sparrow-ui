@@ -20,6 +20,12 @@ define([
 
 			return this;
 		},
+
+		/*
+		 * This would either be overriden when extending or when instantiating a view the user would
+		 * pass in a template property.
+		 * @returns {String}
+		 */
 		template : function() {
 			return 'No template specified'
 		},
@@ -30,7 +36,7 @@ define([
 		 *		@prop router {Backbone.Router instance} - defaults to null
 		 *		@prop template {Function} optional - Returns html to be rendered. Will override the template property.
 		 *		@prop context {Object} to be used when rendering templateName - defaults to {}
-		 *      @prop $el {Jquery element} - render view in $el.
+		 *      @prop el {Jquery element} - render view in $el.
 		 * @returns
 		 */
 		initialize : function(options) {
