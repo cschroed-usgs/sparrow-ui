@@ -7,6 +7,7 @@ define([
 	'models/SelectionModel',
 	'text!templates/home.html'
 ], function(Handlebars, BaseView, MapView, SelectModelView, SelectionModel, hbTemplate) {
+	"use strict";
 
 	var view = BaseView.extend({
 
