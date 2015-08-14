@@ -77,113 +77,7 @@
     <!-- END USGS Header Template -->
 
     <!-- Start App Title Area -->
-
-            <nav>
-            <h4>SPARROW Surface Water-Quality Modeling&nbsp;</h4>
-            <span class="fa fa-lg fa-question" aria-hidden="true"></span>
-            <div id="titleButtons">
-                <button>Save Session</button>
-                <button>Help</button>
-            </div>
-        </nav>
-
-    <!-- END App Title Area -->
-
-    <!-- Start Content Area -->
-        <div id="map-ui-container">
-			
-			<!--======Map======-->
-            <div id="map-container"></div>
-
-            <!--======Model Selection======-->
-            <div id="model-selection-container">
-                <p>Explore a Model</p>
-                <div id="selection-clear">
-                    <select id="regional-model">
-                        <option value="" disabled selected>Select a Constituent</option>
-                        <option value="">Nitrogen</option>
-                        <option value="">Phosphorus</option>
-                    </select>
-                    <label  id="or" for="national-model">and</label>
-                    <select id="national-model">
-                        <option value="" disabled selected>Select a Model Region</option>
-                        <option value="">Example</option>
-                        <option value="">Example</option>
-                    </select>
-                    <button id="explore-model">Explore</button>
-                </div>
-            </div>
-
-            <!--======Region Search======-->
-            <div id="region-search-container">
-                    <p>Find Area of Interest</p>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Enter HUC, Zipcode, State, Ect...">
-                </div>
-            </div>
-
-
-            <!--======Map Filter Sidebar======-->
-            <div id="map-sidebar-container">
-                    <div id="filter-container">
-                    <p>Choose Area of Interest&nbsp;</p>
-                    <span class="fa fa-question" aria-hidden="true"></span>
-                    <select id="state">
-                        <option value="state">State</option>
-                        <option value="Alabama">Alabama</option>
-                        <option value="Alaska">Alaska</option>
-                        <option value="Arizona">Arizona</option>
-                    </select>
-                    <select id="receiving-water-body">
-                        <option value="receiving water body">Receiving Water Body</option>
-                        <option value="Water Body 1">Water Body 1</option>
-                        <option value="Water Body 2">Water Body 2</option>
-                        <option value="Water Body 3">Water Body 3</option>
-                    </select>
-                    <select id="watershed">
-                        <option value="watershed">Watershed</option>
-                        <option value="">Example</option>
-                        <option value="">Example</option>
-                        <option value="">Example</option>
-                    </select>
-                    <p>Choose a Data Series&nbsp;</p>
-                    <span class="fa fa-question" aria-hidden="true"></span>
-                    <select id="data-series">
-                        <option value="total yield">Incremental Yield</option>
-                        <option value="Incremental Load">Incremental Load</option>
-                        <option value="Flow-weighted Concentration">Flow-weighted Concentration</option>
-                        <option value="Incremental Yield">Total Yield</option>
-                    </select>
-                    <p>Group Results by:</p>
-                    <select id="group-result-by">
-                        <option value="">Catchment</option>
-                        <option value="">HUC 8</option>
-                        <option value="">Tributary Outlet</option>
-                        <option value="">Main River Basin</option>
-                        <option value="">State</option>
-                    </select>
-                    <p class="advanced-toggle">Advanced Options</p>
-                    <span class="glyphicon glyphicon-question-sign advanced-toggle" aria-hidden="true"></span>
-                    <button class="advanced-options-item advanced-toggle" id="change-inputs">Change Inputs</button>
-                    <button class="advanced-options-item advanced-toggle" id="downstream-tracking">Downstream Tracking</button>
-                    <button id="advanced-options">Advanced Options</button>
-                </div>
-                <div id="download-container">
-                    <p>View/Download Data</p>
-                    <img src="img/view-icon.png" alt="view data icon" title="View Graph Data"/>
-                    <img src="img/download_model-icon.png" alt="Download model icon" title="Download Model Data"/>
-                    <img src="img/download-spatial-icon.png" alt="Download spatial icon" title="Download Spatial Data"/>
-                    <img src="img/download-calibration-icon.png" alt="Download calibration icon" title="Download Calibration Data"/>
-                </div>
-            </div>
-            
-            <div id="legend">
-                    <h4>Legend</h4>
-            </div>
-        </div><!--map-ui-container-->
-
-
-
+	<div id="page-content-container"></div>
     <!-- END Content Area -->
 
 
@@ -246,12 +140,13 @@
 				},
 				baseUrl: "<%=baseUrl%>/js/",
 				paths: {
-					"jquery": ["<%=baseUrl%>/webjars/jquery/<%= getProp("version.jquery")%>/jquery<%= development ? ".min" : ""%>"],
-					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%= getProp("version.backbone")%>/backbone<%= development ? "-min" : ""%>'],
-					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ? "-min" : ""%>'],
+					"jquery": ["<%=baseUrl%>/webjars/jquery/<%= getProp("version.jquery")%>/jquery<%= development ? "" : ".min" %>"],
+					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%= getProp("version.backbone")%>/backbone<%= development ? "" : "-min"%>'],
+					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ?  "" : "-min"%>'],
+					"handlebars" : ['<%=baseUrl%>/webjars/handlebars/<%= getProp("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
-					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/log4javascript<%= development ? "_uncompressed" : ""%>'],
-					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "-debug" : ""%>'],
+					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/log4javascript<%= development ? "" : "_uncompressed"%>'],
+					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "" : "-debug"%>'],
 					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
 					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
 					},

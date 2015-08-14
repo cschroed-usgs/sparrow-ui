@@ -7,7 +7,7 @@ define([
 		beforeEach(function () {
 			this.router = new Router();
 			this.routeSpy = sinon.spy();
-			this.router.bind("route:mapView", this.routeSpy);
+			this.router.bind("route:homeView", this.routeSpy);
 
 			try {
 				Backbone.history.start({silent: true});

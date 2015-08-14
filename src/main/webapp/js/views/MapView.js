@@ -1,21 +1,28 @@
 /*jslint browser: true */
-/*global Backbone*/
-/*global ol*/
 define([
-	'backbone',
-	'utils/logger',
+	'views/BaseView',
 	'ol',
 	'utils/mapUtils',
 	'olLayerSwitcher'
-], function (Backbone, logger, ol, mapUtils) {
+], function (BaseView, ol, mapUtils) {
 	"use strict";
-	var view = Backbone.View.extend({
+	var view = BaseView.extend({
+
+		/**
+		 * Renders the map.
+		 * @returns {extended Backbone.View}
+		 */
 		render: function () {
 			this.map.setTarget(this.mapDivId);
 			return this;
 		},
+
+		/*
+		 * @constructs
+		 * @param {Object} options
+		 *      @prop mapDivId - Id of the div where the map will be rendered.
+		 */
 		initialize: function (options) {
-			this.LOG = logger.init();
 			this.mapDivId = options.mapDivId;
 			this.map = new ol.Map({
 				view: new ol.View({
@@ -42,8 +49,7 @@ define([
 				])
 			});
 
-			Backbone.View.prototype.initialize.apply(this, arguments);
-			this.render();
+			BaseView.prototype.initialize.apply(this, arguments);
 			this.LOG.debug("Map View rendered");
 		}
 	});
