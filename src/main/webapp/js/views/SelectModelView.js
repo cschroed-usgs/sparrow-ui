@@ -6,7 +6,7 @@ define([
 	'views/BaseView',
 	'text!templates/model_selection.html'
 ], function(Handlebars, $, BaseView, hbTemplate) {
-	'use strict';
+	"use strict";
 
 	var view = BaseView.extend({
 
