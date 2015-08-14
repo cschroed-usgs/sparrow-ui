@@ -27,8 +27,7 @@ function(BaseView) {
 				el : this.$testDiv
 			});
 
-			expect(this.templateSpy).toHaveBeenCalled();
-			expect(this.$testDiv.html()).toEqual('Template content');
+ 			expect(testView.template()).toEqual('Template content');
 		});
 
 		it('Expects the template passed in via instantiation to override the template property when rendering', function() {
@@ -38,9 +37,16 @@ function(BaseView) {
 				template : testTemplate
 			});
 
-			expect(this.templateSpy).not.toHaveBeenCalled();
-			expect(testTemplate).toHaveBeenCalled();
-			expect(this.$testDiv.html()).toEqual('New template content');
+			expect(testView.template()).toEqual('New template content')
+		});
+
+		it('Expects a call to render to call the template function and render the content', function() {
+			var testView = new this.TestView({
+				el : this.$testDiv
+			}).render();
+			testView.render();
+			expect(this.templateSpy).toHaveBeenCalled();
+			expect(this.$testDiv.html()).toEqual('Template content');
 		});
 
 		it('Expects that if the view is instantiated with a context, that context is called by the template function', function() {
@@ -51,7 +57,7 @@ function(BaseView) {
 					prop1 : 'One',
 					prop2 : 'Two'
 				}
-			});
+			}).render();
 
 			expect(this.templateSpy).toHaveBeenCalledWith({
 					prop1 : 'One',

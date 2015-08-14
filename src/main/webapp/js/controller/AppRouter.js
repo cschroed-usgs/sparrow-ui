@@ -16,7 +16,7 @@ define([
 
 				this.currentView = new HomeView({
 					el : $('#page-content-container')
-				});
+				}).render();
 			});
 		}
 	});

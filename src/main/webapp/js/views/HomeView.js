@@ -9,12 +9,28 @@ define([
 
 		template : Handlebars.compile(hbTemplate),
 
-		initialize : function(options) {
-			BaseView.prototype.initialize.apply(this, arguments);
+		/*
+		 * Renders the object's template using it's context into the view's element.
+		 * @returns {extended BaseView}
+		 */
+		render : function() {
+			BaseView.prototype.render.apply(this, arguments);
+			this.mapView.render();
+		},
 
+		/*
+		 * @constructs
+		 * @param {Object} options
+		 *		@prop router {Backbone.Router instance} - defaults to null
+		 *		@prop template {Function} optional - Returns html to be rendered. Will override the template property.
+		 *		@prop context {Object} to be used when rendering templateName - defaults to {}
+		 *      @prop el {Jquery element} - render view in $el.
+		 */
+		initialize : function(options) {
 			this.mapView = new MapView({
 				mapDivId : 'map-container'
 			});
+			BaseView.prototype.initialize.apply(this, arguments);
 		}
 	});
 

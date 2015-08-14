@@ -8,10 +8,20 @@ define([
 	"use strict";
 	var view = BaseView.extend({
 
+		/**
+		 * Renders the map.
+		 * @returns {extended Backbone.View}
+		 */
 		render: function () {
 			this.map.setTarget(this.mapDivId);
 			return this;
 		},
+
+		/*
+		 * @constructs
+		 * @param {Object} options
+		 *      @prop mapDivId - Id of the div where the map will be rendered.
+		 */
 		initialize: function (options) {
 			this.mapDivId = options.mapDivId;
 			this.map = new ol.Map({
