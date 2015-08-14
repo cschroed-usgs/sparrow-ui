@@ -7,7 +7,7 @@ define([
 	'models/SelectionModel',
 	'text!templates/home.html'
 ], function(Handlebars, BaseView, MapView, SelectModelView, SelectionModel, hbTemplate) {
-	
+
 	var view = BaseView.extend({
 
 		template : Handlebars.compile(hbTemplate),
