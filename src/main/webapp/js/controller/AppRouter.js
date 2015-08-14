@@ -1,23 +1,22 @@
 /*jslint browser : true*/
-/*global Backbone*/
 define([
 	'backbone',
 	'utils/logger',
-	'views/MapView'
-], function (Backbone, logger, MapView) {
+	'views/HomeView'
+], function (Backbone, logger, HomeView) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
-			'': 'mapView'
+			'': 'homeView'
 		},
 		initialize: function () {
 			this.LOG = logger.init();
-			this.on("route:mapView", function () {
-				this.LOG.trace("Routing to map view");
-				
-				new MapView({
-					mapDivId: 'map-container'
-				});
+			this.on("route:homeView", function () {
+				this.LOG.trace("Routing to home view");
+
+				this.currentView = new HomeView({
+					el : $('#page-content-container')
+				}).render();
 			});
 		}
 	});

@@ -129,6 +129,7 @@
 		<version.require>2.1.18</version.require>
 		<version.require.text>2.0.14</version.require.text>
 		<version.sinon>1.7.3</version.sinon>
+		<version.squire>0.2.0</version.squire>
 		<version.log4js>1.4.13</version.log4js>
 	</properties>
     
@@ -240,6 +241,12 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>sinonjs</artifactId>
 			<version>${version.sinon}-1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>squirejs</artifactId>
+			<version>${version.squire}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
