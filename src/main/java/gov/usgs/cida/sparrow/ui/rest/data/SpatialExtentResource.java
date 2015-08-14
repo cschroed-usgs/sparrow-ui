@@ -33,7 +33,7 @@ public class SpatialExtentResource {
 
 		Map<String, List<String>> extentsMap = new HashMap<>();
 		extentsMap.put("spatialextents", extents);
-		String output = gson.toJson(gson.toJson(extentsMap));
+		String output = gson.toJson(extentsMap);
 		return Response.ok(output).build();
 	}
 }

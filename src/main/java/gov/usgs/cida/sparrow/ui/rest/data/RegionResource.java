@@ -33,7 +33,7 @@ public class RegionResource {
 
 		Map<String, List<String>> regionMap = new HashMap<>();
 		regionMap.put("regions", regions);
-		String output = gson.toJson(gson.toJson(regionMap));
+		String output = gson.toJson(regionMap);
 		return Response.ok(output).build();
 	}
 }
