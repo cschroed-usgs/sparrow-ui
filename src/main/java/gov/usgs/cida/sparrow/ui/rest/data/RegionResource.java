@@ -1,7 +1,7 @@
 package gov.usgs.cida.sparrow.ui.rest.data;
 
 import com.google.gson.Gson;
-import gov.usgs.cida.sparrow.ui.rest.model.ModelUtil;
+import gov.usgs.cida.sparrow.ui.model.ModelUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class RegionResource {
 
 		Map<String, List<String>> regionMap = new HashMap<>();
 		regionMap.put("regions", regions);
-		String output = gson.toJson(gson.toJson(regionMap));
+		String output = gson.toJson(regionMap);
 		return Response.ok(output).build();
 	}
 }

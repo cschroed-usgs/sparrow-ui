@@ -1,10 +1,7 @@
 package gov.usgs.cida.sparrow.ui.rest.data;
 
 import com.google.gson.Gson;
-import gov.usgs.cida.sparrow.ui.rest.model.Model;
-import gov.usgs.cida.sparrow.ui.rest.model.ModelUtil;
-import java.util.ArrayList;
-import java.util.Collection;
+import gov.usgs.cida.sparrow.ui.model.ModelUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +33,7 @@ public class ConstituentResource {
 		
 		Map<String, List<String>> constituentsMap = new HashMap<>();
 		constituentsMap.put("constituents", constituents);
-		String output = gson.toJson(gson.toJson(constituentsMap));
+		String output = gson.toJson(constituentsMap);
 		return Response.ok(output).build();
 	}
 }

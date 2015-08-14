@@ -1,0 +1,27 @@
+<configuration>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%t] Sparrow-UI %5p %logger{20} - %m%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+		<file>${catalina.base}/logs/sparrow.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${catalina.base}/logs/sparrow-ui/sparrow-ui.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>7</maxHistory>
+			<cleanHistoryOnStart>true</cleanHistoryOnStart>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%t] Sparrow-UI %5p %logger{20} - %m%n</pattern>
+		</encoder>
+	</appender>
+	
+	<logger name="org.apache" level="INFO"/>
+	<root level="INFO">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>
