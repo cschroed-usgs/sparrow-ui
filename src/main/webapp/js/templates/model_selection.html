@@ -1,0 +1,17 @@
+<p>Explore a Model</p>
+<div id="selection-clear">		
+	<select class="constituent-select">
+		<option value="" disabled selected>Select a Constituent</option>
+		{{#each constituents}}
+		<option value="{{this}}">{{this}}</option>
+		{{/each}}
+	</select>
+	<label >and</label>
+	<select class="region-select">
+		<option value="" disabled selected>Select a Model Region</option>
+		{{#each regions}}
+		<option value="{{this}}">{{this}}</option>
+		{{/each}}
+	</select>
+	<button id="explore-model">Explore</button>
+</div>

@@ -1,10 +1,11 @@
 /*jslint browser: true */
 define([
+	'underscore',
 	'views/BaseView',
 	'ol',
 	'utils/mapUtils',
 	'olLayerSwitcher'
-], function (BaseView, ol, mapUtils) {
+], function (_, BaseView, ol, mapUtils) {
 	"use strict";
 	var view = BaseView.extend({
 
@@ -21,8 +22,10 @@ define([
 		 * @constructs
 		 * @param {Object} options
 		 *      @prop mapDivId - Id of the div where the map will be rendered.
+		 *      @prop enableZoom {Boolean} - Optional, set to false if the zoom control should be removed. Deafult is true
 		 */
 		initialize: function (options) {
+			options.enableZoom = _.has(options, 'enableZoom') ? options.enableZoom : true;
 			this.mapDivId = options.mapDivId;
 			this.map = new ol.Map({
 				view: new ol.View({
@@ -41,12 +44,12 @@ define([
 						]
 					})
 				],
-				controls: ol.control.defaults().extend([
-					new ol.control.ScaleLine(),
+				controls: ol.control.defaults({
+					zoom : options.enableZoom
+				}).extend([new ol.control.ScaleLine(),
 					new ol.control.LayerSwitcher({
 						tipLabel: 'Switch base layers'
-					})
-				])
+				})])
 			});
 
 			BaseView.prototype.initialize.apply(this, arguments);

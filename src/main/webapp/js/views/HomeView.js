@@ -3,8 +3,11 @@ define([
 	'handlebars',
 	'views/BaseView',
 	'views/MapView',
+	'views/SelectModelView',
+	'models/SelectionModel',
 	'text!templates/home.html'
-], function(Handlebars, BaseView, MapView, hbTemplate) {
+], function(Handlebars, BaseView, MapView, SelectModelView, SelectionModel, hbTemplate) {
+
 	var view = BaseView.extend({
 
 		template : Handlebars.compile(hbTemplate),
@@ -16,6 +19,7 @@ define([
 		render : function() {
 			BaseView.prototype.render.apply(this, arguments);
 			this.mapView.render();
+			this.selectModelView.setElement(this.$('.model-selection-container')).render();
 		},
 
 		/*
@@ -27,10 +31,22 @@ define([
 		 *      @prop el {Jquery element} - render view in $el.
 		 */
 		initialize : function(options) {
+			this.selectionModel = new SelectionModel();
 			this.mapView = new MapView({
-				mapDivId : 'map-container'
+				mapDivId : 'map-container',
+				enableZoom : false
+			});
+			this.selectModelView = new SelectModelView({
+				model : this.selectionModel,
+				el : '.model-selection-container'
 			});
 			BaseView.prototype.initialize.apply(this, arguments);
+		},
+
+		remove : function() {
+			this.mapView.remove();
+			this.selectModelView.remove();
+			BaseView.prototype.remove.apply(this, arguments);
 		}
 	});
 

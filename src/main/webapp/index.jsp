@@ -145,7 +145,7 @@
 					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ?  "" : "-min"%>'],
 					"handlebars" : ['<%=baseUrl%>/webjars/handlebars/<%= getProp("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
-					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/log4javascript<%= development ? "" : "_uncompressed"%>'],
+					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/js/log4javascript<%= development ? "" : "_uncompressed"%>'],
 					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "" : "-debug"%>'],
 					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
 					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
