@@ -12,10 +12,31 @@ define([
 
 		events : {
 			'change .constituent-select' : 'changeConstituent',
-			'change .region-select' : 'changeRegion',
+			'change .region-select' : 'changeRegion'
 		},
 
 		template : Handlebars.compile(hbTemplate),
+
+		render : function() {
+			var self = this;
+			$.when(this.constituentsPromise, this.regionsPromise).done(function() {
+				BaseView.prototype.render.apply(self, arguments);
+			});
+			return this;
+		},
+
+		/*
+		 * @constructs
+		 * @param {Object} options
+		 *      @prop {SelectionModel} - model
+		 */
+		initialize : function(options) {
+			this.constituentsPromise = this.getConstituents();
+			this.regionsPromise = this.getRegions();
+			this.setModelListeners();
+
+			BaseView.prototype.initialize.apply(this, arguments);
+		},
 
 		/*
 		 * @return Promise which is resolved when the ajax call finishes. Resolved data is the list of constituents.
@@ -51,7 +72,7 @@ define([
 				url : 'data/region',
 				success : function(response) {
 					self.context.regions = response.regions;
-					deferred.resolve()
+					deferred.resolve();
 				},
 				error : function(xhr, textStatus) {
 					deferred.reject(textStatus);
@@ -59,28 +80,6 @@ define([
 			});
 
 			return deferred.promise();
-		},
-
-		render : function() {
-			var self = this;
-			$.when(this.constituentsPromise, this.regionsPromise).done(function() {
-				BaseView.prototype.render.apply(self, arguments);
-
-				self.setModelListeners();
-			});
-			return this;
-		},
-
-		/*
-		 * @constructs
-		 * @param {Object} options
-		 *      @prop {SelectionModel} - model
-		 */
-		initialize : function(options) {
-			this.constituentsPromise = this.getConstituents();
-			this.regionsPromise = this.getRegions();
-
-			BaseView.prototype.initialize.apply(this, arguments);
 		},
 
 		setModelListeners : function() {
