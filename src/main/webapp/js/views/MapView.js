@@ -21,8 +21,10 @@ define([
 		 * @constructs
 		 * @param {Object} options
 		 *      @prop mapDivId - Id of the div where the map will be rendered.
+		 *      @prop enableZoom -
 		 */
 		initialize: function (options) {
+			var defaultControls =
 			this.mapDivId = options.mapDivId;
 			this.map = new ol.Map({
 				view: new ol.View({
@@ -41,12 +43,12 @@ define([
 						]
 					})
 				],
-				controls: ol.control.defaults().extend([
-					new ol.control.ScaleLine(),
+				controls: ol.control.defaults({
+					zoom : options.enableZoom
+				}).extend([new ol.control.ScaleLine(),
 					new ol.control.LayerSwitcher({
 						tipLabel: 'Switch base layers'
-					})
-				])
+					})])
 			});
 
 			BaseView.prototype.initialize.apply(this, arguments);
