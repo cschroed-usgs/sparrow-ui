@@ -1,0 +1,16 @@
+<!-- 
+	This file represents the environment variables that Sparrow UI requires
+	in order to properly function. Normal Tomcat context content like
+	WatchedResource, Manager, Valve and others are not included here. 
+	
+	See https://tomcat.apache.org/tomcat-8.0-doc/config/context.html for more
+	information on setting up your Tomcat instance
+-->
+<Context>
+	<!-- 
+		Defines whether or not the server this application is a development server.
+		This has an effect on whether or not the application will serve minified
+		javascript and css or not. It may also affect logging levels.
+	-->
+	<Environment name="development" type="java.lang.String" value="true"/>
+</Context>
