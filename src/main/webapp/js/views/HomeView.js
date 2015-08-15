@@ -1,13 +1,14 @@
 /*jslint browser: true */
 define([
+	'jquery',
 	'handlebars',
-	'utils/logger',
 	'views/BaseView',
 	'views/MapView',
 	'views/SelectModelView',
 	'models/SelectionModel',
+	'views/SearchView',
 	'text!templates/home.html'
-], function(Handlebars, log, BaseView, MapView, SelectModelView, SelectionModel, hbTemplate) {
+], function($, Handlebars, BaseView, MapView, SelectModelView, SelectionModel, SearchView, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -22,6 +23,8 @@ define([
 			BaseView.prototype.render.apply(this, arguments);
 			this.mapView.render();
 			this.selectModelView.setElement(this.$('.model-selection-container')).render();
+			this.searchView.render();
+			return this;
 		},
 
 		/*
@@ -34,14 +37,19 @@ define([
 		 */
 		initialize : function(options) {
 			this.selectionModel = new SelectionModel();
+			
 			this.mapView = new MapView({
 				mapDivId : 'map-container',
 				enableZoom : false
 			});
+			
 			this.selectModelView = new SelectModelView({
 				model : this.selectionModel,
 				el : '.model-selection-container'
 			});
+			
+			this.searchView = new SearchView();
+			
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
 

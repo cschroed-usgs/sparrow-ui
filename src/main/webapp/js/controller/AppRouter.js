@@ -15,7 +15,7 @@ define([
 				log.trace("Routing to home view");
 
 				this.currentView = new HomeView({
-					el : $('#page-content-container')
+					el : '#page-content-container'
 				}).render();
 			});
 		}
