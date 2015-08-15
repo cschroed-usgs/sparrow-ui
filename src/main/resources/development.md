@@ -29,3 +29,15 @@ bottom you should see an input box labeled `Compiler Options`. In there you shou
 `${web.root}/../../../target/less-webjars/`
 
 This tells the compiler to also look in the target directory to find other LESS files to compile against. 
+
+###Comments in JSP and Handlebars templates
+When creating comments in JSPs or Handlebars that render HTML, 
+try not to use HTML comment tags `<!-- -->`. These comments are usually for developers
+and make their way into the final HTML and end up increasing the size of the transfer
+to the browser. 
+
+Instead, in JSP, use JSP comment tags `<%-- --%>` and in Handlebars, use Handlebars 
+comment tags `{{!-- --}}` or `{{! }}`.
+
+These comments will not make it into the final product and will not be served to 
+the client.
