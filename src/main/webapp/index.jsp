@@ -21,13 +21,6 @@
 	}
 	boolean development = true;//Boolean.parseBoolean(getProp("development"));
 	String version = getProp("application.version");
-	String vJquery = getProp("version.jquery");
-	String vBootstrap = getProp("version.bootstrap");
-	String vFontAwesome = getProp("version.fontawesome");
-	String vOpenlayers = getProp("version.openlayers");
-	String vHandlebars = getProp("version.handlebars");
-	String vUnderscore = getProp("version.underscore");
-	String vBackbone = getProp("version.backbone");
 	String resourceSuffix = development ? "" : "-" + version + "-min";
 %>
 <%
