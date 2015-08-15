@@ -136,19 +136,19 @@
 				baseUrl: "<%=baseUrl%>/js/",
 				paths: {
 					"jquery": ["<%=baseUrl%>/webjars/jquery/<%= getProp("version.jquery")%>/jquery<%= development ? "" : ".min"%>"],
-								"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%= getProp("version.backbone")%>/backbone<%= development ? "" : "-min"%>'],
-											"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ? "" : "-min"%>'],
-														"handlebars": ['<%=baseUrl%>/webjars/handlebars/<%= getProp("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
-																	"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
-																	"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%= getProp("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
-																				"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "" : "-debug"%>'],
-																							"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
-																							"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
-																									},
-																									shim: {
-																										"olLayerSwitcher": ["olshim"]
-																									}
-																								};
+					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%= getProp("version.backbone")%>/backbone<%= development ? "" : "-min"%>'],
+					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ? "" : "-min"%>'],
+					"handlebars": ['<%=baseUrl%>/webjars/handlebars/<%= getProp("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
+					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
+					"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%= getProp("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
+					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "" : "-debug"%>'],
+					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
+					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
+				},
+				shim: {
+					"olLayerSwitcher": ["olshim"]
+				}
+			};
 		</script>
 		<script data-main="init" src="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("require" + (development ? "" : ".min") + ".js")%>"></script>
 	</body>
