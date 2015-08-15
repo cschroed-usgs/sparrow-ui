@@ -7,8 +7,9 @@ define([
 	'views/SelectModelView',
 	'models/SelectionModel',
 	'views/SearchView',
+	'views/MapFilterView',
 	'text!templates/home.html'
-], function($, Handlebars, BaseView, MapView, SelectModelView, SelectionModel, SearchView, hbTemplate) {
+], function($, Handlebars, BaseView, MapView, SelectModelView, SelectionModel, SearchView, MapFilterView, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -24,6 +25,7 @@ define([
 			this.mapView.render();
 			this.selectModelView.setElement(this.$('.model-selection-container')).render();
 			this.searchView.render();
+			this.mapFilterView.render();
 			return this;
 		},
 
@@ -49,6 +51,7 @@ define([
 			});
 			
 			this.searchView = new SearchView();
+			this.mapFilterView = new MapFilterView();
 			
 			BaseView.prototype.initialize.apply(this, arguments);
 		},

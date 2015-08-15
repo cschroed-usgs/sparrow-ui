@@ -1,5 +1,4 @@
 /*jslint browser : true */
-
 define([
 	'handlebars',
 	'utils/logger',

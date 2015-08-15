@@ -17,7 +17,6 @@ define([
 				return Backbone.View;
 			});
 			injector.mock('text!templates/home.html', 'text!templates/region_search.html');
-
 			injector.require(['views/HomeView', 'views/SearchView'], function(homeView, searchView) {
 				HomeView = homeView;
 				SearchView = searchView;
