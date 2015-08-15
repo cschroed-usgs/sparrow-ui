@@ -23,7 +23,7 @@ define([
 		render : function() {
 			BaseView.prototype.render.apply(this, arguments);
 			this.mapView.render();
-			this.selectModelView.setElement(this.$('.model-selection-container')).render();
+			this.selectModelView.setElement(this.$('#model-selection-container')).render();
 			this.searchView.render();
 			this.mapFilterView.render();
 			return this;

@@ -25,7 +25,7 @@ define([
 			if (_.has(opts, 'el')) {
 				this.el = opts.el;
 			} else {
-				this.el = ".region-search-container-div";
+				this.el = "#region-search-container-div";
 			}
 			
 			if (_.has(opts, 'template')) {
