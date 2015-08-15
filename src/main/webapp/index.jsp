@@ -31,49 +31,49 @@
 	<head>
 		<jsp:include page="/WEB-INF/jsp/components/common/meta-tags.jsp" />
 		<title>Sparrow UI</title>
-		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("css/bootstrap" + (development ? "" : ".min") + ".css") %>" />
-		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("ol.css") %>" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("css/bootstrap" + (development ? "" : ".min") + ".css")%>" />
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("ol.css")%>" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>.css" />
         <link type="text/css" rel="stylesheet" href="<%= baseUrl%>/css/custom.css" />
 	</head>
 	<body>
 
-    <div class="container-fluid">
+		<div class="container-fluid">
 
-    <!-- BEGIN USGS Header Template --> 
+			<%-- BEGIN USGS Header Template --%> 
 
-        <div id="usgscolorband">
+			<div id="usgscolorband">
 
-            <div id="usgsheader">
+				<div id="usgsheader">
 
-                <div id="usgsidentifier">
-                <a href="http://www.usgs.gov/" target="_blank"><img src="img/usgslogo.jpg" alt="USGS - science for a changing world" title="U.S. Geological Survey Home Page"/></a>
-                </div><!--usgsidentifier-->
+					<div id="usgsidentifier">
+						<a href="http://www.usgs.gov/" target="_blank"><img src="img/usgslogo.jpg" alt="USGS - science for a changing world" title="U.S. Geological Survey Home Page"/></a>
+					</div><%--usgsidentifier--%>
 
-            <img src="img/banner.png" alt="banner"/>
+					<img src="img/banner.png" alt="banner"/>
 
-            <div id="usgsccsabox">
+					<div id="usgsccsabox">
 
-                <div id="usgsccsa">
-                    <a href="http://www.usgs.gov/">USGS Home</a>
-                    <br /><a href="http://answers.usgs.gov/cgi-bin/gsanswers?tmplt=2">Contact USGS</a>
-                    <br /><a href="http://search.usgs.gov/">Search USGS</a>
-                    <br />
-                </div><!--usgsccsa-->
+						<div id="usgsccsa">
+							<a href="http://www.usgs.gov/">USGS Home</a>
+							<br /><a href="http://answers.usgs.gov/cgi-bin/gsanswers?tmplt=2">Contact USGS</a>
+							<br /><a href="http://search.usgs.gov/">Search USGS</a>
+							<br />
+						</div><%--usgsccsa--%>
 
-            </div><!--usgsccsabox-->
+					</div><%--usgsccsabox--%>
 
-        </div><!--usgsheader-->
-        </div><!--colorband-->
+				</div><%--usgsheader--%>
+			</div><%--colorband--%>
 
-    <!-- END USGS Header Template -->
+			<%-- END USGS Header Template --%>
 
-    <!-- Start App Title Area -->
-	<div id="page-content-container"></div>
-    <!-- END Content Area -->
+			<%-- Start App Title Area --%>
+			<div id="page-content-container"></div>
+			<%-- END Content Area --%>
 
 
-    <!-- BEGIN USGS Footer Template -->
+			<%-- BEGIN USGS Footer Template --%>
 
             <div id="usgsfooter">
 
@@ -126,8 +126,8 @@
 		<script>
 			var require = {
 				config: {
-					'utils/logger' : {
-						isDevelopment : <%= development ? true : false %>
+					'utils/logger': {
+						isDevelopment: <%= development ? true : false%>
 					},
 					'init': {
 						'contextPath': "<%=baseUrl%>/"
@@ -135,21 +135,21 @@
 				},
 				baseUrl: "<%=baseUrl%>/js/",
 				paths: {
-					"jquery": ["<%=baseUrl%>/webjars/jquery/<%= getProp("version.jquery")%>/jquery<%= development ? "" : ".min" %>"],
+					"jquery": ["<%=baseUrl%>/webjars/jquery/<%= getProp("version.jquery")%>/jquery<%= development ? "" : ".min"%>"],
 					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%= getProp("version.backbone")%>/backbone<%= development ? "" : "-min"%>'],
-					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ?  "" : "-min"%>'],
-					"handlebars" : ['<%=baseUrl%>/webjars/handlebars/<%= getProp("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
+					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ? "" : "-min"%>'],
+					"handlebars": ['<%=baseUrl%>/webjars/handlebars/<%= getProp("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
 					"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%= getProp("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
 					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "" : "-debug"%>'],
 					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
 					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
-					},
+				},
 				shim: {
 					"olLayerSwitcher": ["olshim"]
 				}
 			};
 		</script>
-		<script data-main="init" src="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("require" + (development ? "" : ".min") + ".js") %>"></script>
+		<script data-main="init" src="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("require" + (development ? "" : ".min") + ".js")%>"></script>
 	</body>
 </html>
