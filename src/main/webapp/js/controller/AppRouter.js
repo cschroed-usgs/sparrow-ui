@@ -3,16 +3,16 @@ define([
 	'backbone',
 	'utils/logger',
 	'views/HomeView'
-], function (Backbone, logger, HomeView) {
+], function (Backbone, log, HomeView) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
 			'': 'homeView'
 		},
 		initialize: function () {
-			this.LOG = logger.init();
+			log.trace("Initializing router");
 			this.on("route:homeView", function () {
-				this.LOG.trace("Routing to home view");
+				log.trace("Routing to home view");
 
 				this.currentView = new HomeView({
 					el : $('#page-content-container')
