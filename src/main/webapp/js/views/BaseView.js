@@ -3,13 +3,12 @@
 define([
 	'backbone',
 	'underscore',
-	'utils/logger'
-], function(Backbone, _, logger){
+	'utils/logger',
+], function(Backbone, _, log){
 	"use strict";
 
 	var view = Backbone.View.extend({
 
-		LOG : logger.init(),
 		/*
 		 * Renders the object's template using it's context into the view's element.
 		 * @returns {extended Backbone.View}

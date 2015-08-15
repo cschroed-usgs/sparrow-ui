@@ -21,14 +21,6 @@
 	}
 	boolean development = true;//Boolean.parseBoolean(getProp("development"));
 	String version = getProp("application.version");
-	String vJquery = getProp("version.jquery");
-	String vBootstrap = getProp("version.bootstrap");
-	String vFontAwesome = getProp("version.fontawesome");
-	String vOpenlayers = getProp("version.openlayers");
-	String vHandlebars = getProp("version.handlebars");
-	String vUnderscore = getProp("version.underscore");
-	String vBackbone = getProp("version.backbone");
-	String vLog4Js = getProp("version.log4js");
 	String resourceSuffix = development ? "" : "-" + version + "-min";
 %>
 <%
@@ -134,6 +126,9 @@
 		<script>
 			var require = {
 				config: {
+					'utils/logger' : {
+						isDevelopment : <%= development ? true : false %>
+					},
 					'init': {
 						'contextPath': "<%=baseUrl%>/"
 					}
@@ -145,7 +140,7 @@
 					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ?  "" : "-min"%>'],
 					"handlebars" : ['<%=baseUrl%>/webjars/handlebars/<%= getProp("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
-					"log4js": ['<%=baseUrl%>/webjars/log4javascript/<%= getProp("version.log4js")%>/js/log4javascript<%= development ? "" : "_uncompressed"%>'],
+					"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%= getProp("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
 					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "" : "-debug"%>'],
 					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
 					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']

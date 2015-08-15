@@ -2,10 +2,11 @@
 
 define([
 	'handlebars',
+	'utils/logger',
 	'jquery',
 	'views/BaseView',
 	'text!templates/model_selection.html'
-], function(Handlebars, $, BaseView, hbTemplate) {
+], function(Handlebars, log, $, BaseView, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({

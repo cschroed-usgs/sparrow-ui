@@ -1,11 +1,12 @@
 /*jslint browser: true */
 define([
 	'underscore',
+	'utils/logger',
 	'views/BaseView',
 	'ol',
 	'utils/mapUtils',
 	'olLayerSwitcher'
-], function (_, BaseView, ol, mapUtils) {
+], function (_, log, BaseView, ol, mapUtils) {
 	"use strict";
 	var view = BaseView.extend({
 
@@ -53,7 +54,7 @@ define([
 			});
 
 			BaseView.prototype.initialize.apply(this, arguments);
-			this.LOG.debug("Map View rendered");
+			log.debug("Map View rendered");
 		}
 	});
 

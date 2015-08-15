@@ -1,12 +1,13 @@
 /*jslint browser: true */
 define([
 	'handlebars',
+	'utils/logger',
 	'views/BaseView',
 	'views/MapView',
 	'views/SelectModelView',
 	'models/SelectionModel',
 	'text!templates/home.html'
-], function(Handlebars, BaseView, MapView, SelectModelView, SelectionModel, hbTemplate) {
+], function(Handlebars, log, BaseView, MapView, SelectModelView, SelectionModel, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
