@@ -10,7 +10,7 @@ define([
 	"use strict";
 
 	var view = BaseView.extend({
-
+		
 		events : {
 			'change .constituent-select' : 'changeConstituent',
 			'change .region-select' : 'changeRegion'
@@ -21,6 +21,10 @@ define([
 		render : function() {
 			var self = this;
 			$.when(this.constituentsPromise, this.regionsPromise).done(function() {
+				if (self.$el.length === 0) {
+					self.$el = $(self.el);
+				}
+				
 				BaseView.prototype.render.apply(self, arguments);
 			});
 			return this;
