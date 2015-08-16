@@ -42,6 +42,20 @@ define([
 		setModelListeners: function () {
 			this.listenTo(this.model, 'change:constituent', this.updateConstituent);
 			this.listenTo(this.model, 'change:region', this.updateRegion);
+			this.listenTo(this.model, 'change', this.modelChanged)
+		},
+		/**
+		 * A funnel function which listens to any model change and checks whether 
+		 * both a region and constiuent has been chosen
+		 * @param {type} model
+		 * @returns {undefined}
+		 */
+		modelChanged: function (model) {
+			var c = model.attributes.constituent,
+				r = model.attributes.region;
+			if (r && c) {
+				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r);
+			}
 		},
 		updateConstituent: function (model) {
 			this.$('.constituent-select').val(model.get('constituent'));
@@ -50,10 +64,14 @@ define([
 			this.$('.region-select').val(model.get('region'));
 		},
 		changeConstituent: function (ev) {
-			this.model.set('constituent', ev.currentTarget.value);
+			var value = ev.currentTarget.value;
+			log.debug("New constituent chosen: " + value);
+			this.model.set('constituent', value);
 		},
 		changeRegion: function (ev) {
-			this.model.set('region', ev.currentTarget.value);
+			var value = ev.currentTarget.value;
+			log.debug("New region chosen: " + value);
+			this.model.set('region', value);
 		}
 	});
 
