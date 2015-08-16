@@ -5,8 +5,8 @@
 	 <diskStore path="java.io.tmpdir" /> 
 
 	<cache name="model" 
-		   maxEntriesLocalHeap="10000"
-		   maxEntriesLocalDisk="1000" 
+		   maxEntriesLocalHeap="500"
+		   maxEntriesLocalDisk="10000" 
 		   eternal="false" 
 		   diskSpoolBufferSizeMB="20"
 		   timeToLiveSeconds="3600"
