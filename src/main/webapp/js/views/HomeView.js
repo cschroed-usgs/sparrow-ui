@@ -1,6 +1,5 @@
 /*jslint browser: true */
 define([
-	'jquery',
 	'handlebars',
 	'views/BaseView',
 	'views/MapView',
@@ -9,7 +8,7 @@ define([
 	'views/SearchView',
 	'views/MapFilterView',
 	'text!templates/home.html'
-], function($, Handlebars, BaseView, MapView, SelectModelView, SelectionModel, SearchView, MapFilterView, hbTemplate) {
+], function(Handlebars, BaseView, MapView, SelectModelView, SelectionModel, SearchView, MapFilterView, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({

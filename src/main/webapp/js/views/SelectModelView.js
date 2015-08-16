@@ -5,105 +5,110 @@ define([
 	'jquery',
 	'views/BaseView',
 	'text!templates/model_selection.html'
-], function(Handlebars, log, $, BaseView, hbTemplate) {
+], function (Handlebars, log, $, BaseView, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
-		
-		events : {
-			'change .constituent-select' : 'changeConstituent',
-			'change .region-select' : 'changeRegion'
+		events: {
+			'change .constituent-select': 'changeConstituent',
+			'change .region-select': 'changeRegion'
 		},
-
-		template : Handlebars.compile(hbTemplate),
-
-		render : function() {
+		template: Handlebars.compile(hbTemplate),
+		render: function () {
 			var self = this;
-			$.when(this.constituentsPromise, this.regionsPromise).done(function() {
+			$.when(this.constituentsPromise, this.regionsPromise, this.getModelsPromise).done(function () {
 				if (self.$el.length === 0) {
 					self.$el = $(self.el);
 				}
-				
+
 				BaseView.prototype.render.apply(self, arguments);
 			});
 			return this;
 		},
-
 		/*
 		 * @constructs
 		 * @param {Object} options
 		 *      @prop {SelectionModel} - model
 		 */
-		initialize : function(options) {
+		initialize: function (options) {
+			this.getModelsPromise = this.getModels();
 			this.constituentsPromise = this.getConstituents();
 			this.regionsPromise = this.getRegions();
 			this.setModelListeners();
 
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
-
+		/**
+		 * Get models from ScienceBase
+		 * @return A deferred object 
+		 */
+		getModels: function () {
+			return $.ajax({
+				url: '//www.sciencebase.gov/catalog/items',
+				data: {
+					parentId : '55c90c3be4b08400b1fd88a2',
+					max : '1000',
+					format : 'json',
+					fields : 'tags'
+				}
+			});
+		},
 		/*
 		 * @return Promise which is resolved when the ajax call finishes. Resolved data is the list of constituents.
 		 * If rejected the service call failed.
 		 */
-		getConstituents : function() {
+		getConstituents: function () {
 			var self = this;
 			var deferred = $.Deferred();
 
 			$.ajax({
-				url : 'data/constituent',
-				success : function(response) {
+				url: 'data/constituent',
+				success: function (response) {
 					self.context.constituents = response.constituents;
 					deferred.resolve(response.constituents);
 				},
-				error : function(xhr, textStatus) {
+				error: function (xhr, textStatus) {
 					deferred.reject(textStatus);
 				}
 			});
 
 			return deferred.promise();
 		},
-
 		/*
 		 * @return Promise which is resolved when the ajax call finishes.
 		 * If rejected the service call failed.
 		 */
-		getRegions : function() {
+		getRegions: function () {
 			var self = this;
 			var deferred = $.Deferred();
 
 			$.ajax({
-				url : 'data/region',
-				success : function(response) {
+				url: 'data/region',
+				success: function (response) {
 					self.context.regions = response.regions;
 					deferred.resolve();
 				},
-				error : function(xhr, textStatus) {
+				error: function (xhr, textStatus) {
 					deferred.reject(textStatus);
 				}
 			});
 
 			return deferred.promise();
 		},
-
-		setModelListeners : function() {
+		setModelListeners: function () {
 			this.listenTo(this.model, 'change:constituent', this.updateConstituent);
 			this.listenTo(this.model, 'change:region', this.updateRegion);
 		},
-
-		updateConstituent : function(model) {
+		updateConstituent: function (model) {
 			this.$('.constituent-select').val(model.get('constituent'));
 		},
-
-		updateRegion : function(model) {
+		updateRegion: function (model) {
 			this.$('.region-select').val(model.get('region'));
 		},
-
-		changeConstituent : function(ev) {
+		changeConstituent: function (ev) {
 			this.model.set('constituent', ev.currentTarget.value);
 		},
-
-		changeRegion : function(ev) {
+		changeRegion: function (ev) {
 			this.model.set('region', ev.currentTarget.value);
 		}
 	});
