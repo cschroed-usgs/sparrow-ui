@@ -1,12 +1,17 @@
 /*jslint browser: true*/
 define([
 	'backbone'
-], function(Backbone) {
+], function (Backbone) {
 	"use strict";
 
 	var model = Backbone.Model.extend({
-		constituent : '',
-		region : ''
+		defaults: function () {
+			return {
+				constituent: '',
+				region: ''
+			};
+		}
+
 	});
 	return model;
 });
