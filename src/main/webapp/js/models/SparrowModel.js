@@ -1,6 +1,6 @@
 define([
 	'backbone'
-], function (Backbonel) {
+], function (Backbone) {
 	"use strict";
 	var model = Backbone.Model.extend({
 		defaults: function () {
