@@ -32,6 +32,7 @@ public class ModelResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getModels() {
+		String keyName = "all_sb_models";
 		CacheManager cm = CacheManagerUtil.getManager();
 		Response response;
 		if (!cm.cacheExists(CACHE_NAME)) {
@@ -39,7 +40,7 @@ public class ModelResource {
 		}
 		Cache modelCache = cm.getCache(CACHE_NAME);
 
-		if (!modelCache.isKeyInCache("model")) {
+		if (!modelCache.isKeyInCache(keyName)) {
 			// The sciencebase model response is not yet in the cache. 
 			// Go grab the response from ScienceBase and if everything comes 
 			// ok, cache that response
@@ -58,7 +59,7 @@ public class ModelResource {
 			// to the client.
 			if (response.getStatus() == 200) {
 				String model = response.readEntity(String.class);
-				modelCache.put(new Element("model", model));
+				modelCache.put(new Element(keyName, model));
 				// We already pulled the string out of the client response so
 				// re-assign the response to a new Response object
 				response = Response.ok(model, MediaType.APPLICATION_JSON).build();
@@ -66,7 +67,7 @@ public class ModelResource {
 			
 		} else {
 			// There is already a cached response from sciencebase, so use that
-			String model = (String) modelCache.get("model").getObjectValue();
+			String model = (String) modelCache.get(keyName).getObjectValue();
 			response = Response.ok(model, MediaType.APPLICATION_JSON).build();
 		}
 
