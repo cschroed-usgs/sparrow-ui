@@ -35,10 +35,10 @@ public class ModelResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getModels() {
+		LOG.debug("Request to: /data/model");
 		String keyName = "all_sb_models";
 		CacheManager cm = CacheManagerUtil.getManager();
 		Response response;
-		LOG.debug("Request to: /data/model");
 		
 		if (!cm.cacheExists(CACHE_NAME)) {
 			LOG.debug("{} cache does not yet exist. Creating.", CACHE_NAME);

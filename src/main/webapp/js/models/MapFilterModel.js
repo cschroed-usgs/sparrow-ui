@@ -5,12 +5,14 @@ define([
 	"use strict";
 
 	var model = Backbone.Model.extend({
-		defaults: {
-			state: "state",
-			waterBody: 'waterbody',
-			waterShed: 'watershed',
-			dataSeries: 'ds-total-yield',
-			groupResultsBy: 'group-catchment'
+		defaults: function () {
+			return {
+				state: "state",
+				waterBody: 'waterbody',
+				waterShed: 'watershed',
+				dataSeries: 'ds-total-yield',
+				groupResultsBy: 'group-catchment'
+			};
 		}
 	});
 
