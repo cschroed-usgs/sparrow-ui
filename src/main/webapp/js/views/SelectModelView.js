@@ -42,13 +42,11 @@ define([
 		setModelListeners: function () {
 			this.listenTo(this.model, 'change:constituent', this.updateConstituent);
 			this.listenTo(this.model, 'change:region', this.updateRegion);
-			this.listenTo(this.model, 'change', this.modelChanged)
+			this.listenTo(this.model, 'change', this.modelChanged);
 		},
 		/**
 		 * A funnel function which listens to any model change and checks whether 
-		 * both a region and constiuent has been chosen
-		 * @param {type} model
-		 * @returns {undefined}
+		 * both a region and constiuent has been chosen.
 		 */
 		modelChanged: function (model) {
 			var c = model.attributes.constituent,
