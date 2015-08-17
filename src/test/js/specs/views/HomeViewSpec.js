@@ -8,7 +8,7 @@ define([
 ], function(Squire, Backbone) {
 
 	describe('HomeView', function() {
-		var HomeView, mapViewInitializeSpy, mapRenderSpy, mockMapView;
+		var HomeView, mapViewInitializeSpy, mapRenderSpy;
 
 		beforeEach(function(done) {
 			var injector = new Squire();

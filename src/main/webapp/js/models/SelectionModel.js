@@ -1,7 +1,8 @@
 /*jslint browser: true*/
 define([
-	'backbone'
-], function(Backbone) {
+	'backbone',
+	'underscore'
+], function (Backbone, _) {
 	"use strict";
 
 	var model = Backbone.Model.extend({
@@ -16,12 +17,12 @@ define([
 			var region = this.get('region');
 			var metadata = this.get('metadata');
 			var isTagRegion = function(tag) {
-				return tags.type === 'region';
+				return tag.type === 'region';
 			};
 
 			if (region) {
 				validMetadata = _.filter(this.get('metadata'), function(d) {
-					return (_.find(d.tags, isTagRegion) === region)
+					return (_.find(d.tags, isTagRegion) === region);
 				});
 			}
 			else {
@@ -29,26 +30,25 @@ define([
 			}
 			return validMetadata.pluck('constituent');
 		},
-		
+
 		getValidRegions : function() {
 			var validMetadata;
 			var constituent = this.get('constituent');
 			var metadata = this.get('metadata');
 			var isTagConstituent = function(tag) {
-				return tags.type === 'constituent';
+				return tag.type === 'constituent';
 			};
 
-			if (region) {
+			if (constituent) {
 				validMetadata = _.filter(this.get('metadata'), function(d) {
-					return (_.find(d.tags, isTagConstituent) === region)
+					return (_.find(d.tags, isTagConstituent) === constituent);
 				});
 			}
 			else {
 				validMetadata = metadata;
 			}
-			return validMetadata.pluck('constituent');
-		},
-
+			return validMetadata.pluck('region');
+		}
 
 	});
 	return model;

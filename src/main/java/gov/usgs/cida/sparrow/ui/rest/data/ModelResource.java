@@ -1,156 +1,83 @@
 package gov.usgs.cida.sparrow.ui.rest.data;
 
-import com.google.gson.Gson;
-import gov.usgs.cida.sparrow.ui.model.Model;
-import gov.usgs.cida.sparrow.ui.model.ModelUtil;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import gov.usgs.cida.config.DynamicReadOnlyProperties;
+import gov.usgs.cida.sparrow.ui.utilities.CacheManagerUtil;
+import gov.usgs.cida.sparrow.ui.utilities.JNDISingleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Query on the model resource
+ * Query ScienceBase to pull back the model resource.
+ *
+ * Will cache valid responses and used the cached version if available.
  *
  * @author isuftin
  */
 @Path("/model")
 public class ModelResource {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ModelResource.class);
+	private final static String SB_URL = "https://www.sciencebase.gov/catalog/items";
+	private final static String CACHE_NAME = "model";
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getModels() {
-		Gson gson = new Gson();
-		List<Model> models = ModelUtil.getModels();
-
-		// Sort models by ID
-		models.sort((p1, p2) -> Integer.compare(p1.getId(), p2.getId()));
-		Collection<Map<Integer, String>> modelsMaps = new ArrayList<>();
-
-		models.stream().map((m) -> {
-			Map<Integer, String> modelMap = new HashMap<>();
-			modelMap.put(m.getId(), gson.toJson(m));
-			return modelMap;
-		}).forEach((modelMap) -> {
-			modelsMaps.add(modelMap);
-		});
-
-		String output = gson.toJson(modelsMaps);
-		return Response.ok(output).build();
-	}
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/id/{id}")
-	public Response getModelById(@PathParam("id") int id) {
-		Gson gson = new Gson();
-		Response response = null;
-
-		// Find a model that matches the id
-		Model model = ModelUtil.getModels().stream().filter(m -> {
-			return m.getId() == id;
-		}).findFirst().get();
-
-		if (model == null) {
-			response = Response.status(Response.Status.NOT_FOUND).build();
-		} else {
-			String output = gson.toJson(model);
-			response = Response.ok(output).build();
+		LOG.debug("Request to: /data/model");
+		String keyName = "all_sb_models";
+		CacheManager cm = CacheManagerUtil.getManager();
+		Response response;
+		
+		if (!cm.cacheExists(CACHE_NAME)) {
+			LOG.debug("{} cache does not yet exist. Creating.", CACHE_NAME);
+			cm.addCache(CACHE_NAME);
 		}
+		Cache modelCache = cm.getCache(CACHE_NAME);
 
-		return response;
-	}
+		if (!modelCache.isKeyInCache(keyName)) {
+			LOG.debug("{} not found in cache {}", keyName, CACHE_NAME);
+			// The sciencebase model response is not yet in the cache. 
+			// Go grab the response from ScienceBase and if everything comes 
+			// ok, cache that response
+			Client client = ClientBuilder.newClient();
+			DynamicReadOnlyProperties jndiProps = JNDISingleton.getInstance();
+			WebTarget webTarget = client.target(SB_URL)
+					.queryParam("parentId", jndiProps.get("sciencebase-sparrow-locator"))
+					.queryParam("max", "1000")
+					.queryParam("format", "json")
+					.queryParam("fields", "tags");
+			Invocation.Builder request = webTarget.request(MediaType.APPLICATION_JSON);
+			response = request.get();
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/name/{name}")
-	public Response getModelByName(@PathParam("name") String name) {
-		Gson gson = new Gson();
-		Response response = null;
+			// Check if response is OK. If so, cache the String response. Otherwise,
+			// I will send the original response (which should be an error) back
+			// to the client.
+			if (response.getStatus() == 200) {
+				String model = response.readEntity(String.class);
+				modelCache.put(new Element(keyName, model));
+				LOG.debug("New entry stored into cache {}, key {}", CACHE_NAME, keyName);
+				// We already pulled the string out of the client response so
+				// re-assign the response to a new Response object
+				response = Response.ok(model, MediaType.APPLICATION_JSON).build();
+			}
 
-		// Find a model that matches the id
-		Model model = ModelUtil.getModels().stream().filter(m -> {
-			return m.getName().equals(name);
-		}).findFirst().get();
-
-		if (model == null) {
-			response = Response.status(Response.Status.NOT_FOUND).build();
 		} else {
-			String output = gson.toJson(model);
-			response = Response.ok(output).build();
-		}
-
-		return response;
-	}
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/constituent/{ct}")
-	public Response getModelByConstituent(@PathParam("ct") String consituent) {
-		Gson gson = new Gson();
-		Response response = null;
-
-		// Find a model that matches the id
-		List<Model> model = ModelUtil.getModels().stream().filter(m -> {
-			return m.getConstituent().equals(consituent);
-		}).collect(Collectors.toList());
-
-		if (model == null) {
-			response = Response.status(Response.Status.NOT_FOUND).build();
-		} else {
-			String output = gson.toJson(model);
-			response = Response.ok(output).build();
-		}
-
-		return response;
-	}
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/region/{region}")
-	public Response getModelByRegion(@PathParam("region") String region) {
-		Gson gson = new Gson();
-		Response response = null;
-
-		// Find a model that matches the id
-		List<Model> model = ModelUtil.getModels().stream().filter(m -> {
-			return m.getRegion().equals(region);
-		}).collect(Collectors.toList());
-
-		if (model == null) {
-			response = Response.status(Response.Status.NOT_FOUND).build();
-		} else {
-			String output = gson.toJson(model);
-			response = Response.ok(output).build();
-		}
-
-		return response;
-	}
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/spatialextent/{se}")
-	public Response getModelsBySpatialExtent(@PathParam("se") String se) {
-		Gson gson = new Gson();
-		Response response = null;
-
-		// Find a model that matches the id
-		List<Model> model = ModelUtil.getModels().stream().filter(m -> {
-			return m.getSpatialExtent().equals(se);
-		}).collect(Collectors.toList());
-
-		if (model == null) {
-			response = Response.status(Response.Status.NOT_FOUND).build();
-		} else {
-			String output = gson.toJson(model);
-			response = Response.ok(output).build();
+			LOG.debug("{} found in cache {}", keyName, CACHE_NAME);
+			// There is already a cached response from sciencebase, so use that
+			String model = (String) modelCache.get(keyName).getObjectValue();
+			response = Response.ok(model, MediaType.APPLICATION_JSON).build();
 		}
 
 		return response;
