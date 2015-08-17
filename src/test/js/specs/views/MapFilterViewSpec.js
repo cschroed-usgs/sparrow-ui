@@ -2,7 +2,7 @@ define([
 	'squire',
 	'backbone'
 ], function(Squire, Backbone) {
-	xdescribe('MapFilterView', function () {
+	describe('MapFilterView', function () {
 		var mapFilterView, mapFilterViewInitializeSpy, templateSpy, injector;
 
 		beforeEach(function(done) {

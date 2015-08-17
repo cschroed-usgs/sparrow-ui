@@ -66,9 +66,10 @@ define([
 		},
 
 		getId : function(constituent, region) {
-			return _.find(this, function(model) {
-				return (model.attributes.region === region && model.attributes.constituent === constituent);
-			});
+
+			return _.find(this.models, function(model) {
+				return ((model.attributes.region === region) && (model.attributes.constituent === constituent));
+			}).id;
 		}
 	});
 

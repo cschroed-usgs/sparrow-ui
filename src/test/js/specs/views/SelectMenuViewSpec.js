@@ -1,10 +1,11 @@
 /* global expect */
 
 define([
-	'backbone'
-], function (Backbone) {
+	'backbone',
+	'views/SelectMenuView'
+], function (Backbone, SelectMenuView) {
 
-	xdescribe('SelectMenuView', function() {
+	describe('SelectMenuView', function() {
 
 		describe('Tests without a placeholder', function() {
 
@@ -14,14 +15,6 @@ define([
 
 			afterEach(function() {
 				$('#test-select').remove();
-			});
-
-			it('Expects the view\'s $el property to equal the select menu', function() {
-				var testView = new SelectMenuView({
-					el : '#test-select',
-					menuOptions: [{value: 'smith', text: 'Smith', selected: false},{value: 'jones', text: 'Jones', selected: false},{value: 'olsen', text: 'Olsen', selected: false}]
-				});
-				expect(testView.$el).toEqual($('#test-select'));
 			});
 
 			it('Expects a select menu view to contain the options specified', function() {
