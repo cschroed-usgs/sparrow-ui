@@ -19,9 +19,8 @@ define([
 
 		render : function() {
 			var self = this;
-			$.when(this.constituentsPromise, this.regionsPromise).done(function() {
-				BaseView.prototype.render.apply(self, arguments);
-			});
+			BaseView.prototype.render.apply(self, arguments);
+
 			return this;
 		},
 
@@ -31,9 +30,8 @@ define([
 		 *      @prop {SelectionModel} - model
 		 */
 		initialize : function(options) {
-			this.constituentsPromise = this.getConstituents();
-			this.regionsPromise = this.getRegions();
 			this.setModelListeners();
+			this.metadataPromise = this.getMetadata();
 
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
@@ -42,15 +40,16 @@ define([
 		 * @return Promise which is resolved when the ajax call finishes. Resolved data is the list of constituents.
 		 * If rejected the service call failed.
 		 */
-		getConstituents : function() {
+		getMetadata : function() {
 			var self = this;
 			var deferred = $.Deferred();
 
 			$.ajax({
-				url : 'data/constituent',
+				url : 'https://www.sciencebase.gov/catalog/items?parentId=55c90c3be4b08400b1fd88a2&max=1700&format=json&fields=tags',
 				success : function(response) {
-					self.context.constituents = response.constituents;
-					deferred.resolve(response.constituents);
+					self.model.set('metadata', response.items);
+
+					deferred.resolve();
 				},
 				error : function(xhr, textStatus) {
 					deferred.reject(textStatus);
@@ -83,6 +82,7 @@ define([
 		},
 
 		setModelListeners : function() {
+			this.listenTo(this.model, 'change:metadata', this.updateMetadata);
 			this.listenTo(this.model, 'change:constituent', this.updateConstituent);
 			this.listenTo(this.model, 'change:region', this.updateRegion);
 		},
