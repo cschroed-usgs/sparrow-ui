@@ -1,9 +1,13 @@
 package gov.usgs.cida.sparrow.ui.rest.data;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import gov.usgs.cida.config.DynamicReadOnlyProperties;
 import gov.usgs.cida.sparrow.ui.utilities.JNDISingleton;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +37,12 @@ public class PredictionResource {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(PredictionResource.class);
 	private final static String SPARROW_URL = "http://cida.usgs.gov/sparrow";
+	private Mustache mustache;
+
+	public PredictionResource() {
+		MustacheFactory mf = new DefaultMustacheFactory();
+		this.mustache = mf.compile("PredictionContextRequest.mustache");
+	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -44,21 +54,13 @@ public class PredictionResource {
 		Gson gson = new Gson();
 		List<Map<String,String>> predictions = new ArrayList<>();
 		
-		String modelId = verifyModelId(modelIdIn, "54");
-		String dataSeries = verifyDataSeries(dataSeriesIn, "total_yield");
+		Map<String,String> params = new HashMap<>();
+		params.put("modelId", verifyModelId(modelIdIn, "54"));
+		params.put("dataSeries", verifyDataSeries(dataSeriesIn, "total_yield"));
 		
-		String predictionContext = "<PredictionContext "
-				+ "xmlns=\"http://www.usgs.gov/sparrow/prediction-schema/v0_2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" model-id=\"" + modelId + "\">"
-				+ "<adjustmentGroups conflicts=\"accumulate\">"
-				+ "<individualGroup enabled=\"true\"></individualGroup>"
-				+ "</adjustmentGroups>"
-				+ "<analysis>"
-				+ "<dataSeries source=\"\">" + dataSeries + "</dataSeries>"
-				+ "</analysis>"
-				+ "<terminalReaches>"
-				+ "</terminalReaches>"
-				+ "<nominalComparison type=\"none\"></nominalComparison>"
-				+ "</PredictionContext>";
+		StringWriter sw = new StringWriter();
+		mustache.execute(sw, params);
+		String predictionContext = sw.toString();
 		
 		Client client = ClientBuilder.newClient();
 		DynamicReadOnlyProperties jndiProps = JNDISingleton.getInstance();

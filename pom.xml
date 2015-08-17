@@ -165,6 +165,11 @@
 			<artifactId>gson</artifactId>
 			<version>2.3.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.spullara.mustache.java</groupId>
+			<artifactId>compiler</artifactId>
+			<version>0.9.0</version>
+		</dependency>
 		
 		<!-- Jersey -->
 		<dependency>
@@ -300,6 +305,21 @@
 					<goal>process-resources</goal>
 					<debug>false</debug>
 				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>com.github.spullara.mustache.java</groupId>
+				<artifactId>mustache-maven-plugin</artifactId>
+				<version>0.9.0</version>
+				<executions>
+					<execution>
+						<configuration>
+						</configuration>
+						<goals>
+							<goal>validate</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			
 			<!-- 
