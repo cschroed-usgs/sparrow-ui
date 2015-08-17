@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -35,20 +36,24 @@ public class PredictionResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPredictions() {
+	public Response getPredictions(
+			@QueryParam("model-id") String modelIdIn, 
+			@QueryParam("data-series") String dataSeriesIn
+	) {
 		LOG.debug("Request to: /data/prediction");
-		Response response;
-		
 		Gson gson = new Gson();
 		List<Map<String,String>> predictions = new ArrayList<>();
 		
+		String modelId = verifyModelId(modelIdIn, "54");
+		String dataSeries = verifyDataSeries(dataSeriesIn, "total_yield");
+		
 		String predictionContext = "<PredictionContext "
-				+ "xmlns=\"http://www.usgs.gov/sparrow/prediction-schema/v0_2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" model-id=\"54\">"
+				+ "xmlns=\"http://www.usgs.gov/sparrow/prediction-schema/v0_2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" model-id=\"" + modelId + "\">"
 				+ "<adjustmentGroups conflicts=\"accumulate\">"
 				+ "<individualGroup enabled=\"true\"></individualGroup>"
 				+ "</adjustmentGroups>"
 				+ "<analysis>"
-				+ "<dataSeries source=\"\">total_yield</dataSeries>"
+				+ "<dataSeries source=\"\">" + dataSeries + "</dataSeries>"
 				+ "</analysis>"
 				+ "<terminalReaches>"
 				+ "</terminalReaches>"
@@ -71,6 +76,22 @@ public class PredictionResource {
 		
 		String output = gson.toJson(predictions);
 		return Response.ok(output).build();
+	}
+	
+	private static String verifyModelId(String in, String defaultValue) {
+		String result = defaultValue;
+		if (!Strings.isNullOrEmpty(in)) {
+			result = in.trim();
+		}
+		return result;
+	}
+	
+	private static String verifyDataSeries(String in, String defaultValue) {
+		String result = defaultValue;
+		if (!Strings.isNullOrEmpty(in)) {
+			result = in.trim();
+		}
+		return result;
 	}
 	
 	private static String getContextId(Client client, String url, String predictionContext) {
