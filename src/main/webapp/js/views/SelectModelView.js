@@ -5,9 +5,10 @@ define([
 	'utils/logger',
 	'jquery',
 	'views/BaseView',
+	'views/SelectMenuView',
 	'models/SelectionModel',
 	'text!templates/model_selection.html'
-], function (Handlebars, _, log, $, BaseView, SelectionModel, hbTemplate) {
+], function (Handlebars, _, log, $, BaseView, SelectMenuView, SelectionModel, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -18,28 +19,57 @@ define([
 		},
 
 		template: Handlebars.compile(hbTemplate),
+
 		render: function () {
 			if (this.$el.length === 0) {
 				this.$el = $(this.el);
 			}
 			BaseView.prototype.render.apply(this, arguments);
+			this.constituentSelectView.setElement(this.$('.constituent-select')).updateMenuOptions(this.context.constituents);
+			this.regionSelectView.setElement(this.$('.region-select')).updateMenuOptions(this.context.regions);
 
 			return this;
 		},
 		/*
 		 * @constructs
 		 * @param {Object} options
-		 *      @prop {SelectionModel} - model
+		 *      @prop {SelectionModel} model
+		 *      @prop {ModelCollection} collection
+		 *      @prop {Jquery selector} el - Where view will be rendered.
 		 */
 
 		initialize: function (options) {
 			this.setModelListeners();
 			this.listenTo(this.collection, 'update', this.updateContext);
+
+			this.constituentSelectView = new SelectMenuView({
+				el : '.constituent-select',
+				hasPlaceholder : true,
+				menuOptions : []
+			});
+			this.regionSelectView = new SelectMenuView({
+				el : '.region-select',
+				hasPlaceholder : true,
+				menuOptions : []
+			});
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
+
+		_menuOptions : function(optionList, selectedOption) {
+			selectedOption = selectedOption ? selectedOption : '';
+			return _.map(optionList, function(option) {
+				return {
+					text : option,
+					value : option,
+					selected : option === selectedOption
+				};
+			});
+
+		},
+
 		updateContext: function (collection) {
-			this.context.constituents = _.uniq(_.pluck(collection.toJSON(), 'constituent'));
-			this.context.regions = _.uniq(_.pluck(collection.toJSON(), 'region'));
+			this.context.constituents = this._menuOptions(collection.getConstituents());
+			this.context.regions = this._menuOptions(collection.getRegions());
 			this.render();
 		},
 		setModelListeners: function () {
@@ -50,19 +80,29 @@ define([
 		/**
 		 * A funnel function which listens to any model change and checks whether
 		 * both a region and constiuent has been chosen.
+		 * @param {SelectionModel} model
 		 */
 		modelChanged: function (model) {
 			var c = model.attributes.constituent,
 				r = model.attributes.region;
 			if (r && c) {
-				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r);
+				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r +
+					'picks model ' +  this.collection.getId(c, r));
 			}
 		},
 		updateConstituent: function (model) {
-			this.$('.constituent-select').val(model.get('constituent'));
+			var constituent = model.get('constituent');
+			var validRegions = this.collection.getRegions(constituent);
+
+			this.regionSelectView.updateMenuOptions(this._menuOptions(validRegions));
+			this.$('.constituent-select').val(constituent);
 		},
 		updateRegion: function (model) {
-			this.$('.region-select').val(model.get('region'));
+			var region = model.get('region');
+			var validConstituents = this.collection.getConstituents(region);
+
+			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents));
+			this.$('.region-select').val(region);
 		},
 		changeConstituent: function (ev) {
 			var value = ev.currentTarget.value;

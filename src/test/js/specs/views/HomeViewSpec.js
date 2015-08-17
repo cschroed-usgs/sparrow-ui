@@ -7,7 +7,7 @@ define([
 	'backbone'
 ], function(Squire, Backbone) {
 
-	describe('HomeView', function() {
+	xdescribe('HomeView', function() {
 		var HomeView, mapViewInitializeSpy, mapRenderSpy;
 
 		beforeEach(function(done) {

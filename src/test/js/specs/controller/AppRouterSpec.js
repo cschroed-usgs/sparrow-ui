@@ -3,7 +3,7 @@ define([
 	"sinon",
 	'controller/AppRouter'
 ], function (Backbone, sinon, Router) {
-	describe("Router", function () {
+	xdescribe("Router", function () {
 		beforeEach(function () {
 			this.router = new Router();
 			this.routeSpy = sinon.spy();
