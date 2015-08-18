@@ -5,9 +5,11 @@ define([
 	"use strict";
 
 	var model = Backbone.Model.extend({
-		defaults : {
-			constituent : '',
-			region : ''
+		defaults: function () {
+			return {
+				constituent: '',
+				region: ''
+			};
 		}
 	});
 	return model;
