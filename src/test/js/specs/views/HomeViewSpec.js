@@ -12,7 +12,11 @@ define([
 		var removeMapViewSpy, removeSelectViewSpy;
 
 		beforeEach(function(done) {
+			this.collection = new Backbone.Collection();
+
 			var injector = new Squire();
+
+			// Create spies
 			mapRenderSpy = jasmine.createSpy('mapRenderSpy');
 			selectViewRenderSpy = jasmine.createSpy('selectViewRenderSpy');
 			setElementViewSpy = jasmine.createSpy('setElementSpy');
@@ -20,11 +24,10 @@ define([
 			removeMapViewSpy = jasmine.createSpy('removeMapViewSpy');
 			removeSelectViewSpy = jasmine.createSpy('removeSelectViewSpy');
 
-			this.collection = new Backbone.Collection();
-
+			// Create mocks for dependencies
 			injector.mock('views/MapView', Backbone.View.extend({
 				render : mapRenderSpy,
-				remove : removeMapViewSpy,
+				remove : removeMapViewSpy
 			}));
 			injector.mock('views/SelectModelView', Backbone.View.extend({
 				initialize : selectViewInitializeSpy,
@@ -34,7 +37,6 @@ define([
 				}),
 				remove : removeSelectViewSpy
 			}));
-
 			injector.mock('text!templates/home.html', '');
 
 			injector.require(['views/HomeView'], function(view) {

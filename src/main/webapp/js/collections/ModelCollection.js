@@ -8,6 +8,7 @@ define([
 
 		model: SparrowModel,
 		url: 'data/model',
+
 		parse: function (resp) {
 			var models = _.map(resp.items, function (item) {
 				var id, sbId, link, relatedLink, region, extent, constituent;
@@ -34,6 +35,11 @@ define([
 			return models;
 		},
 
+		/*
+		 * @param {String} region (optional)
+		 * @return {Array of String} - the array of constituents that are valid for region.
+		 *     If region is unspecified, returns all of the constituents.
+		 */
 		getConstituents : function(region) {
 			var validModels;
 			if (region) {
@@ -49,6 +55,11 @@ define([
 			}));
 		},
 
+		/*
+		 * @param {String} constituent (optional)
+		 * @return {Array of String}the array of regions that are valid for constituent.
+		 *     If constituent is unspecified, retun all of the regions
+		 */
 		getRegions : function(constituent) {
 			var validModels;
 
@@ -65,11 +76,23 @@ define([
 			}));
 		},
 
+		/*
+		 * @param {String} constituent
+		 * @param {String} region
+		 * @Return {String} - returns the model is defined by constituent and region. Returns
+		 *     undefined if no such model exists.
+		 */
 		getId : function(constituent, region) {
-
-			return _.find(this.models, function(model) {
+			var model = _.find(this.models, function(model) {
 				return ((model.attributes.region === region) && (model.attributes.constituent === constituent));
-			}).id;
+			});
+
+			if (model) {
+				return model.id;
+			}
+			else {
+				return undefined;
+			}
 		}
 	});
 

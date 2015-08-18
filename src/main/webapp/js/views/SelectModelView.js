@@ -45,11 +45,13 @@ define([
 
 			this.constituentSelectView = new SelectMenuView({
 				el : '.constituent-select',
+				sortBy : 'text',
 				hasPlaceholder : true,
 				menuOptions : []
 			});
 			this.regionSelectView = new SelectMenuView({
 				el : '.region-select',
+				sortBy : 'text',
 				hasPlaceholder : true,
 				menuOptions : []
 			});

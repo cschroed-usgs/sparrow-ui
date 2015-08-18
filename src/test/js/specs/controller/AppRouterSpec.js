@@ -7,14 +7,17 @@ define([
 	"sinon"
 ], function (Squire, Backbone, sinon) {
 	describe("Router", function () {
-		var Router, fetchSpy;
+		var Router, fetchSpy, homeViewInitializeSpy;
 		beforeEach(function (done) {
 			fetchSpy = jasmine.createSpy('fetchSpy');
+			homeViewInitializeSpy = jasmine.createSpy('homeViewInitializeSpy');
 			var injector = new Squire();
 			injector.mock('collections/ModelCollection', Backbone.Collection.extend({
 				fetch : fetchSpy
 			}));
-			injector.mock('views/HomeView', Backbone.View);
+			injector.mock('views/HomeView', Backbone.View.extend({
+				initialize : homeViewInitializeSpy
+			}));
 			injector.require(['controller/AppRouter'], function(router) {
 				Router = router;
 				done();
@@ -28,29 +31,28 @@ define([
 
 		// This broked when I added squire. Not sure how to fix
 		xdescribe('Tests to see if the correct routes are taken', function() {
+			var router;
 			beforeEach(function() {
-				this.router = new Router();
-				this.routeSpy = sinon.spy();
-				this.router.bind("route:homeView", this.routeSpy);
+				router = new Router();
 
 				try {
-					Backbone.history.start({silent: true});
+					Backbone.history.start({silent : true});
 				} catch (e) {
 				}
-				this.router.navigate("elsewhere");
+				router.navigate("elsewhere");
 
 			});
 
 
 			it("does not fire for unknown paths", function () {
-				this.router.navigate("unknown", true);
-				expect(this.routeSpy.notCalled).toBeTruthy();
+				router.navigate("unknown", {trigger : true});
+				expect(homeViewInitializeSpy).not.toHaveBeenCalled();
 			});
 
 			it("fires the default root with a blank hash", function () {
-				this.router.navigate("", true);
-				expect(this.routeSpy.calledOnce).toBeTruthy();
-				expect(this.routeSpy.calledWith(null)).toBeTruthy();
+				router.navigate("", {trigger : true});
+				expect(homeViewInitializeSpy.calls.count()).toEqual(1);
+				expect(homeViewInitializeSpy.calls.argsFor(1)).toEqual([{collection : router.modelCollection}]);
 			});
 		});
 	});
