@@ -1,8 +1,7 @@
 /*jslint browser: true*/
 define([
-	'backbone',
-	'underscore'
-], function (Backbone, _) {
+	'backbone'
+], function (Backbone) {
 	"use strict";
 
 	var model = Backbone.Model.extend({
