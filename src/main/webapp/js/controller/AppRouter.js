@@ -32,7 +32,7 @@ define([
 		},
 
 		showView : function(view, opts) {
-			var newEl = $('<div>');
+			var newEl = $('<div />');
 
 			this.removeCurrentView();
 			$(this.applicationContextDiv).append(newEl);
