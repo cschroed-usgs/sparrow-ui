@@ -1,5 +1,6 @@
 /*jslint browser: true */
 /*global ol*/
+/*global Infinity*/
 define([
 	'jquery',
 	"ol"
@@ -12,17 +13,29 @@ define([
 	self.CONUS_EXTENT = [-14819398.304233, -92644.611414691, -6718296.2995848, 9632591.3700111];
 
 	self.createRegionalCoverageLayers = function (layerTitle) {
-		return new ol.layer.Vector({
+		var layer = new ol.layer.Vector({
 			visible: true,
 			source: new ol.source.Vector({
 				url: "http://cida-eros-sparrowdev.er.usgs.gov:8081/sparrowgeoserver/wfs?" +
 						"service=WFS&version=1.0.0&request=GetFeature&typeName=huc8-regional-overlay:" + layerTitle + "&outputFormat=json",
 				format: new ol.format.GeoJSON()
+			}),
+			style: new ol.style.Style({
+				stroke: new ol.style.Stroke({
+					color: [0, 0, 255, 0.5]
+				}),
+				fill: new ol.style.Fill({
+					color: [100, 100, 100, 0.5]
+				}),
+				zIndex: Infinity
 			})
 		});
-	};
-
-	self.getLayersForGeoserverWorkspace = function (workspace) {
+		
+		layer.on("select", function () {
+			debugger
+		});
+		
+		return layer;
 		
 	};
 

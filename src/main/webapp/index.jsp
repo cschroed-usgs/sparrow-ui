@@ -107,21 +107,6 @@
 
 			<%--  END USGS Footer Template ​--%>
         </div><%--container-fluid--%>
-        <script>
-//					$(document).ready(function () {
-//						var advanced = $('#advanced-options');
-//						$(advanced).click(function () {
-//							if (advanced.html() === 'Advanced Options') {
-//								advanced.html('Close Advanced Options');
-//							} else if (advanced.html() === 'Closed Advanced Options') {
-//								advanced.html('Advanced Options');
-//							} else {
-//								advanced.html('Advanced Options');
-//							}
-//							$('.advanced-toggle').toggle();
-//						});
-//					});
-		</script>
 		<script>
 			var require = {
 				config: {

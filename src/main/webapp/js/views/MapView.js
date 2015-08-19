@@ -53,7 +53,8 @@ define([
 							"mrb04_mrbe2rf1",
 							"mrb05_mrbe2rf1",
 							"mrb06_mrbe2rf1",
-							"mrb07_mrbe2rf1"], function (name) {
+							"mrb07_mrbe2rf1"
+						], function (name) {
 							return mapUtils.createRegionalCoverageLayers(name)
 						})
 					})
@@ -66,6 +67,10 @@ define([
 				})])
 			});
 			
+			// Add on-hover events for features
+			this.map.addInteraction(new ol.interaction.Select({
+				condition: ol.events.condition.pointerMove
+			}));
 			
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug("Map View rendered");
