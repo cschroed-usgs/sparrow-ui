@@ -19,4 +19,11 @@
 		https://www.sciencebase.gov/catalog/item/55c90c3be4b08400b1fd88a2
 	-->
 	<Environment name="sciencebase-sparrow-locator" type="java.lang.String" value="55c90c3be4b08400b1fd88a2" />
+	
+	<!--
+		The Geoserver endpoint that the application uses to pull down layers and 
+		geospatial information
+	-->
+	<Environment name="endpoint-geoserver" type="java.lang.String" value="http://cida.usgs.gov/sparrowgeoserver/" />
+	
 </Context>
