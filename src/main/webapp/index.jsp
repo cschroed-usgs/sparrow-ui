@@ -113,6 +113,9 @@
 					'utils/logger': {
 						isDevelopment: <%= development ? true : false%>
 					},
+					'utils/mapUtils': {
+						'endpointGeoserver' : '<%= getProp("endpoint-geoserver")%>'
+					},
 					'init': {
 						'contextPath': "<%=baseUrl%>/"
 					}
