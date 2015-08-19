@@ -1,14 +1,30 @@
 /*jslint browser: true */
 /*global ol*/
 define([
+	'jquery',
 	"ol"
-], function (ol) {
+], function ($, ol) {
 
 	"use strict";
 	var self = {};
 	self.ZYX = '/MapServer/tile/{z}/{y}/{x}';
 
 	self.CONUS_EXTENT = [-14819398.304233, -92644.611414691, -6718296.2995848, 9632591.3700111];
+
+	self.createRegionalCoverageLayers = function (layerTitle) {
+		return new ol.layer.Vector({
+			visible: true,
+			source: new ol.source.Vector({
+				url: "http://cida-eros-sparrowdev.er.usgs.gov:8081/sparrowgeoserver/wfs?" +
+						"service=WFS&version=1.0.0&request=GetFeature&typeName=huc8-regional-overlay:" + layerTitle + "&outputFormat=json",
+				format: new ol.format.GeoJSON()
+			})
+		});
+	};
+
+	self.getLayersForGeoserverWorkspace = function (workspace) {
+		
+	};
 
 	self.createWorldStreetMapBaseLayer = function (isVisible) {
 		return new ol.layer.Tile({
@@ -73,7 +89,7 @@ define([
 			})
 		});
 	};
-	
+
 	return self;
 
 });

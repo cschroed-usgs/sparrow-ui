@@ -43,6 +43,19 @@ define([
 							mapUtils.createWorldImageryLayer(false),
 							mapUtils.createWorldStreetMapBaseLayer(true)
 						]
+					}),
+					new ol.layer.Group({
+						title: 'Base maps',
+						layers: _.map([
+							"mrb01_nhd", 
+							"mrb02_mrbe2rf1", 
+							"mrb03_mrbe2rf1",
+							"mrb04_mrbe2rf1",
+							"mrb05_mrbe2rf1",
+							"mrb06_mrbe2rf1",
+							"mrb07_mrbe2rf1"], function (name) {
+							return mapUtils.createRegionalCoverageLayers(name)
+						})
 					})
 				],
 				controls: ol.control.defaults({
@@ -52,7 +65,8 @@ define([
 						tipLabel: 'Switch base layers'
 				})])
 			});
-
+			
+			
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug("Map View rendered");
 		}
