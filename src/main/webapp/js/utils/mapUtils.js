@@ -16,6 +16,7 @@ define([
 
 	self.createRegionalCoverageLayers = function (layerTitle) {
 		var layer = new ol.layer.Vector({
+			title: layerTitle,
 			visible: true,
 			source: new ol.source.Vector({
 				url: self.GEOSERVER_ENDPOINT + "wfs?" +
