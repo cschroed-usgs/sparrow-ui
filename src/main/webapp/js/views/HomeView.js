@@ -5,12 +5,9 @@ define([
 	'views/MapView',
 	'views/SelectModelView',
 	'models/SelectionModel',
-	'views/SearchView',
-	'views/MapFilterView',
-	'collections/ModelCollection',
 	'utils/logger',
 	'text!templates/home.html'
-], function (Handlebars, BaseView, MapView, SelectModelView, SelectionModel, SearchView, MapFilterView, ModelCollection, log, hbTemplate) {
+], function (Handlebars, BaseView, MapView, SelectModelView, SelectionModel, log, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -26,41 +23,27 @@ define([
 		render: function () {
 			BaseView.prototype.render.apply(this, arguments);
 			this.mapView.render();
-			this.selectModelView.setElement(this.$('#model-selection-container'));
-			this.searchView.render();
-			this.mapFilterView.render();
-			this.modelCollection.fetch();
+			this.selectModelView.setElement(this.$('#model-selection-container')).render();
 			return this;
 		},
 		/*
 		 * @constructs
 		 * @param {Object} options
-		 *		@prop router {Backbone.Router instance} - defaults to null
-		 *		@prop template {Function} optional - Returns html to be rendered. Will override the template property.
-		 *		@prop context {Object} to be used when rendering templateName - defaults to {}
+		 *		@prop collection {ModelCollection instance}
 		 *      @prop el {Jquery element} - render view in $el.
 		 */
 		initialize: function (options) {
-			// This model collection of Sparrow models  will feed into multiple 
-			// views so create it here at the top level and pass it into multiple 
-			// views in order so that they can decorate their controls
-			this.modelCollection = new ModelCollection();
-
 			this.selectionModel = new SelectionModel();
 
 			this.mapView = new MapView({
 				mapDivId: 'map-container',
 				enableZoom: false
 			});
-
 			this.selectModelView = new SelectModelView({
-				collection: this.modelCollection,
+				collection: this.collection,
+				model : this.selectionModel,
 				el: '.model-selection-container'
 			});
-
-			this.searchView = new SearchView();
-			this.mapFilterView = new MapFilterView();
-
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
 		remove: function () {

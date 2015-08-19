@@ -11,7 +11,6 @@ define([
 				region: ''
 			};
 		}
-
 	});
 	return model;
 });
