@@ -33,10 +33,6 @@ define([
 			})
 		});
 		
-		layer.on("select", function () {
-			debugger
-		});
-		
 		return layer;
 		
 	};
