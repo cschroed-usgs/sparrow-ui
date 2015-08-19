@@ -19,7 +19,7 @@
 		String result = props.getProperty(key, "");
 		return result;
 	}
-	boolean development = true;//Boolean.parseBoolean(getProp("development"));
+	boolean development = Boolean.parseBoolean(getProp("development"));
 	String version = getProp("application.version");
 	String resourceSuffix = development ? "" : "-" + version + "-min";
 %>
@@ -37,7 +37,6 @@
         <link type="text/css" rel="stylesheet" href="<%= baseUrl%>/css/custom.css" />
 	</head>
 	<body>
-
 		<div class="container-fluid">
 
 			<%-- BEGIN USGS Header Template --%> 
@@ -141,7 +140,7 @@
 					"handlebars": ['<%=baseUrl%>/webjars/handlebars/<%= getProp("version.handlebars")%>/handlebars<%= development ? "" : ".min"%>'],
 					"text": ['<%=baseUrl%>/webjars/requirejs-text/<%= getProp("version.require.text")%>/text'],
 					"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%= getProp("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
-					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "" : "-debug"%>'],
+					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "-debug" : ""%>'],
 					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
 					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
 				},
