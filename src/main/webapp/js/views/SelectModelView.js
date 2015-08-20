@@ -39,6 +39,7 @@ define([
 		 */
 		initialize: function (options) {
 			this.context = {};
+			this.context.disabled = _.has(options, 'disabled') ? options.disabled : false;
 			this.updateContext(this.collection);
 
 			this._setModelListeners();
@@ -87,8 +88,8 @@ define([
 		},
 
 		updateContext : function(collection) {
-			this.context.constituents = this._menuOptions(collection.getConstituents());
-			this.context.regions = this._menuOptions(collection.getRegions());
+			this.context.constituents = this._menuOptions(collection.getConstituents(), this.model.get('constituent'));
+			this.context.regions = this._menuOptions(collection.getRegions(), this.model.get('region'));
 		},
 
 		/*
@@ -145,7 +146,7 @@ define([
 			var r = this.model.attributes.region;
 			var modelId = this.collection.getId(c, r);
 
-			this.router.navigate('model/' + modelId + '/constituent/' + c + '/region/' + r, {trigger : true});
+			this.router.navigate(encodeURI('model/' + modelId + '/constituent/' + c + '/region/' + r), {trigger : true});
 		}
 	});
 

@@ -21,6 +21,7 @@ define([
 		 * Renders the object's template using it's context into the view's element.
 		 * @returns {extended BaseView}
 		 */
+
 		render: function () {
 			BaseView.prototype.render.apply(this, arguments);
 			this.mapView.render();
@@ -44,7 +45,8 @@ define([
 			this.selectionModelView = new SelectModelView({
 				collection : this.collection,
 				model : this.selectionModel,
-				el : '#model-selection-container'
+				el : '#model-selection-container',
+				disabled : true
 			});
 			this.mapFilterView = new MapFilterView({
 				el : '#map-sidebar-container',

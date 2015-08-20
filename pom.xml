@@ -420,8 +420,7 @@
 					<!-- This webapp doesn't use a web.xml (servlet 3.x) -->
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
-			</plugin>
-			<!--
+			</plugin>			
 			<plugin>
 				<groupId>com.github.searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
@@ -448,7 +447,6 @@
 					</preloadSources>
 				</configuration>
 			</plugin>
-			-->
 		</plugins>
 
 		<finalName>${project.artifactId}</finalName>

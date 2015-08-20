@@ -1,10 +1,10 @@
 <p>Explore a Model</p>
 <div id="selection-clear">		
-	<select class="constituent-select">
+	<select class="constituent-select" {{#if disabled}}disabled{{/if}}>
 		<option value="" selected>Select a Constituent</option>
 	</select>
 	<label>and</label>
-	<select class="region-select">
+	<select class="region-select" {{#if disabled}}disabled{{/if}}>
 		<option value="" selected>Select a Model Region</option>
 	</select>
 	<button class="explore-model" disabled>Explore</button>
