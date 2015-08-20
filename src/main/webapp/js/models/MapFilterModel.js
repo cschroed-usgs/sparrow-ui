@@ -7,11 +7,11 @@ define([
 	var model = Backbone.Model.extend({
 		defaults: function () {
 			return {
-				state: "state",
-				waterBody: 'waterbody',
-				waterShed: 'watershed',
-				dataSeries: 'ds-total-yield',
-				groupResultsBy: 'group-catchment'
+				state: '',
+				waterBody: '',
+				waterShed: '',
+				dataSeries: '',
+				groupResultsBy: ''
 			};
 		}
 	});

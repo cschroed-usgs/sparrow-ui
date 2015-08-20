@@ -3,14 +3,14 @@ define([
 	'underscore',
 	'jquery',
 	'utils/logger',
-	'backbone',
+	'views/BaseView',
 	'handlebars',
 	'models/MapFilterModel',
 	'text!templates/map_filter.html'
-], function (_, $, log, Backbone, Handlebars, MapFilterModel, filterTemplate) {
+], function (_, $, log, BaseView, Handlebars, MapFilterModel, filterTemplate) {
 	"use strict";
 
-	var view = Backbone.View.extend({
+	var view = BaseView.extend({
 		template: Handlebars.compile(filterTemplate),
 		model: new MapFilterModel(),
 		events: {
@@ -20,27 +20,10 @@ define([
 			'change #data-series': 'dataSeriesChange',
 			'change #group-result-by': 'groupResultsByChange'
 		},
-		render: function () {
-			this.setElement($(this.el));
-			var html = this.template();
-			this.$el.html(html);
 
-			return this;
-		},
-		initialize: function () {
-
-			var opts = arguments ? arguments[0] : null;
-			if (_.has(opts, 'el')) {
-				this.el = opts.el;
-			} else {
-				this.el = "#map-sidebar-container";
-			}
-
-			if (_.has(opts, 'template')) {
-				this.template = opts.template;
-			}
-
-			this.model.on('change', this.modelChange, this);
+		initialize: function (options) {
+			this.listenTo(this.model, 'change', this.modelChange);
+			BaseView.prototype.initialize.apply(this, arguments);
 		},
 		stateChange: function (evt) {
 			this.model.set("state", $(evt.target).val());

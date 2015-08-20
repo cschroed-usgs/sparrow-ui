@@ -38,7 +38,7 @@ define([
 			], function (name) {
 				return mapUtils.createRegionalCoverageLayers(name);
 			});
-			
+
 			this.mapDivId = options.mapDivId;
 			this.map = new ol.Map({
 				view: new ol.View({
@@ -48,7 +48,7 @@ define([
 				}),
 				layers: [
 					new ol.layer.Group({
-						title: 'Regions',
+						title: 'Base maps',
 						layers: [
 							mapUtils.createStamenTonerBaseLayer(false),
 							mapUtils.createWorldTopoBaseLayer(false),
@@ -57,7 +57,7 @@ define([
 						]
 					}),
 					new ol.layer.Group({
-						title: 'Base maps',
+						title: 'Regions',
 						layers: regionLayers
 					})
 				],
@@ -84,7 +84,7 @@ define([
 					zIndex: Infinity
 				})
 			}));
-			
+
 			var onClickSelect = new ol.interaction.Select({
 				condition: ol.events.condition.singleClick,
 				multi: true,
@@ -106,11 +106,11 @@ define([
 				});
 				log.debug("Selected region ID(s): " + selectedRegionIds);
 			});
-			
+
 			this.map.addInteraction(onClickSelect);
 
 			BaseView.prototype.initialize.apply(this, arguments);
-			log.debug("Map View rendered");
+			log.debug("Map View initialized");
 		}
 	});
 

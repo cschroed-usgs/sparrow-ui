@@ -14,7 +14,8 @@ define([
 
 		events: {
 			'change .constituent-select': 'changeConstituent',
-			'change .region-select': 'changeRegion'
+			'change .region-select': 'changeRegion',
+			'click .explore-model' : 'goToModelDisplayPage'
 		},
 
 		template: Handlebars.compile(hbTemplate),
@@ -38,6 +39,7 @@ define([
 		 */
 		initialize: function (options) {
 			this.context = {};
+			this.context.disabled = _.has(options, 'disabled') ? options.disabled : false;
 			this.updateContext(this.collection);
 
 			this._setModelListeners();
@@ -86,8 +88,8 @@ define([
 		},
 
 		updateContext : function(collection) {
-			this.context.constituents = this._menuOptions(collection.getConstituents());
-			this.context.regions = this._menuOptions(collection.getRegions());
+			this.context.constituents = this._menuOptions(collection.getConstituents(), this.model.get('constituent'));
+			this.context.regions = this._menuOptions(collection.getRegions(), this.model.get('region'));
 		},
 
 		/*
@@ -96,7 +98,7 @@ define([
 		 * @returns this view
 		 */
 		updateView: function (collection) {
-			this.updateContext(collection)
+			this.updateContext(collection);
 			return this.render();
 		},
 
@@ -108,6 +110,7 @@ define([
 		modelChanged: function (model) {
 			var c = model.attributes.constituent,
 				r = model.attributes.region;
+			this.$('.explore-model').prop('disabled', (!(r && c)));
 			if (r && c) {
 				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r +
 					' picks model ' +  this.collection.getId(c, r));
@@ -136,6 +139,14 @@ define([
 			var value = ev.currentTarget.value;
 			log.debug("New region chosen: " + value);
 			this.model.set('region', value);
+		},
+
+		goToModelDisplayPage : function() {
+			var c = this.model.attributes.constituent;
+			var r = this.model.attributes.region;
+			var modelId = this.collection.getId(c, r);
+
+			this.router.navigate(encodeURI('model/' + modelId + '/constituent/' + c + '/region/' + r), {trigger : true});
 		}
 	});
 

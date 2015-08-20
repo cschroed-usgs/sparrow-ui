@@ -3,12 +3,14 @@ define([
 	'backbone',
 	'utils/logger',
 	'collections/ModelCollection',
-	'views/HomeView'
-], function (Backbone, log, ModelCollection, HomeView) {
+	'views/HomeView',
+	'views/ModelDisplayView'
+], function (Backbone, log, ModelCollection, HomeView, ModelDisplayView) {
 	"use strict";
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
-			'': 'homeView'
+			'': 'homeView',
+			'model/:modelId/constituent/:constituent/region/:region' : 'modelDisplayView'
 		},
 
 		applicationContextDiv : '#page-content-container',
@@ -28,6 +30,18 @@ define([
 
 			this.showView(HomeView, {
 				collection : this.modelCollection
+			});
+		},
+
+		modelDisplayView : function(modelId, constituent, region) {
+			log.trace('Routing to model display view for model ' + modelId + ', constituent ' + constituent +
+				' and region ' + region);
+
+			this.showView(ModelDisplayView, {
+				collection : this.modelCollection,
+				modelId : modelId,
+				constituent : constituent,
+				region : region
 			});
 		},
 

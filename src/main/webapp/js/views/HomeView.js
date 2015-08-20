@@ -2,20 +2,18 @@
 define([
 	'handlebars',
 	'views/BaseView',
+	'views/NavView',
 	'views/MapView',
 	'views/SelectModelView',
 	'models/SelectionModel',
 	'utils/logger',
 	'text!templates/home.html'
-], function (Handlebars, BaseView, MapView, SelectModelView, SelectionModel, log, hbTemplate) {
+], function (Handlebars, BaseView, NavView, MapView, SelectModelView, SelectionModel, log, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
 		template: Handlebars.compile(hbTemplate),
-		events: {
-			'click #button-save-session': 'saveSession',
-			'click #button-help': 'displayHelp'
-		},
+
 		/*
 		 * Renders the object's template using it's context into the view's element.
 		 * @returns {extended BaseView}
@@ -35,6 +33,10 @@ define([
 		initialize: function (options) {
 			this.selectionModel = new SelectionModel();
 
+			this.navView = new NavView({
+				el : 'nav',
+				router : options.router
+			});
 			this.mapView = new MapView({
 				mapDivId: 'map-container',
 				enableZoom: false
@@ -42,20 +44,18 @@ define([
 			this.selectModelView = new SelectModelView({
 				collection: this.collection,
 				model : this.selectionModel,
-				el: '.model-selection-container'
+				el: '#model-selection-container',
+				router : options.router
 			});
+
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
 		remove: function () {
+			this.navView.remove();
 			this.mapView.remove();
 			this.selectModelView.remove();
 			BaseView.prototype.remove.apply(this, arguments);
-		},
-		saveSession: function () {
-			log.debug("Save session button clicked");
-		},
-		displayHelp: function () {
-			log.debug("Display help button clicked");
+			return this;
 		}
 	});
 
