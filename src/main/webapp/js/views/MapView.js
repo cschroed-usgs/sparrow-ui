@@ -72,6 +72,7 @@ define([
 			// Add on-hover events for features
 			this.map.addInteraction(new ol.interaction.Select({
 				condition: ol.events.condition.pointerMove,
+//				multi: true,
 				layers : regionLayers,
 				style: new ol.style.Style({
 					stroke: new ol.style.Stroke({
@@ -85,7 +86,8 @@ define([
 			}));
 
 			var onClickSelect = new ol.interaction.Select({
-				condition: ol.events.condition.Select,
+				condition: ol.events.condition.singleClick,
+				multi: true,
 				layers : regionLayers,
 				style: new ol.style.Style({
 					stroke: new ol.style.Stroke({
