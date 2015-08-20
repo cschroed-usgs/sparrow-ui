@@ -19,4 +19,6 @@
 		https://www.sciencebase.gov/catalog/item/55c90c3be4b08400b1fd88a2
 	-->
 	<Environment name="sciencebase-sparrow-locator" type="java.lang.String" value="55c90c3be4b08400b1fd88a2" />
+	
+	<Environment name="sparrow-dss-url" type="java.lang.String" value="http://cida-eros-sparrowdev.er.usgs.gov:8080/sparrow" />
 </Context>
