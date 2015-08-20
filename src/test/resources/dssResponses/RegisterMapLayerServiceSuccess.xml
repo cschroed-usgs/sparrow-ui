@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ServiceResponseWrapper>
+    <Status>OK</Status>
+    <Operation>CREATE</Operation>
+    <EntityClass>org.geoserver.sparrow.process.SparrowDataLayerResponse</EntityClass>
+    <EntityList>
+        <List>
+            <SparrowDataLayerResponse>
+				<EndpointUrl>http://cida-eros-sparrowdev.er.usgs.gov:8081/sparrowgeoserver/wms</EndpointUrl>
+				<FlowLayerName>sparrow-flowline-reusable:54N1717643560</FlowLayerName>
+				<CatchLayerName>sparrow-catchment-reusable:54N1717643560</CatchLayerName>
+				<FlowLayerDefaultStyleName>54N1717643560-flowline-default</FlowLayerDefaultStyleName>
+				<CatchLayerDefaultStyleName>54N1717643560-catchment-default</CatchLayerDefaultStyleName>
+			</SparrowDataLayerResponse>
+        </List>
+    </EntityList>
+</ServiceResponseWrapper>
