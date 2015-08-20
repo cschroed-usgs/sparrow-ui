@@ -24,6 +24,8 @@ define([
 			removeMapViewSpy = jasmine.createSpy('removeMapViewSpy');
 			removeSelectViewSpy = jasmine.createSpy('removeSelectViewSpy');
 
+			mockRouter = jasmine.createSpy('mockRouter');
+
 			// Create mocks for dependencies
 			injector.mock('views/MapView', Backbone.View.extend({
 				render : mapRenderSpy,
@@ -47,7 +49,8 @@ define([
 
 		it('Expects that a sub views and models are created', function() {
 			var testView = new HomeView({
-				collection : this.collection
+				collection : this.collection,
+				router : mockRouter
 			});
 			expect(testView.selectionModel).toBeDefined();
 			expect(testView.mapView).toBeDefined();
@@ -58,7 +61,9 @@ define([
 		});
 
 		it('Expects that the map view and selectModelView are rendered when render is called', function() {
-			var testView = new HomeView();
+			var testView = new HomeView({
+				router : mockRouter
+			});
 
 			testView.render();
 			expect(mapRenderSpy).toHaveBeenCalled();
@@ -66,7 +71,9 @@ define([
 		});
 
 		it('Expects that when this view is removed the sub views are removed', function() {
-			var testView = new HomeView();
+			var testView = new HomeView({
+				router : mockRouter
+			});
 			testView.remove();
 			expect(removeMapViewSpy).toHaveBeenCalled();
 			expect(removeSelectViewSpy).toHaveBeenCalled();

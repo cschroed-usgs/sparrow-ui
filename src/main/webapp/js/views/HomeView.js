@@ -31,11 +31,7 @@ define([
 		 *      @prop el {Jquery element} - render view in $el.
 		 */
 		initialize: function (options) {
-			this.selectionModel = new SelectionModel({
-				constituent : options.constituent,
-				region : options.region,
-				router : options.router
-			});
+			this.selectionModel = new SelectionModel();
 
 			this.navView = new NavView({
 				el : 'nav',
