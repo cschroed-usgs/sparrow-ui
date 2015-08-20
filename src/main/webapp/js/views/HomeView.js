@@ -12,10 +12,7 @@ define([
 
 	var view = BaseView.extend({
 		template: Handlebars.compile(hbTemplate),
-		events: {
-			'click #button-save-session': 'saveSession',
-			'click #button-help': 'displayHelp'
-		},
+
 		/*
 		 * Renders the object's template using it's context into the view's element.
 		 * @returns {extended BaseView}
@@ -33,8 +30,15 @@ define([
 		 *      @prop el {Jquery element} - render view in $el.
 		 */
 		initialize: function (options) {
-			this.selectionModel = new SelectionModel();
+			this.selectionModel = new SelectionModel({
+				constituent : options.constituent,
+				region : options.region
+			});
 
+			this.navView = new NavView({
+				el : 'nav',
+				router : this.router
+			});
 			this.mapView = new MapView({
 				mapDivId: 'map-container',
 				enableZoom: false
@@ -42,20 +46,18 @@ define([
 			this.selectModelView = new SelectModelView({
 				collection: this.collection,
 				model : this.selectionModel,
-				el: '.model-selection-container'
+				el: '#model-selection-container',
+				router : this.router
 			});
+			this.
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
 		remove: function () {
+			this.navView.remove();
 			this.mapView.remove();
 			this.selectModelView.remove();
 			BaseView.prototype.remove.apply(this, arguments);
-		},
-		saveSession: function () {
-			log.debug("Save session button clicked");
-		},
-		displayHelp: function () {
-			log.debug("Display help button clicked");
+			return this;
 		}
 	});
 

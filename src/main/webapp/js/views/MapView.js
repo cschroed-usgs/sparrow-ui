@@ -38,7 +38,7 @@ define([
 			], function (name) {
 				return mapUtils.createRegionalCoverageLayers(name);
 			});
-			
+
 			this.mapDivId = options.mapDivId;
 			this.map = new ol.Map({
 				view: new ol.View({
@@ -83,7 +83,7 @@ define([
 					zIndex: Infinity
 				})
 			}));
-			
+
 			var onClickSelect = new ol.interaction.Select({
 				condition: ol.events.condition.Select,
 				layers : regionLayers,
@@ -104,11 +104,11 @@ define([
 				});
 				log.debug("Selected region ID(s): " + selectedRegionIds);
 			});
-			
+
 			this.map.addInteraction(onClickSelect);
 
 			BaseView.prototype.initialize.apply(this, arguments);
-			log.debug("Map View rendered");
+			log.debug("Map View initialized");
 		}
 	});
 

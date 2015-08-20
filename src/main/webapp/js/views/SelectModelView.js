@@ -109,6 +109,8 @@ define([
 			var c = model.attributes.constituent,
 				r = model.attributes.region;
 			if (r && c) {
+				this.router.navigate('model/' + this.collection.getId(c, r) + '/constituent/' + c +
+					'/region/' + r);
 				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r +
 					' picks model ' +  this.collection.getId(c, r));
 			}
