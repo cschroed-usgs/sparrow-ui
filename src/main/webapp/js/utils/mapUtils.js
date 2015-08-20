@@ -1,14 +1,42 @@
 /*jslint browser: true */
 /*global ol*/
+/*global Infinity*/
 define([
-	"ol"
-], function (ol) {
+	"ol",
+	"module"
+], function (ol, module) {
 
 	"use strict";
 	var self = {};
 	self.ZYX = '/MapServer/tile/{z}/{y}/{x}';
 
 	self.CONUS_EXTENT = [-14819398.304233, -92644.611414691, -6718296.2995848, 9632591.3700111];
+	
+	self.GEOSERVER_ENDPOINT = module.config().endpointGeoserver;
+
+	self.createRegionalCoverageLayers = function (layerTitle) {
+		var layer = new ol.layer.Vector({
+			title: layerTitle,
+			visible: true,
+			source: new ol.source.Vector({
+				url: self.GEOSERVER_ENDPOINT + "wfs?" +
+						"service=WFS&version=1.0.0&request=GetFeature&typeName=huc8-regional-overlay:" + layerTitle + "&outputFormat=json",
+				format: new ol.format.GeoJSON()
+			}),
+			style: new ol.style.Style({
+				stroke: new ol.style.Stroke({
+					color: [0, 0, 255, 0.5]
+				}),
+				fill: new ol.style.Fill({
+					color: [100, 100, 100, 0.5]
+				}),
+				zIndex: Infinity
+			})
+		});
+		
+		return layer;
+		
+	};
 
 	self.createWorldStreetMapBaseLayer = function (isVisible) {
 		return new ol.layer.Tile({
@@ -73,7 +101,7 @@ define([
 			})
 		});
 	};
-	
+
 	return self;
 
 });

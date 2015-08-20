@@ -121,7 +121,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.bootstrap>3.3.5</version.bootstrap>
 		<version.jquery>2.1.4</version.jquery>
-		<version.openlayers>3.5.0</version.openlayers>
+		<version.openlayers>3.8.2</version.openlayers>
 		<version.fontawesome>4.3.0-4</version.fontawesome>
 		<version.handlebars>3.0.0-1</version.handlebars>
 		<version.underscore>1.8.3</version.underscore>
