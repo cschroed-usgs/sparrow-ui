@@ -48,7 +48,7 @@ define([
 				}),
 				layers: [
 					new ol.layer.Group({
-						title: 'Regions',
+						title: 'Base maps',
 						layers: [
 							mapUtils.createStamenTonerBaseLayer(false),
 							mapUtils.createWorldTopoBaseLayer(false),
@@ -57,7 +57,7 @@ define([
 						]
 					}),
 					new ol.layer.Group({
-						title: 'Base maps',
+						title: 'Regions',
 						layers: regionLayers
 					})
 				],

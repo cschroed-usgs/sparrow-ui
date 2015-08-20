@@ -33,17 +33,13 @@ define([
 				}),
 				layers: [
 					new ol.layer.Group({
-						title: 'Regions',
+						title: 'Base maps',
 						layers: [
 							mapUtils.createStamenTonerBaseLayer(false),
 							mapUtils.createWorldTopoBaseLayer(false),
 							mapUtils.createWorldImageryLayer(false),
 							mapUtils.createWorldStreetMapBaseLayer(true)
 						]
-					}),
-					new ol.layer.Group({
-						title: 'Base maps',
-						layers: regionLayers
 					})
 				],
 				controls: ol.control.defaults().extend([
@@ -57,7 +53,7 @@ define([
 			log.debug('ModelMapView initialized')
 		}
 	});
-	
+
 	return view;
 });
 

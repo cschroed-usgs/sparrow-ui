@@ -2,13 +2,15 @@
 
 define([
 	'handlebars',
+	'models/SelectionModel',
 	'views/BaseView',
+	'views/NavView',
 	'views/ModelMapView',
+	'views/SelectModelView',
 	'views/MapFilterView',
-	'views/SearchView',
 	'utils/logger',
 	'text!templates/home.html'
-], function(Handlebars, BaseView, ModelMapView, log){
+], function(Handlebars, SelectionModel, BaseView, NavView, ModelMapView, SelectModelView, MapFilterView, log, hbTemplate){
 	"use strict";
 
 	var view = BaseView.extend({
@@ -23,19 +25,20 @@ define([
 			BaseView.prototype.render.apply(this, arguments);
 			this.mapView.render();
 			this.selectionModelView.setElement(this.$('#model-selection-container')).render();
-			this.navView.setElement(this.$('nav'))
+			this.navView.setElement(this.$('nav')).render();
+			this.mapFilterView.setElement(this.$('#map-sidebar-container')).render();
 			return this;
 		},
 
 		initialize : function(options) {
 			this.selectionModel = new SelectionModel({
 				constituent : options.constituent,
-				region : options.region,
+				region : options.region
 			});
 			this.navView = new NavView({
 				el : 'nav'
 			});
-			this.mapView = ModelMapView({
+			this.mapView = new ModelMapView({
 				mapDivId : 'map-container'
 			});
 			this.selectionModelView = new SelectModelView({
@@ -48,6 +51,7 @@ define([
 				collection : this.collection,
 				modelId : options.modelId
 			});
+			BaseView.prototype.initialize.apply(this, arguments);
 		},
 
 		remove : function() {

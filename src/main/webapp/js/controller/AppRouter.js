@@ -29,7 +29,7 @@ define([
 			log.trace("Routing to home view");
 
 			this.showView(HomeView, {
-				collection : this.modelCollection,
+				collection : this.modelCollection
 			});
 		},
 

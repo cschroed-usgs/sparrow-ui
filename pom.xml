@@ -421,7 +421,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			
+			<!--
 			<plugin>
 				<groupId>com.github.searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
@@ -448,6 +448,7 @@
 					</preloadSources>
 				</configuration>
 			</plugin>
+			-->
 		</plugins>
 
 		<finalName>${project.artifactId}</finalName>
