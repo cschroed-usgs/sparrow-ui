@@ -14,7 +14,7 @@ define([
 	
 	self.GEOSERVER_ENDPOINT = module.config().endpointGeoserver;
 
-	self.createRegionalCoverageLayers = function (layerTitle) {
+	self.createRegionalCoverageLayers = function (layerTitle, zIndex) {
 		var layer = new ol.layer.Vector({
 			title: layerTitle,
 			visible: true,
@@ -31,7 +31,7 @@ define([
 					color: [100, 100, 100, 0.5]
 				}),
 				zIndex: Infinity
-			})
+				})
 		});
 		
 		return layer;
