@@ -3,11 +3,12 @@ define([
 	'handlebars',
 	'underscore',
 	'utils/logger',
+	'utils/spatialUtils',
 	'jquery',
 	'views/BaseView',
 	'views/SelectMenuView',
 	'text!templates/model_selection.html'
-], function (Handlebars, _, log, $, BaseView, SelectMenuView, hbTemplate) {
+], function (Handlebars, _, log, SpatialUtils, $, BaseView, SelectMenuView, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -114,6 +115,10 @@ define([
 			if (r && c) {
 				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r +
 					' picks model ' +  this.collection.getId(c, r));
+			
+				SpatialUtils.getStatesForRegion(r).done(function (data) {
+					// TODO - Do stuff with return here
+				});
 			}
 		},
 		updateConstituent: function (model) {
