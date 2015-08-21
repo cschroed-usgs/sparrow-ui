@@ -12,7 +12,7 @@ define([
 
 	var view = BaseView.extend({
 		template: Handlebars.compile(filterTemplate),
-		model: new MapFilterModel(),
+
 		events: {
 			'change #state': 'stateChange',
 			'change #receiving-water-body': 'waterBodyChange',

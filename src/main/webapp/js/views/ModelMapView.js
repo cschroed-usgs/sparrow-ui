@@ -15,6 +15,8 @@ define([
 		 */
 		render: function () {
 			this.map.setTarget(this.mapDivId);
+			$('#' + this.mapDivId).append('<div id="map-loading-div">Loading model ...</div>');
+			$('#map-loading-div').show();
 			return this;
 		},
 		/*
@@ -25,6 +27,17 @@ define([
 		 */
 		initialize: function (options) {
 			this.mapDivId = options.mapDivId;
+			this.modelId = options.modelId;
+
+			this.flowlineLayer = new ol.layer.Tile({
+					title : 'Flowline',
+					opacity : 1
+				});
+			this.catchmentLayer = new ol.layer.Tile({
+				title : 'Catchment',
+				opacity : 0.3
+			});
+			this.updateModelLayer();
 			this.map = new ol.Map({
 				view: new ol.View({
 					center: ol.extent.getCenter(mapUtils.CONUS_EXTENT),
@@ -40,6 +53,10 @@ define([
 							mapUtils.createWorldImageryLayer(false),
 							mapUtils.createWorldStreetMapBaseLayer(true)
 						]
+					}),
+					new ol.layer.Group({
+						title: 'Model layers',
+						layers :  [this.catchmentLayer, this.flowlineLayer ]
 					})
 				],
 				controls: ol.control.defaults().extend([
@@ -50,7 +67,50 @@ define([
 			});
 
 			BaseView.prototype.initialize.apply(this, arguments);
-			log.debug('ModelMapView initialized')
+			log.debug('ModelMapView initialized');
+		},
+
+		updateModelLayer : function() {
+			var self = this;
+			var getModelLayerNamesPromise = $.Deferred();
+			$.ajax({
+				url : 'data/prediction',
+				data : {
+					'model-id' : this.modelId
+				},
+				success : function(response) {
+					log.debug('Got model layers');
+					getModelLayerNamesPromise.resolve(response[0]);
+					$('#map-loading-div').hide();
+				},
+				error : function(jqxhr, textStatus) {
+					log.debug('Error in retrieving model layers');
+					getModelLayerNamesPromise.reject(textStatus);
+					$('#map-loading-div').hide();
+					alert('Error retrieving model information from server');
+				}
+			});
+			getModelLayerNamesPromise.done(function(response) {
+				var flowlineSource = new ol.source.TileWMS({
+					serverType : 'geoserver',
+					params : {
+						LAYERS : response.FlowLayerName,
+						STYLES : response.FlowLayerDefaultStyleName
+					},
+					url : response.EndpointUrl
+				});
+				var catchmentSource = new ol.source.TileWMS({
+					serverType : 'geoserver',
+					params : {
+						LAYERS : response.CatchLayerName,
+						STYLES : response.CatchLayerDefaultStyleName
+					},
+					url : response.EndpointUrl
+				});
+
+				self.flowlineLayer.setSource(flowlineSource)
+				self.catchmentLayer.setSource(catchmentSource);
+			});
 		}
 	});
 

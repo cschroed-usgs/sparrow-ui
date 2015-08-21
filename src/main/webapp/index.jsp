@@ -116,6 +116,7 @@
 					'utils/mapUtils': {
 						'endpointGeoserver' : '<%= getProp("endpoint-geoserver")%>'
 					},
+						
 					'init': {
 						'contextPath': "<%=baseUrl%>/"
 					}
