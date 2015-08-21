@@ -74,7 +74,7 @@ define([
 			// Add on-hover events for features
 			this.map.addInteraction(new ol.interaction.Select({
 				condition: ol.events.condition.pointerMove,
-				layers : regionLayers,
+				layers: regionLayers,
 				style: new ol.style.Style({
 					stroke: new ol.style.Stroke({
 						color: [0, 0, 255, 0.75]
@@ -83,23 +83,24 @@ define([
 						color: [150, 150, 150, 0.75]
 					}),
 					zIndex: Infinity
-					})
+				})
 			}));
 
 			var onClickSelect = new ol.interaction.Select({
 				condition: ol.events.condition.singleClick,
 				multi: true,
-				layers : regionLayers,
+				layers: regionLayers,
 				style: new ol.style.Style({
-						stroke: new ol.style.Stroke({
-							color: [0, 0, 255, 0.75]
-						}),
-						fill: new ol.style.Fill({
-							color: [200, 200, 200, 0.75]
-						}),
+					stroke: new ol.style.Stroke({
+						color: [0, 0, 255, 0.75]
+					}),
+					fill: new ol.style.Fill({
+						color: [200, 200, 200, 0.75]
+					}),
 					zIndex: Infinity
 				})
-					});
+			});
+			
 			onClickSelect.on("select", function (evt) {
 				var selectedFeatures = evt.selected;
 				var selectedRegionIds = _.map(selectedFeatures, function (f) {

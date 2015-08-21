@@ -11,7 +11,8 @@ define([
 				relatedLink: '',
 				region: '',
 				extent: '',
-				constituent: ''
+				constituent: '',
+				regionId: ''
 			};
 		}
 	});

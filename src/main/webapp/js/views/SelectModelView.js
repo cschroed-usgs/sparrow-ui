@@ -79,9 +79,9 @@ define([
 			selectedOption = selectedOption ? selectedOption : '';
 			return _.map(optionList, function(option) {
 				return {
-					text : option,
-					value : option,
-					selected : option === selectedOption
+					text : option.name,
+					value : option.id,
+					selected : option.name === selectedOption
 				};
 			});
 
@@ -119,14 +119,17 @@ define([
 		updateConstituent: function (model) {
 			var constituent = model.get('constituent');
 			var validRegions = this.collection.getRegions(constituent);
-
+			
 			this.regionSelectView.updateMenuOptions(this._menuOptions(validRegions, model.get('region')));
 			this.$('.constituent-select').val(constituent);
 		},
 		updateRegion: function (model) {
 			var region = model.get('region');
-			var validConstituents = this.collection.getConstituents(region);
-
+			var regionModel = _.find(this.collection.getRegions(), function (r) {
+				return r.id === region;
+			});
+			var validConstituents = this.collection.getConstituents(regionModel.name);
+			
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
 		},
