@@ -28,13 +28,15 @@ define([
 		initialize: function (options) {
 			options.enableZoom = _.has(options, 'enableZoom') ? options.enableZoom : true;
 			var regionLayers = _.map([
+				"national_mrb_e2rf1",
 				"mrb01_nhd",
 				"mrb02_mrbe2rf1",
 				"mrb03_mrbe2rf1",
 				"mrb04_mrbe2rf1",
 				"mrb05_mrbe2rf1",
 				"mrb06_mrbe2rf1",
-				"mrb07_mrbe2rf1"
+				"mrb07_mrbe2rf1",
+				"chesa_nhd"
 			], function (name) {
 				return mapUtils.createRegionalCoverageLayers(name);
 			});
@@ -67,12 +69,11 @@ define([
 					new ol.control.LayerSwitcher({
 						tipLabel: 'Switch base layers'
 					})])
-				});
+			});
 
 			// Add on-hover events for features
 			this.map.addInteraction(new ol.interaction.Select({
 				condition: ol.events.condition.pointerMove,
-//				multi: true,
 				layers : regionLayers,
 				style: new ol.style.Style({
 					stroke: new ol.style.Stroke({
@@ -82,7 +83,7 @@ define([
 						color: [150, 150, 150, 0.75]
 					}),
 					zIndex: Infinity
-				})
+					})
 			}));
 
 			var onClickSelect = new ol.interaction.Select({
@@ -90,15 +91,15 @@ define([
 				multi: true,
 				layers : regionLayers,
 				style: new ol.style.Style({
-					stroke: new ol.style.Stroke({
-						color: [0, 0, 255, 0.75]
-					}),
-					fill: new ol.style.Fill({
-						color: [200, 200, 200, 0.75]
-					}),
+						stroke: new ol.style.Stroke({
+							color: [0, 0, 255, 0.75]
+						}),
+						fill: new ol.style.Fill({
+							color: [200, 200, 200, 0.75]
+						}),
 					zIndex: Infinity
 				})
-			});
+					});
 			onClickSelect.on("select", function (evt) {
 				var selectedFeatures = evt.selected;
 				var selectedRegionIds = _.map(selectedFeatures, function (f) {
