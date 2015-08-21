@@ -4,19 +4,26 @@
 define([
 	'squire',
 	"backbone",
-	"sinon"
-], function (Squire, Backbone, sinon) {
+	"sinon",
+	'jquery'
+], function (Squire, Backbone, sinon, $) {
 	describe("Router", function () {
-		var Router, fetchSpy, homeViewInitializeSpy;
+		var Router, fetchSpy, homeViewInitializeSpy, modelDisplayViewInitializeSpy;
+		var fetchDeferred;
 		beforeEach(function (done) {
-			fetchSpy = jasmine.createSpy('fetchSpy');
+			fetchDeferred = $.Deferred();
+			fetchSpy = jasmine.createSpy('fetchSpy').and.returnValue(fetchDeferred);
 			homeViewInitializeSpy = jasmine.createSpy('homeViewInitializeSpy');
+			modelDisplayViewInitializeSpy = jasmine.createSpy('modelDisplayViewInitializeSpy');
 			var injector = new Squire();
 			injector.mock('collections/ModelCollection', Backbone.Collection.extend({
 				fetch : fetchSpy
 			}));
 			injector.mock('views/HomeView', Backbone.View.extend({
 				initialize : homeViewInitializeSpy
+			}));
+			injector.mock('views/ModelDisplayView', Backbone.View.extend({
+				initialize : modelDisplayViewInitializeSpy
 			}));
 			injector.require(['controller/AppRouter'], function(router) {
 				Router = router;
@@ -27,6 +34,25 @@ define([
 			var router = new Router();
 			expect(router.modelCollection).toBeDefined();
 			expect(fetchSpy).toHaveBeenCalled();
+		});
+		it('Expects a failed call to fetch to call the errorView', function() {
+			var router = new Router();
+			spyOn(router, 'errorView');
+			fetchDeferred.reject();
+			expect(router.errorView).toHaveBeenCalled();
+		});
+		it('Expects a successful call but no models in the model collection to call the errorView', function() {
+			var router = new Router();
+			spyOn(router, 'errorView');
+			fetchDeferred.resolve();
+			expect(router.errorView).toHaveBeenCalled();
+		});
+		it('Expects a successful call with models in the model collection not call the errorView', function() {
+			var router = new Router();
+			spyOn(router, 'errorView');
+			router.modelCollection.add([new Backbone.Model()]);
+			fetchDeferred.resolve();
+			expect(router.errorView).not.toHaveBeenCalled();
 		});
 
 		// This broked when I added squire. Not sure how to fix
