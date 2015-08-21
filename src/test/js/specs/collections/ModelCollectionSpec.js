@@ -104,8 +104,8 @@ define([
 		});
 
 		it('Expects getId to return the model id for the region and constituent', function () {
-			expect(coll.getId('TN', 'Missouri (MRB4)')).toEqual('57');
-			expect(coll.getId('TDS', 'Missouri (MRB4)')).not.toBeDefined();
+			expect(coll.getId('TN', 'mrb04_mrbe2rf1')).toEqual('57');
+			expect(coll.getId('TDS', 'mrb04_mrbe2rf1')).not.toBeDefined();
 			expect(coll.getId('', '')).not.toBeDefined();
 			expect(coll.getId('TN', '')).not.toBeDefined();
 		});

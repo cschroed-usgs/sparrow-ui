@@ -105,7 +105,7 @@ define([
 		 */
 		getId : function(constituent, region) {
 			var model = _.find(this.models, function(model) {
-				return ((model.attributes.region === region) && (model.attributes.constituent === constituent));
+				return ((model.attributes.regionId === region) && (model.attributes.constituent === constituent));
 			});
 
 			if (model) {
