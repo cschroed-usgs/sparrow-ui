@@ -10,9 +10,12 @@ define([
 		url: 'data/model',
 
 		parse: function (resp) {
-			var models = _.map(resp.items, function (item) {
+			var filteredModels = _.filter(resp.items, function (item) {
+				return _.findWhere(item.tags, {type: 'id'}).name.toLowerCase() !== "new";
+			});
+			var models = _.map(filteredModels, function (item) {
 				var id, sbId, link, relatedLink, region, extent, constituent;
-
+				
 				var id = _.findWhere(item.tags, {type: 'id'}).name;
 				var sbId = item.id;
 				var link = item.link;
@@ -20,6 +23,7 @@ define([
 				var region = _.findWhere(item.tags, {type: 'region'}).name;
 				var extent = _.findWhere(item.tags, {type: 'extent'}).name;
 				var constituent = _.findWhere(item.tags, {type: 'constituent'}).name;
+				var regionId = _.findWhere(item.tags, {type: 'regionId'}).name;
 
 				return {
 					id: id,
@@ -28,10 +32,11 @@ define([
 					relatedLink: relatedLink,
 					region: region,
 					extent: extent,
-					constituent: constituent
+					constituent: constituent,
+					regionId: regionId
 				};
 			});
-
+			
 			return models;
 		},
 
@@ -50,9 +55,17 @@ define([
 			else {
 				validModels = this.models;
 			}
-			return _.uniq(_.map(validModels, function(model) {
-				return model.attributes.constituent;
-			}));
+			
+			var constArr = _.map(validModels, function(model) {
+				return {
+					id : model.attributes.constituent,
+					name : model.attributes.constituent
+				};
+			});
+			
+			return _.uniq(constArr, function (m) {
+				return m.id;
+			});
 		},
 
 		/*
@@ -71,9 +84,17 @@ define([
 			else {
 				validModels = this.models;
 			}
-			return _.uniq(_.map(validModels, function(model) {
-				return model.attributes.region;
-			}));
+			
+			var modelArr = _.map(validModels, function(model) {
+				return {
+					id : model.attributes.regionId,
+					name : model.attributes.region
+				};
+			});
+			
+			return _.uniq(modelArr, function(m) {
+				return m.id;
+			});
 		},
 
 		/*

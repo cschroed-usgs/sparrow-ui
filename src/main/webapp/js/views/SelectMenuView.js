@@ -24,7 +24,7 @@ define([
 			this.sortBy = _.has(options, 'sortBy') ? options.sortBy : false;
 
 			//true for ascending, false for descending
-			this.sortAscending = _.has(options, 'sortAscending') ? options.sortAscending : true
+			this.sortAscending = _.has(options, 'sortAscending') ? options.sortAscending : true;
 			this.menuOptions = _.has(options, 'menuOptions') ? options.menuOptions : [];
 
 			this.template = Handlebars.compile('{{#each options}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{text}}</option>{{/each}}');

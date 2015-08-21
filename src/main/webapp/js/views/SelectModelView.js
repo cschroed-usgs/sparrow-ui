@@ -79,9 +79,9 @@ define([
 			selectedOption = selectedOption ? selectedOption : '';
 			return _.map(optionList, function(option) {
 				return {
-					text : option,
-					value : option,
-					selected : option === selectedOption
+					text : option.name,
+					value : option.id,
+					selected : option.name === selectedOption
 				};
 			});
 
