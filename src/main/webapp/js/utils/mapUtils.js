@@ -101,7 +101,7 @@ define([
 			})
 		});
 	};
-
+	
 	return self;
 
 });
