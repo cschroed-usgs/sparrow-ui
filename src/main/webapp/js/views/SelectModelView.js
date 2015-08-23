@@ -116,8 +116,8 @@ define([
 				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r +
 					' picks model ' +  this.collection.getId(c, r));
 			
-				SpatialUtils.getStatesForRegion(r).done(function (data) {
-					// TODO - Do stuff with return here
+				SpatialUtils.getStatesForRegion(r, this).done(function (states) {
+					// TODO: Get states from call
 				});
 			}
 		},
