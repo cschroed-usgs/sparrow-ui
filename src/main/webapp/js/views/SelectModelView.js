@@ -39,6 +39,7 @@ define([
 		 *      @prop {Jquery selector} el - Where view will be rendered.
 		 */
 		initialize: function (options) {
+			this.mapUtils = options.mapUtils;
 			this.context = {};
 			this.context.disabled = _.has(options, 'disabled') ? options.disabled : false;
 			this.updateContext(this.collection);
@@ -137,6 +138,7 @@ define([
 			
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
+			this.mapUtils.highlightRegion(region);
 		},
 		changeConstituent: function (ev) {
 			var value = ev.currentTarget.value;

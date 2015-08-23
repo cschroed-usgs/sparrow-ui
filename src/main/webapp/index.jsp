@@ -125,6 +125,7 @@
 				},
 				baseUrl: "<%=baseUrl%>/js/",
 				paths: {
+					"bootstrap" :  ["<%=baseUrl%>/webjars/bootstrap/<%= getProp("version.bootstrap")%>/js/bootstrap<%= development ? "" : ".min"%>"] ,
 					"jquery": ["<%=baseUrl%>/webjars/jquery/<%= getProp("version.jquery")%>/jquery<%= development ? "" : ".min"%>"],
 					"backbone": ['<%=baseUrl%>/webjars/backbonejs/<%= getProp("version.backbone")%>/backbone<%= development ? "" : "-min"%>'],
 					"underscore": ['<%=baseUrl%>/webjars/underscorejs/<%= getProp("version.underscore")%>/underscore<%= development ? "" : "-min"%>'],
@@ -136,7 +137,8 @@
 					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
 				},
 				shim: {
-					"olLayerSwitcher": ["olshim"]
+					"olLayerSwitcher": ["olshim"],
+					"bootstrap": [ "jquery" ]
 				}
 			};
 		</script>

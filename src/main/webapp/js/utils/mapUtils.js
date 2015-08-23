@@ -11,31 +11,33 @@ define([
 	self.ZYX = '/MapServer/tile/{z}/{y}/{x}';
 
 	self.CONUS_EXTENT = [-14819398.304233, -92644.611414691, -6718296.2995848, 9632591.3700111];
-	
+
 	self.GEOSERVER_ENDPOINT = module.config().endpointGeoserver;
+
+	self.defaultRegionStyle = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: [0, 0, 255, 0.5]
+		}),
+		fill: new ol.style.Fill({
+			color: [100, 100, 100, 0.5]
+		}),
+		zIndex: Infinity
+	});
 
 	self.createRegionalCoverageLayers = function (layerTitle, zIndex) {
 		var layer = new ol.layer.Vector({
 			title: layerTitle,
 			visible: true,
+			updateWhileInteracting: true,
 			source: new ol.source.Vector({
 				url: self.GEOSERVER_ENDPOINT + "wfs?" +
-						"service=WFS&version=1.0.0&request=GetFeature&typeName=huc8-regional-overlay:" + layerTitle + "&outputFormat=json",
+					"service=WFS&version=1.0.0&request=GetFeature&typeName=huc8-regional-overlay:" + layerTitle + "&outputFormat=json",
 				format: new ol.format.GeoJSON()
 			}),
-			style: new ol.style.Style({
-				stroke: new ol.style.Stroke({
-					color: [0, 0, 255, 0.5]
-				}),
-				fill: new ol.style.Fill({
-					color: [100, 100, 100, 0.5]
-				}),
-				zIndex: Infinity
-				})
+			style: self.defaultRegionStyle
 		});
-		
+
 		return layer;
-		
 	};
 
 	self.createWorldStreetMapBaseLayer = function (isVisible) {
@@ -101,9 +103,22 @@ define([
 			})
 		});
 	};
-	
-	return self;
 
+	self.highlightRegion = function (regionId) {
+		var vectorlayers = _.find(this.map.getLayers().getArray(), function (g) {
+			return g.get("title").toLowerCase() === "regions";
+		}).getLayersArray();
+
+		_.chain(this.map.getInteractions().getArray())
+			.filter(function (s) {
+				return s.getProperties().type === "select";
+			})
+			.each(function (s) {
+				s.getFeatures().clear();
+			});
+	};
+
+	return self;
 });
 
 

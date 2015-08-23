@@ -69,8 +69,6 @@ define([
 			this.selectionModelView.remove();
 			this.mapFilterView.remove();
 		}
-
-
 	});
 
 	return view;

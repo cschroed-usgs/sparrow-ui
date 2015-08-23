@@ -7,8 +7,9 @@ define([
 	'views/SelectModelView',
 	'models/SelectionModel',
 	'utils/logger',
+	'utils/mapUtils',
 	'text!templates/home.html'
-], function (Handlebars, BaseView, NavView, MapView, SelectModelView, SelectionModel, log, hbTemplate) {
+], function (Handlebars, BaseView, NavView, MapView, SelectModelView, SelectionModel, log, MapUtils, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -37,15 +38,20 @@ define([
 				el : 'nav',
 				router : options.router
 			});
-			this.mapView = new MapView({
-				mapDivId: 'map-container',
-				enableZoom: false
-			});
+			
 			this.selectModelView = new SelectModelView({
 				collection: this.collection,
 				model : this.selectionModel,
 				el: '#model-selection-container',
-				router : options.router
+				router : options.router,
+				mapUtils : MapUtils
+			});
+
+			this.mapView = new MapView({
+				mapDivId: 'map-container',
+				enableZoom: false,
+				selectModelView : this.selectModelView,
+				mapUtils : MapUtils
 			});
 
 			BaseView.prototype.initialize.apply(this, arguments);
