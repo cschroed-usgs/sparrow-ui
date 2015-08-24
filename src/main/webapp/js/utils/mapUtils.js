@@ -103,7 +103,14 @@ define([
 		});
 	};
 
+	/**
+	 * Selects/highlights a specific region on the map
+	 * 
+	 * @param {type} regionId the id of the region to choose
+	 * @returns {undefined}
+	 */
 	self.highlightRegion = function (regionId) {
+		// I want only the vector layers which are part of the "regions" group
 		var vectorlayers = _.find(this.map.getLayers().getArray(), function (g) {
 			return g.get("title").toLowerCase() === "regions";
 		}).getLayersArray();

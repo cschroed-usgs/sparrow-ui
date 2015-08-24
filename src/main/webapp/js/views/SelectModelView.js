@@ -13,7 +13,6 @@ define([
 	"use strict";
 
 	var view = BaseView.extend({
-
 		events: {
 			'change .constituent-select': 'changeConstituent',
 			'change .region-select': 'changeRegion',
