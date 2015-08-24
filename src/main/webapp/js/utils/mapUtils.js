@@ -109,6 +109,9 @@ define([
 		}).getLayersArray();
 
 		_.chain(vectorlayers)
+				.each(function (l) {
+					l.setVisible(true);
+				})
 				.filter(function (l) {
 					return l.getProperties("id").title !== regionId;
 				})
