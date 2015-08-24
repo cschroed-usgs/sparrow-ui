@@ -59,10 +59,10 @@ define([
 					new ol.layer.Group({
 						title: 'Base maps',
 						layers: [
-							MapUtils.createStamenTonerBaseLayer(false),
 							MapUtils.createWorldTopoBaseLayer(false),
 							MapUtils.createWorldImageryLayer(false),
-							MapUtils.createWorldStreetMapBaseLayer(true)
+							MapUtils.createWorldStreetMapBaseLayer(false),
+							MapUtils.createStamenTonerBaseLayer(true)
 						]
 					}),
 					new ol.layer.Group({

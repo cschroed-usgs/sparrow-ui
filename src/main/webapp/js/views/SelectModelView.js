@@ -118,7 +118,7 @@ define([
 					' picks model ' +  this.collection.getId(c, r));
 			
 				SpatialUtils.getStatesForRegion(r, this).done(function (states) {
-					// TODO: Get states from call
+					// TODO: states param should be an array of states
 				});
 			}
 		},

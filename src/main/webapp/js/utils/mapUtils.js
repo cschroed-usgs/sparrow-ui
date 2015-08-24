@@ -1,10 +1,9 @@
 /*jslint browser: true */
-/*global ol*/
-/*global Infinity*/
 define([
+	"underscore",
 	"ol",
 	"module"
-], function (ol, module) {
+], function (_, ol, module) {
 
 	"use strict";
 	var self = {};
@@ -24,14 +23,14 @@ define([
 		zIndex: Infinity
 	});
 
-	self.createRegionalCoverageLayers = function (layerTitle, zIndex) {
+	self.createRegionalCoverageLayers = function (layerTitle) {
 		var layer = new ol.layer.Vector({
 			title: layerTitle,
 			visible: true,
 			updateWhileInteracting: true,
 			source: new ol.source.Vector({
 				url: self.GEOSERVER_ENDPOINT + "wfs?" +
-					"service=WFS&version=1.0.0&request=GetFeature&typeName=huc8-regional-overlay:" + layerTitle + "&outputFormat=json",
+						"service=WFS&version=1.0.0&request=GetFeature&typeName=huc8-regional-overlay:" + layerTitle + "&outputFormat=json",
 				format: new ol.format.GeoJSON()
 			}),
 			style: self.defaultRegionStyle
@@ -109,13 +108,21 @@ define([
 			return g.get("title").toLowerCase() === "regions";
 		}).getLayersArray();
 
+		_.chain(vectorlayers)
+				.filter(function (l) {
+					return l.getProperties("id").title !== regionId;
+				})
+				.each(function (l) {
+					l.setVisible(false);
+				});
+
 		_.chain(this.map.getInteractions().getArray())
-			.filter(function (s) {
-				return s.getProperties().type === "select";
-			})
-			.each(function (s) {
-				s.getFeatures().clear();
-			});
+				.filter(function (s) {
+					return s.getProperties().type === "select";
+				})
+				.each(function (s) {
+					s.getFeatures().clear();
+				});
 	};
 
 	return self;
