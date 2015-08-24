@@ -14,6 +14,7 @@ define([
 		var SelectModelView;
 		var selectionModel;
 		var collection;
+		var stateDeferred;
 
 		var COLLECTION = [
 			{
@@ -46,6 +47,7 @@ define([
 
 			selectionModel = new SelectionModel();
 			collection = new ModelCollection();
+			stateDeferred = $.Deferred();
 			updateMenuOptionsSpy = jasmine.createSpy('updateMenuOptionsSpy');
 
 			var injector = new Squire();
@@ -56,6 +58,10 @@ define([
 			injector.require(['views/SelectModelView'], function(view) {
 				SelectModelView = view;
 				done();
+			});
+
+			injector.mock('utils/SpatialUtils', {
+				getStatesForRegion : jasmine.createSpy('getStatesForRegion').and.returnValue(stateDeferred)
 			});
 		});
 
@@ -100,7 +106,5 @@ define([
 			expect(updateMenuOptionsSpy.calls.argsFor(0)).toEqual([[]]);
 			expect(updateMenuOptionsSpy.calls.argsFor(1)).toEqual([[]]);
 		});
-
-		it('Expects that a call to render when the view was created')
 	});
 });

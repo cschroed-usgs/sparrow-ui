@@ -8,9 +8,8 @@ define([
 	'jquery',
 	'views/BaseView',
 	'views/SelectMenuView',
-	'utils/mapUtils',
 	'text!templates/model_selection.html'
-], function (Handlebars, _, log, SpatialUtils, $, BaseView, SelectMenuView, MapUtils, hbTemplate) {
+], function (Handlebars, _, log, SpatialUtils, $, BaseView, SelectMenuView, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -23,6 +22,7 @@ define([
 		template: Handlebars.compile(hbTemplate),
 
 		render: function () {
+
 			if (this.$el.length === 0) {
 				this.$el = $(this.el);
 			}
@@ -117,7 +117,7 @@ define([
 			if (r && c) {
 				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r +
 					' picks model ' +  this.collection.getId(c, r));
-			
+
 				SpatialUtils.getStatesForRegion(r, this).done(function (states) {
 					// TODO: states param should be an array of states
 				});
@@ -139,7 +139,6 @@ define([
 
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
-			MapUtils.highlightRegion(region);
 		},
 		changeConstituent: function (ev) {
 			var value = ev.currentTarget.value;
