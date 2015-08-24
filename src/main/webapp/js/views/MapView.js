@@ -20,6 +20,7 @@ define([
 		"mrb05_mrbe2rf1",
 		"mrb06_mrbe2rf1",
 		"mrb07_mrbe2rf1",
+		"marb_mrbe2rf1",
 		"chesa_nhd"
 	];
 
