@@ -21,6 +21,7 @@ define([
 		render: function () {
 			BaseView.prototype.render.apply(this, arguments);
 			this.mapView.render();
+			this.navView.setElement(this.$('nav')).render();
 			this.selectModelView.setElement(this.$('#model-selection-container')).render();
 			return this;
 		},
@@ -37,7 +38,7 @@ define([
 				el : 'nav',
 				router : options.router
 			});
-			
+
 			this.selectModelView = new SelectModelView({
 				collection: this.collection,
 				model : this.selectionModel,

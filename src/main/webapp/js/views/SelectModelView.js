@@ -8,9 +8,8 @@ define([
 	'jquery',
 	'views/BaseView',
 	'views/SelectMenuView',
-	'utils/mapUtils',
 	'text!templates/model_selection.html'
-], function (Handlebars, _, log, SpatialUtils, $, BaseView, SelectMenuView, MapUtils, hbTemplate) {
+], function (Handlebars, _, log, SpatialUtils, $, BaseView, SelectMenuView, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -23,6 +22,7 @@ define([
 		template: Handlebars.compile(hbTemplate),
 
 		render: function () {
+
 			if (this.$el.length === 0) {
 				this.$el = $(this.el);
 			}
@@ -38,6 +38,7 @@ define([
 		 *      @prop {SelectionModel} model
 		 *      @prop {ModelCollection} collection
 		 *      @prop {Jquery selector} el - Where view will be rendered.
+		 *      @prop {Boolean} disabled - optional. Set to true if the constituent and region menus show be disabled. Default is false.
 		 */
 		initialize: function (options) {
 			this.context = {};
@@ -116,7 +117,7 @@ define([
 			if (r && c) {
 				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r +
 					' picks model ' +  this.collection.getId(c, r));
-			
+
 				SpatialUtils.getStatesForRegion(r, this).done(function (states) {
 					// TODO: states param should be an array of states
 				});
@@ -135,7 +136,7 @@ define([
 				return r.id === region;
 			});
 			var validConstituents = this.collection.getConstituents(regionModel.name);
-			
+
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
 		},
