@@ -1,5 +1,4 @@
 /*jslint browser: true */
-/*global Infinity*/
 /*global define*/
 define([
 	'underscore',
@@ -77,7 +76,7 @@ define([
 					new ol.control.LayerSwitcher({
 						tipLabel: 'Switch base layers'
 					})])
-			});
+				});
 
 			var hoverSelector = new ol.interaction.Select({
 				condition: ol.events.condition.pointerMove,
@@ -101,7 +100,6 @@ define([
 			this.map.addInteraction(hoverSelector);
 
 			var clickSelector = new ol.interaction.Select({
-				title: "TEST",
 				condition: ol.events.condition.singleClick,
 				multi: true,
 				layers: regionLayers,
@@ -138,9 +136,9 @@ define([
 					// Bind to the view's modal window 
 					dRegionView.$el.find(dRegionView.modalId + ' button').one('click', function (evt) {
 						var buttonId = evt.target.getAttribute('id'),
-							insignificantIdLength = 14, // Length of "button-region-"
+							insignificantIdLength = "button-region-".length,
 							regionId = buttonId.substr(insignificantIdLength);
-
+							
 						if (regionId !== 'cancel') {
 							selectModelView.model.set('region', regionId);
 						} else {
@@ -148,7 +146,7 @@ define([
 						}
 					});
 				} else {
-					// update
+					selectModelView.model.set('region', selectedRegions[0].id);
 				}
 			});
 
