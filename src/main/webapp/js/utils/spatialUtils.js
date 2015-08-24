@@ -37,6 +37,9 @@ define([
 					.value();
 				
 				this.deferred.resolveWith(this.that, [states]);
+			},
+			error : function () {
+				this.deferred.rejectWith(this.that, arguments);
 			}
 		});
 
