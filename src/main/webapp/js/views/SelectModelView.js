@@ -83,7 +83,7 @@ define([
 				return {
 					text : option.name,
 					value : option.id,
-					selected : option.name === selectedOption
+					selected : option.id === selectedOption
 				};
 			});
 
@@ -125,7 +125,7 @@ define([
 		updateConstituent: function (model) {
 			var constituent = model.get('constituent');
 			var validRegions = this.collection.getRegions(constituent);
-			
+
 			this.regionSelectView.updateMenuOptions(this._menuOptions(validRegions, model.get('region')));
 			this.$('.constituent-select').val(constituent);
 		},
@@ -138,7 +138,6 @@ define([
 			
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
-			MapUtils.highlightRegion(region);
 		},
 		changeConstituent: function (ev) {
 			var value = ev.currentTarget.value;
