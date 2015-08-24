@@ -109,9 +109,9 @@ define([
 	 * @param {type} regionId the id of the region to choose
 	 * @returns {undefined}
 	 */
-	self.highlightRegion = function (regionId) {
+	self.highlightRegion = function (regionId, map) {
 		// I want only the vector layers which are part of the "regions" group
-		var vectorlayers = _.find(this.map.getLayers().getArray(), function (g) {
+		var vectorlayers = _.find(map.getLayers().getArray(), function (g) {
 			return g.get("title").toLowerCase() === "regions";
 		}).getLayersArray();
 
@@ -126,7 +126,7 @@ define([
 					l.setVisible(false);
 				});
 
-		_.chain(this.map.getInteractions().getArray())
+		_.chain(map.getInteractions().getArray())
 				.filter(function (s) {
 					return s.getProperties().type === "select";
 				})

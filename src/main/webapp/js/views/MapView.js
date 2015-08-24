@@ -44,7 +44,9 @@ define([
 		initialize: function (options) {
 			options.enableZoom = _.has(options, 'enableZoom') ? options.enableZoom : true;
 			this.mapDivId = options.mapDivId;
-
+			
+			selectionModel = options.selectionModel;
+			
 			var regionLayers = _.map(regionLayerNames, function (name) {
 				return MapUtils.createRegionalCoverageLayers(name);
 			});
@@ -76,7 +78,7 @@ define([
 					new ol.control.LayerSwitcher({
 						tipLabel: 'Switch base layers'
 					})])
-				});
+			});
 
 			var hoverSelector = new ol.interaction.Select({
 				condition: ol.events.condition.pointerMove,
@@ -130,7 +132,7 @@ define([
 					var dRegionView = new DisambiguateRegionSelectionView({
 						regions: selectedRegions,
 						el: '#page-content-container',
-						selectionModel : selectionModel
+						selectionModel: selectionModel
 					});
 					dRegionView.render();
 				} else {
@@ -139,9 +141,13 @@ define([
 			});
 
 			this.map.addInteraction(clickSelector);
-
-			selectionModel = options.selectionModel;
-			MapUtils.map = this.map;
+			
+			this.listenTo(selectionModel, 'change:region', _.bind(function () {
+				MapUtils.highlightRegion(this.model.get("region"), this.map);
+			}, {
+				map : this.map,
+				model : selectionModel
+			}));
 
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug("Map View initialized");

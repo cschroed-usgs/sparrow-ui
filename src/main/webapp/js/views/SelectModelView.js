@@ -138,7 +138,6 @@ define([
 			
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
-			MapUtils.highlightRegion(region);
 		},
 		changeConstituent: function (ev) {
 			var value = ev.currentTarget.value;
