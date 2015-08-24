@@ -8,7 +8,7 @@
 <meta name="author" content="Ivan Suftin, Mary Bucknell, David Sibley, Phil Russo" />
 <meta name="keywords" content="${param.keywords}" />
 <meta name="publisher" content="${param.publisher}" />
-<link rel="icon" href="${param['baseUrl']}/favicon.ico" type="image/x-icon" />
+<link rel="icon" href="${param['baseUrl']}favicon.ico" type="image/x-icon">
 <script type="text/javascript">
     /* This application does not support <IE9 - Stop early if <IE9*/
     if (navigator.appName === 'Microsoft Internet Explorer') {

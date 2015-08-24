@@ -10,7 +10,7 @@ define([
 				state: '',
 				waterBody: '',
 				waterShed: '',
-				dataSeries: '',
+				dataSeries: 'total_yield',
 				groupResultsBy: ''
 			};
 		}
