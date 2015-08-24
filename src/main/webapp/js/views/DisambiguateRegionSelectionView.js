@@ -20,9 +20,9 @@ define([
 						regionId = buttonId.substr(insignificantIdLength);
 
 				if (regionId !== 'cancel') {
-					this.selectModalModel.set('region', regionId);
+					this.selectionModel.set('region', regionId);
 				} else {
-					this.selectModalModel.set('region', '');
+					this.selectionModel.set('region', '');
 				}
 			}, this));
 
@@ -31,7 +31,7 @@ define([
 		initialize: function (options) {
 			BaseView.prototype.initialize.apply(this, arguments);
 			this.context.regions = options.regions;
-			this.selectModalModel = options.selectModalModel;
+			this.selectionModel = options.selectionModel;
 		}
 	});
 

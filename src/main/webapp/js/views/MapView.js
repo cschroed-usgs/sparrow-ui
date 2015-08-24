@@ -24,8 +24,7 @@ define([
 		"chesa_nhd"
 	];
 
-	var selectModelView = null;
-	var olMap = null;
+	var selectionModel = null;
 
 	var view = BaseView.extend({
 		/**
@@ -131,19 +130,18 @@ define([
 					var dRegionView = new DisambiguateRegionSelectionView({
 						regions: selectedRegions,
 						el: '#page-content-container',
-						selectModalModel : options.selectModelView.model 
+						selectionModel : selectionModel
 					});
 					dRegionView.render();
 				} else {
-					selectModelView.model.set('region', selectedRegions[0].id);
+					selectionModel.set('region', selectedRegions[0].id);
 				}
 			});
 
 			this.map.addInteraction(clickSelector);
 
-			selectModelView = options.selectModelView;
-			olMap = this.map;
-			MapUtils.map = olMap;
+			selectionModel = options.selectionModel;
+			MapUtils.map = this.map;
 
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug("Map View initialized");

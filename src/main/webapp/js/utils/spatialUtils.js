@@ -27,7 +27,7 @@ define([
 		if (regionId === "national_e2rf1" || regionId === "national_mrb_e2rf1") {
 			// Don't bother getting the states for the national regions. We already
 			// know them
-			deferred.resolveWith(this.that, [self.CONUS_ABBREVIATIONS]);
+			deferred.resolveWith(context || this, [self.CONUS_ABBREVIATIONS]);
 		} else {
 			$.ajax({
 				url: self.GEOSERVER_ENDPOINT + workspace + '/ows',

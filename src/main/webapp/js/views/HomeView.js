@@ -48,7 +48,7 @@ define([
 			this.mapView = new MapView({
 				mapDivId: 'map-container',
 				enableZoom: false,
-				selectModelView : this.selectModelView
+				selectionModel : this.selectionModel
 			});
 
 			BaseView.prototype.initialize.apply(this, arguments);
