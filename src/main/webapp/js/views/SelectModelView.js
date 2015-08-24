@@ -7,8 +7,9 @@ define([
 	'jquery',
 	'views/BaseView',
 	'views/SelectMenuView',
+	'utils/mapUtils',
 	'text!templates/model_selection.html'
-], function (Handlebars, _, log, SpatialUtils, $, BaseView, SelectMenuView, hbTemplate) {
+], function (Handlebars, _, log, SpatialUtils, $, BaseView, SelectMenuView, MapUtils, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -39,7 +40,6 @@ define([
 		 *      @prop {Jquery selector} el - Where view will be rendered.
 		 */
 		initialize: function (options) {
-			this.mapUtils = options.mapUtils;
 			this.context = {};
 			this.context.disabled = _.has(options, 'disabled') ? options.disabled : false;
 			this.updateContext(this.collection);
@@ -138,7 +138,7 @@ define([
 			
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
-			this.mapUtils.highlightRegion(region);
+			MapUtils.highlightRegion(region);
 		},
 		changeConstituent: function (ev) {
 			var value = ev.currentTarget.value;

@@ -7,8 +7,9 @@ define([
 	'views/BaseView',
 	'views/DisambiguateRegionSelectionView',
 	'ol',
+	'utils/mapUtils',
 	'olLayerSwitcher'
-], function (_, log, BaseView, DisambiguateRegionSelectionView, ol) {
+], function (_, log, BaseView, DisambiguateRegionSelectionView, ol, MapUtils) {
 	"use strict";
 
 	var regionLayerNames = [
@@ -43,16 +44,15 @@ define([
 		 */
 		initialize: function (options) {
 			options.enableZoom = _.has(options, 'enableZoom') ? options.enableZoom : true;
-			this.mapUtils = options.mapUtils;
 			this.mapDivId = options.mapDivId;
 
 			var regionLayers = _.map(regionLayerNames, function (name) {
-				return options.mapUtils.createRegionalCoverageLayers(name);
+				return MapUtils.createRegionalCoverageLayers(name);
 			});
 
 			this.map = new ol.Map({
 				view: new ol.View({
-					center: ol.extent.getCenter(this.mapUtils.CONUS_EXTENT),
+					center: ol.extent.getCenter(MapUtils.CONUS_EXTENT),
 					zoom: 4,
 					minZoom: 3
 				}),
@@ -60,10 +60,10 @@ define([
 					new ol.layer.Group({
 						title: 'Base maps',
 						layers: [
-							this.mapUtils.createStamenTonerBaseLayer(false),
-							this.mapUtils.createWorldTopoBaseLayer(false),
-							this.mapUtils.createWorldImageryLayer(false),
-							this.mapUtils.createWorldStreetMapBaseLayer(true)
+							MapUtils.createStamenTonerBaseLayer(false),
+							MapUtils.createWorldTopoBaseLayer(false),
+							MapUtils.createWorldImageryLayer(false),
+							MapUtils.createWorldStreetMapBaseLayer(true)
 						]
 					}),
 					new ol.layer.Group({
@@ -156,7 +156,7 @@ define([
 
 			selectModelView = options.selectModelView;
 			olMap = this.map;
-			this.mapUtils.map = olMap;
+			MapUtils.map = olMap;
 
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug("Map View initialized");
