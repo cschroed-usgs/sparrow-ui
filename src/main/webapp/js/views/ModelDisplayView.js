@@ -1,5 +1,5 @@
 /*jslint browser: true */
-
+/*global define*/
 define([
 	'handlebars',
 	'models/SelectionModel',
@@ -12,7 +12,7 @@ define([
 	'views/SearchView',
 	'utils/logger',
 	'text!templates/home.html'
-], function(Handlebars, SelectionModel, MapFilterModel, BaseView, NavView, ModelMapView, SelectModelView, MapFilterView, SearchView, log, hbTemplate){
+], function (Handlebars, SelectionModel, MapFilterModel, BaseView, NavView, ModelMapView, SelectModelView, MapFilterView, SearchView, log, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -34,7 +34,7 @@ define([
 			return this;
 		},
 
-		initialize : function(options) {
+		initialize : function (options) {
 			this.selectionModel = new SelectionModel({
 				constituent : options.constituent,
 				region : options.region
@@ -58,12 +58,14 @@ define([
 			this.mapFilterView = new MapFilterView({
 				el : '#map-sidebar-container',
 				collection : this.collection,
-				modelId : options.modelId
+				modelId : options.modelId,
+				model : this.mapFilterModel,
+				selectionModel : this.selectionModel
 			});
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
 
-		remove : function() {
+		remove : function () {
 			this.navView.remove();
 			this.mapView.remove();
 			this.selectionModelView.remove();
