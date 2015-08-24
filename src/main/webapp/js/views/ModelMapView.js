@@ -78,7 +78,8 @@ define([
 			$.ajax({
 				url: 'data/prediction',
 				data: {
-					'model-id': this.modelId
+					'model-id': this.modelId,
+					'data-series': this.model.get("dataSeries")
 				},
 				success: function (response) {
 					log.debug('Got model layers');
