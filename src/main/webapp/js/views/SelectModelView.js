@@ -84,7 +84,7 @@ define([
 				return {
 					text : option.name,
 					value : option.id,
-					selected : option.name === selectedOption
+					selected : option.id === selectedOption
 				};
 			});
 
