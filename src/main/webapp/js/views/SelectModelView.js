@@ -1,17 +1,19 @@
 /*jslint browser : true */
+/*global define*/
 define([
 	'handlebars',
 	'underscore',
 	'utils/logger',
+	'utils/spatialUtils',
 	'jquery',
 	'views/BaseView',
 	'views/SelectMenuView',
+	'utils/mapUtils',
 	'text!templates/model_selection.html'
-], function (Handlebars, _, log, $, BaseView, SelectMenuView, hbTemplate) {
+], function (Handlebars, _, log, SpatialUtils, $, BaseView, SelectMenuView, MapUtils, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
-
 		events: {
 			'change .constituent-select': 'changeConstituent',
 			'change .region-select': 'changeRegion',
@@ -115,6 +117,10 @@ define([
 			if (r && c) {
 				log.debug("A model has been chosen. Constituent: " + c + ", Region: " + r +
 					' picks model ' +  this.collection.getId(c, r));
+			
+				SpatialUtils.getStatesForRegion(r, this).done(function (states) {
+					// TODO: states param should be an array of states
+				});
 			}
 		},
 		updateConstituent: function (model) {
@@ -133,6 +139,7 @@ define([
 
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
+			MapUtils.highlightRegion(region);
 		},
 		changeConstituent: function (ev) {
 			var value = ev.currentTarget.value;

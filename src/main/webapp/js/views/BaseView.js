@@ -23,7 +23,7 @@ define([
 		 * @returns {String}
 		 */
 		template: function () {
-			return 'No template specified'
+			return 'No template specified';
 		},
 		/*
 		 * @constructs

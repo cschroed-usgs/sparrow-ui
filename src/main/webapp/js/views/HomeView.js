@@ -37,15 +37,18 @@ define([
 				el : 'nav',
 				router : options.router
 			});
-			this.mapView = new MapView({
-				mapDivId: 'map-container',
-				enableZoom: false
-			});
+			
 			this.selectModelView = new SelectModelView({
 				collection: this.collection,
 				model : this.selectionModel,
 				el: '#model-selection-container',
 				router : options.router
+			});
+
+			this.mapView = new MapView({
+				mapDivId: 'map-container',
+				enableZoom: false,
+				selectionModel : this.selectionModel
 			});
 
 			BaseView.prototype.initialize.apply(this, arguments);

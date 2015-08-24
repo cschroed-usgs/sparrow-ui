@@ -3,16 +3,15 @@ define([
 	'underscore',
 	'jquery',
 	'utils/logger',
+	'utils/spatialUtils',
 	'views/BaseView',
 	'handlebars',
-	'models/MapFilterModel',
 	'text!templates/map_filter.html'
-], function (_, $, log, BaseView, Handlebars, MapFilterModel, filterTemplate) {
+], function (_, $, log, SpatialUtils, BaseView, Handlebars, filterTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
 		template: Handlebars.compile(filterTemplate),
-
 		events: {
 			'change #state': 'stateChange',
 			'change #receiving-water-body': 'waterBodyChange',
@@ -20,8 +19,15 @@ define([
 			'change #data-series': 'dataSeriesChange',
 			'change #group-result-by': 'groupResultsByChange'
 		},
-
+		render: function () {
+			SpatialUtils.getStatesForRegion(this.selectionModel.get("region"), this).done(function (states) {
+				this.context.states = states;
+				BaseView.prototype.render.apply(this, arguments);
+			});
+			return this;
+		},
 		initialize: function (options) {
+			this.selectionModel = options.selectionModel;
 			this.listenTo(this.model, 'change', this.modelChange);
 			BaseView.prototype.initialize.apply(this, arguments);
 		},

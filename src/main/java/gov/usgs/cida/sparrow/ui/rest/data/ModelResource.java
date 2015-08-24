@@ -46,9 +46,14 @@ public class ModelResource {
 		}
 		Cache modelCache = cm.getCache(CACHE_NAME);
 
-		if (!modelCache.isKeyInCache(keyName)) {
+		if (modelCache.get(keyName) != null) {
+			LOG.debug("{} found in cache {}", keyName, CACHE_NAME);
+			// There is already a cached response from sciencebase, so use that
+			String model = (String) modelCache.get(keyName).getObjectValue();
+			response = Response.ok(model, MediaType.APPLICATION_JSON).build();
+		} else {
 			LOG.debug("{} not found in cache {}", keyName, CACHE_NAME);
-			// The sciencebase model response is not yet in the cache. 
+			// The sciencebase model response is not yet in the cache.
 			// Go grab the response from ScienceBase and if everything comes 
 			// ok, cache that response
 			Client client = ClientBuilder.newClient();
@@ -73,11 +78,6 @@ public class ModelResource {
 				response = Response.ok(model, MediaType.APPLICATION_JSON).build();
 			}
 
-		} else {
-			LOG.debug("{} found in cache {}", keyName, CACHE_NAME);
-			// There is already a cached response from sciencebase, so use that
-			String model = (String) modelCache.get(keyName).getObjectValue();
-			response = Response.ok(model, MediaType.APPLICATION_JSON).build();
 		}
 
 		return response;

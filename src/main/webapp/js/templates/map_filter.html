@@ -1,11 +1,10 @@
 <div id="filter-container">
 	<p>Choose Area of Interest&nbsp;</p>
 	<span class="fa fa-question" aria-hidden="true"></span>
-	<select id="state">
-		<option value="state">State</option>
-		<option value="alabama">Alabama</option>
-		<option value="alaska">Alaska</option>
-		<option value="arizona">Arizona</option>
+	<select id="state" size="5" multiple="true">
+		{{#each states}}
+		<option value="{{this}}">{{this}}</option>
+		{{/each}}
 	</select>
 	<select id="receiving-water-body">
 		<option value="waterbody">Receiving Water Body</option>
