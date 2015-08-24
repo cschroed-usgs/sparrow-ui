@@ -83,7 +83,7 @@ define([
 				return {
 					text : option.name,
 					value : option.id,
-					selected : option.name === selectedOption
+					selected : option.id === selectedOption
 				};
 			});
 
@@ -125,7 +125,7 @@ define([
 		updateConstituent: function (model) {
 			var constituent = model.get('constituent');
 			var validRegions = this.collection.getRegions(constituent);
-			
+
 			this.regionSelectView.updateMenuOptions(this._menuOptions(validRegions, model.get('region')));
 			this.$('.constituent-select').val(constituent);
 		},
