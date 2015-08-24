@@ -1,15 +1,31 @@
 /*jslint browser: true */
-/*global Infinity*/
 /*global define*/
 define([
 	'underscore',
 	'utils/logger',
 	'views/BaseView',
+	'views/DisambiguateRegionSelectionView',
 	'ol',
 	'utils/mapUtils',
 	'olLayerSwitcher'
-], function (_, log, BaseView, ol, mapUtils) {
+], function (_, log, BaseView, DisambiguateRegionSelectionView, ol, MapUtils) {
 	"use strict";
+
+	var regionLayerNames = [
+		"national_mrb_e2rf1",
+		"mrb01_nhd",
+		"mrb02_mrbe2rf1",
+		"mrb03_mrbe2rf1",
+		"mrb04_mrbe2rf1",
+		"mrb05_mrbe2rf1",
+		"mrb06_mrbe2rf1",
+		"mrb07_mrbe2rf1",
+		"marb_mrbe2rf1",
+		"chesa_nhd"
+	];
+
+	var selectionModel = null;
+
 	var view = BaseView.extend({
 		/**
 		 * Renders the map.
@@ -27,24 +43,15 @@ define([
 		 */
 		initialize: function (options) {
 			options.enableZoom = _.has(options, 'enableZoom') ? options.enableZoom : true;
-			var regionLayers = _.map([
-				"national_mrb_e2rf1",
-				"mrb01_nhd",
-				"mrb02_mrbe2rf1",
-				"mrb03_mrbe2rf1",
-				"mrb04_mrbe2rf1",
-				"mrb05_mrbe2rf1",
-				"mrb06_mrbe2rf1",
-				"mrb07_mrbe2rf1",
-				"chesa_nhd"
-			], function (name) {
-				return mapUtils.createRegionalCoverageLayers(name);
+			this.mapDivId = options.mapDivId;
+
+			var regionLayers = _.map(regionLayerNames, function (name) {
+				return MapUtils.createRegionalCoverageLayers(name);
 			});
 
-			this.mapDivId = options.mapDivId;
 			this.map = new ol.Map({
 				view: new ol.View({
-					center: ol.extent.getCenter(mapUtils.CONUS_EXTENT),
+					center: ol.extent.getCenter(MapUtils.CONUS_EXTENT),
 					zoom: 4,
 					minZoom: 3
 				}),
@@ -52,10 +59,10 @@ define([
 					new ol.layer.Group({
 						title: 'Base maps',
 						layers: [
-							mapUtils.createStamenTonerBaseLayer(false),
-							mapUtils.createWorldTopoBaseLayer(false),
-							mapUtils.createWorldImageryLayer(false),
-							mapUtils.createWorldStreetMapBaseLayer(true)
+							MapUtils.createWorldTopoBaseLayer(false),
+							MapUtils.createWorldImageryLayer(false),
+							MapUtils.createWorldStreetMapBaseLayer(false),
+							MapUtils.createStamenTonerBaseLayer(true)
 						]
 					}),
 					new ol.layer.Group({
@@ -69,10 +76,9 @@ define([
 					new ol.control.LayerSwitcher({
 						tipLabel: 'Switch base layers'
 					})])
-			});
+				});
 
-			// Add on-hover events for features
-			this.map.addInteraction(new ol.interaction.Select({
+			var hoverSelector = new ol.interaction.Select({
 				condition: ol.events.condition.pointerMove,
 				layers: regionLayers,
 				style: new ol.style.Style({
@@ -81,12 +87,19 @@ define([
 					}),
 					fill: new ol.style.Fill({
 						color: [150, 150, 150, 0.75]
-					}),
-					zIndex: Infinity
+					})
 				})
-			}));
+			});
 
-			var onClickSelect = new ol.interaction.Select({
+			hoverSelector.setProperties({
+				type: "select",
+				selectType: "hover"
+			});
+
+			// Add on-hover events for features
+			this.map.addInteraction(hoverSelector);
+
+			var clickSelector = new ol.interaction.Select({
 				condition: ol.events.condition.singleClick,
 				multi: true,
 				layers: regionLayers,
@@ -96,20 +109,39 @@ define([
 					}),
 					fill: new ol.style.Fill({
 						color: [200, 200, 200, 0.75]
-					}),
-					zIndex: Infinity
+					})
 				})
 			});
-			
-			onClickSelect.on("select", function (evt) {
-				var selectedFeatures = evt.selected;
-				var selectedRegionIds = _.map(selectedFeatures, function (f) {
-					return f.getId();
-				});
-				log.debug("Selected region ID(s): " + selectedRegionIds);
+
+			clickSelector.setProperties({
+				type: "select",
+				selectType: "click"
 			});
 
-			this.map.addInteraction(onClickSelect);
+			clickSelector.on("select", function (evt) {
+				var selectedFeatures = evt.selected;
+				var selectedRegions = _.map(selectedFeatures, function (f) {
+					return {id: f.getId().split(".")[0], name: f.getProperties().Name};
+				});
+
+				if (selectedRegions.length > 1) {
+					// Multiple regions were selected. Display the disambiguation 
+					// modal window
+					var dRegionView = new DisambiguateRegionSelectionView({
+						regions: selectedRegions,
+						el: '#page-content-container',
+						selectionModel : selectionModel
+					});
+					dRegionView.render();
+				} else {
+					selectionModel.set('region', selectedRegions[0].id);
+				}
+			});
+
+			this.map.addInteraction(clickSelector);
+
+			selectionModel = options.selectionModel;
+			MapUtils.map = this.map;
 
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug("Map View initialized");

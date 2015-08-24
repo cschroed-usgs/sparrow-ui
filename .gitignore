@@ -16,3 +16,4 @@ hs_err_pid*
 /target/
 /src/main/webapp/META-INF
 /src/main/webapp/css/
+/catalina.base_IS_UNDEFINED/

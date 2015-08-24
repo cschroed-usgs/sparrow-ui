@@ -1,3 +1,8 @@
+config: {
+	'utils/spatialUtils' : {
+		'endpointGeoserver' : 'geoserver/'
+	}
+},
 paths: {
 	"sinon": ['/webjars/sinonjs/${version.sinon}/sinon'],
 	"squire" : ['/webjars/squirejs/${version.squire}/Squire'],
