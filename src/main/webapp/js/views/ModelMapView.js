@@ -1,15 +1,15 @@
 /* jslint browser: true */
-
+/*global define*/
 define([
 	'utils/logger',
 	'ol',
 	'views/BaseView',
 	'utils/mapUtils',
 	'olLayerSwitcher'
-], function(log, ol, BaseView, mapUtils) {
+], function (log, ol, BaseView, mapUtils) {
 	"use strict";
 	var view = BaseView.extend({
-/**
+		/**
 		 * Renders the map.
 		 * @returns {extended Backbone.View}
 		 */
@@ -29,13 +29,15 @@ define([
 			this.mapDivId = options.mapDivId;
 			this.modelId = options.modelId;
 
+			this.model.on("change", this.updateModelLayer, this);
+
 			this.flowlineLayer = new ol.layer.Tile({
-					title : 'Flowline',
-					opacity : 1
-				});
+				title: 'Flowline',
+				opacity: 1
+			});
 			this.catchmentLayer = new ol.layer.Tile({
-				title : 'Catchment',
-				opacity : 0.3
+				title: 'Catchment',
+				opacity: 0.3
 			});
 			this.updateModelLayer();
 			this.map = new ol.Map({
@@ -56,59 +58,60 @@ define([
 					}),
 					new ol.layer.Group({
 						title: 'Model layers',
-						layers :  [this.catchmentLayer, this.flowlineLayer ]
+						layers: [this.catchmentLayer, this.flowlineLayer]
 					})
 				],
 				controls: ol.control.defaults().extend([
 					new ol.control.ScaleLine(),
 					new ol.control.LayerSwitcher({
 						tipLabel: 'Switch base layers'
-					})])
+					})
+				])
 			});
 
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug('ModelMapView initialized');
 		},
-
-		updateModelLayer : function() {
+		updateModelLayer: function () {
 			var self = this;
 			var getModelLayerNamesPromise = $.Deferred();
 			$.ajax({
-				url : 'data/prediction',
-				data : {
-					'model-id' : this.modelId
+				url: 'data/prediction',
+				data: {
+					'model-id': this.modelId
 				},
-				success : function(response) {
+				success: function (response) {
 					log.debug('Got model layers');
 					getModelLayerNamesPromise.resolve(response[0]);
 					$('#map-loading-div').hide();
 				},
-				error : function(jqxhr, textStatus) {
+				error: function (jqxhr, textStatus) {
 					log.debug('Error in retrieving model layers');
 					getModelLayerNamesPromise.reject(textStatus);
 					$('#map-loading-div').hide();
+					// TODO - Let's not do alerts. Need something less abrasive
 					alert('Error retrieving model information from server');
 				}
 			});
-			getModelLayerNamesPromise.done(function(response) {
+			getModelLayerNamesPromise.done(function (response) {
 				var flowlineSource = new ol.source.TileWMS({
-					serverType : 'geoserver',
-					params : {
-						LAYERS : response.FlowLayerName,
-						STYLES : response.FlowLayerDefaultStyleName
+					serverType: 'geoserver',
+					params: {
+						LAYERS: response.FlowLayerName,
+						STYLES: response.FlowLayerDefaultStyleName
 					},
-					url : response.EndpointUrl
+					url: response.EndpointUrl
 				});
 				var catchmentSource = new ol.source.TileWMS({
-					serverType : 'geoserver',
-					params : {
-						LAYERS : response.CatchLayerName,
-						STYLES : response.CatchLayerDefaultStyleName
+					serverType: 'geoserver',
+					params: {
+						LAYERS: response.CatchLayerName,
+						STYLES: response.CatchLayerDefaultStyleName
 					},
-					url : response.EndpointUrl
+					url: response.EndpointUrl
 				});
 
-				self.flowlineLayer.setSource(flowlineSource)
+				self.flowlineLayer.setSource(flowlineSource);
 				self.catchmentLayer.setSource(catchmentSource);
 			});
 		}
