@@ -21,10 +21,10 @@
 	<p>Choose a Data Series&nbsp;</p>
 	<span class="fa fa-question" aria-hidden="true"></span>
 	<select id="data-series">
-		<option value="total-yield">Total Yield</option>
-		<option value="incremental-yield">Incremental Yield</option>
-		<option value="incremental-load">Incremental Load</option>
-		<option value="flow-weighted-concentration">Flow-weighted Concentration</option>
+		<option value="total_yield" {{isSelected "total_yield" dataSeries}} >Total Yield</option>
+		<option value="incremental_yield" {{isSelected "incremental_yield" dataSeries}} >Incremental Yield</option>
+		<option value="decayed_incremental" {{isSelected "decayed_incremental" dataSeries}} >Incremental Load</option>
+		<option value="total_concentration" {{isSelected "total_concentration" dataSeries}} >Flow-weighted Concentration</option>
 	</select>
 	<p>Group Results by:</p>
 	<select id="group-result-by">
