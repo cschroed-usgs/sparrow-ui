@@ -9,11 +9,9 @@ import gov.usgs.cida.config.DynamicReadOnlyProperties;
 import gov.usgs.cida.sparrow.ui.model.ContextIdResponse;
 import gov.usgs.cida.sparrow.ui.model.MapLayerResponse;
 import gov.usgs.cida.sparrow.ui.model.PredictionRequestOptions;
-import gov.usgs.cida.sparrow.ui.model.SparrowResponseStatus;
 import gov.usgs.cida.sparrow.ui.utilities.JNDISingleton;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.DefaultValue;
@@ -31,8 +29,6 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  *
