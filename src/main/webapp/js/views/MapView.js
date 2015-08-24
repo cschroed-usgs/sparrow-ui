@@ -130,22 +130,10 @@ define([
 					// modal window
 					var dRegionView = new DisambiguateRegionSelectionView({
 						regions: selectedRegions,
-						el: '#page-content-container'
+						el: '#page-content-container',
+						selectModalModel : options.selectModelView.model 
 					});
 					dRegionView.render();
-
-					// Bind to the view's modal window 
-					dRegionView.$el.find(dRegionView.modalId + ' button').one('click', function (evt) {
-						var buttonId = evt.target.getAttribute('id'),
-							insignificantIdLength = "button-region-".length,
-							regionId = buttonId.substr(insignificantIdLength);
-							
-						if (regionId !== 'cancel') {
-							selectModelView.model.set('region', regionId);
-						} else {
-							selectModelView.model.set('region', '');
-						}
-					});
 				} else {
 					selectModelView.model.set('region', selectedRegions[0].id);
 				}
