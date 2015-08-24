@@ -36,6 +36,7 @@ define([
 		 *      @prop {SelectionModel} model
 		 *      @prop {ModelCollection} collection
 		 *      @prop {Jquery selector} el - Where view will be rendered.
+		 *      @prop {Boolean} disabled - optional. Set to true if the constituent and region menus show be disabled. Default is false.
 		 */
 		initialize: function (options) {
 			this.context = {};
@@ -119,7 +120,7 @@ define([
 		updateConstituent: function (model) {
 			var constituent = model.get('constituent');
 			var validRegions = this.collection.getRegions(constituent);
-			
+
 			this.regionSelectView.updateMenuOptions(this._menuOptions(validRegions, model.get('region')));
 			this.$('.constituent-select').val(constituent);
 		},
@@ -129,7 +130,7 @@ define([
 				return r.id === region;
 			});
 			var validConstituents = this.collection.getConstituents(regionModel.name);
-			
+
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
 		},
