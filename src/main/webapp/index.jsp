@@ -95,7 +95,7 @@
 
 					<a href="http://www.doioig.gov/" target="_blank">DOI Inspector General</a>
 
-					<p>URL: http//cida.usgs.gov/ca_drought</p>
+					<p>URL: http//cida.usgs.gov/sparrow</p>
 
 					<p>Contact Information: <a href="mailto:cida_webmaster@usgs.gov?Subject=Hello%20again" target="_top">cida.usgs.gov/sparrow</a></p>
 
