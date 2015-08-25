@@ -9,7 +9,7 @@ define([
 	var self = {};
 	self.ZYX = '/MapServer/tile/{z}/{y}/{x}';
 
-	self.CONUS_EXTENT = [-14819398.304233, -92644.611414691, -6718296.2995848, 9632591.3700111];
+	self.CONUS_EXTENT = [-18341616.56817788, 1526597.395101606, -3196078.0356399175, 8013349.363494803];
 
 	self.GEOSERVER_ENDPOINT = module.config().endpointGeoserver;
 
@@ -105,7 +105,7 @@ define([
 
 	/**
 	 * Selects/highlights a specific region on the map
-	 * 
+	 *
 	 * @param {type} regionId the id of the region to choose
 	 * @returns {undefined}
 	 */
@@ -133,6 +133,49 @@ define([
 				.each(function (s) {
 					s.getFeatures().clear();
 				});
+	};
+
+	self.getRegionExtent = function(regionId, scope) {
+		var WORKSPACE = 'huc8-regional-overlay';
+		var deferred = $.Deferred();
+
+		if (regionId === "national_e2rf1" || regionId === "national_mrb_e2rf1") {
+			deferred.resolveWith(scope, [self.CONUS_EXTENT]);
+		}
+		else {
+			$.ajax({
+				url : self.GEOSERVER_ENDPOINT + WORKSPACE+ '/ows',
+				data : {
+					service: 'WFS',
+					version: '2.0.0',
+					request: 'GetFeature',
+					typeName: WORKSPACE + ':' + regionId,
+					outputFormat: 'application/json'
+				},
+				success : function(data) {
+
+					var features = data.features;
+					if (data.features.length === 1) {
+						var coords = _.map(data.features[0].geometry.coordinates[0][0], function(c) {
+							return [c[1], c[0]];
+						});
+						var polygon = new ol.geom.Polygon([coords], 'XY');
+						var gExtent = polygon.getExtent();
+						var extent = ol.proj.transformExtent(gExtent, ol.proj.get('EPSG:4326'), ol.proj.get('EPSG:3857'));
+						deferred.resolveWith(scope, [extent]);
+					}
+					else {
+						// default fall back
+						deferred.resolveWith(scope, [self.CONUS_EXTENT]);
+					}
+				},
+				error : function() {
+					deferred.rejectWith(scope, arguments);
+				}
+			});
+		}
+
+		return deferred.promise();
 	};
 
 	return self;

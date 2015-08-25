@@ -47,7 +47,8 @@ define([
 			this.mapView = new ModelMapView({
 				mapDivId : 'map-container',
 				modelId : options.modelId,
-				model : this.mapFilterModel
+				model : this.mapFilterModel,
+				region : options.region
 			});
 			this.selectionModelView = new SelectModelView({
 				collection : this.collection,

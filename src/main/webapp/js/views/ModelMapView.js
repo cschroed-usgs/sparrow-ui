@@ -3,10 +3,11 @@
 define([
 	'utils/logger',
 	'ol',
+	'underscore',
 	'views/BaseView',
 	'utils/mapUtils',
 	'olLayerSwitcher'
-], function (log, ol, BaseView, mapUtils) {
+], function (log, ol, _, BaseView, mapUtils) {
 	"use strict";
 	var view = BaseView.extend({
 		/**
@@ -15,6 +16,12 @@ define([
 		 */
 		render: function () {
 			this.map.setTarget(this.mapDivId);
+			this.getRegionExtentPromise.done(function(extent) {
+				var size = this.map.getSize();
+//				var extent = this.map.getView().calculateExtent(size);
+				this.map.getView().fit(extent, this.map.getSize());
+			});
+
 			$('#' + this.mapDivId).append('<div id="map-loading-div">Loading model ...</div>');
 			$('#map-loading-div').show();
 			return this;
@@ -29,6 +36,8 @@ define([
 			this.mapDivId = options.mapDivId;
 			this.modelId = options.modelId;
 
+			this.getRegionExtentPromise = mapUtils.getRegionExtent(options.region, this);
+
 			this.model.on("change", this.updateModelLayer, this);
 
 			this.flowlineLayer = new ol.layer.Tile({
@@ -39,6 +48,7 @@ define([
 				title: 'Catchment',
 				opacity: 0.3
 			});
+
 			this.updateModelLayer();
 			this.map = new ol.Map({
 				view: new ol.View({
@@ -72,6 +82,7 @@ define([
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug('ModelMapView initialized');
 		},
+
 		updateModelLayer: function () {
 			var self = this;
 			var getModelLayerNamesPromise = $.Deferred();
