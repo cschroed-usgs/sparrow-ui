@@ -16,7 +16,7 @@ define([
 
 	/**
 	 * Given a specific region id, get the states for that region
-	 * 
+	 *
 	 * @param {type} regionId the id of the region of interest
 	 * @param {type} context (optional) the context of the deferred callback
 	 * @returns {Deferred}
@@ -53,6 +53,7 @@ define([
 							})
 							.flatten()
 							.uniq()
+							.sortBy()
 							.value();
 
 					this.deferred.resolveWith(this.that, [states]);
