@@ -23,7 +23,7 @@
 	<!--
 		Where to hit the dss services
 	-->
-	<Environment name="sparrow-dss-url" type="java.lang.String" value="http://cida-eros-sparrowdev.er.usgs.gov:8080/sparrow" />
+	<Environment name="sparrow-dss-url" type="java.lang.String" value="http://cida.usgs.gov/sparrow" />
 	
 	<!--
 		The Geoserver endpoint that the application uses to pull down layers and 

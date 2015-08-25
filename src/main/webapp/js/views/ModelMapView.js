@@ -8,6 +8,7 @@ define([
 	'utils/mapUtils',
 	'olLayerSwitcher'
 ], function (log, ol, _, BaseView, mapUtils) {
+
 	"use strict";
 	var view = BaseView.extend({
 		/**
@@ -110,7 +111,8 @@ define([
 					serverType: 'geoserver',
 					params: {
 						LAYERS: response.FlowLayerName,
-						STYLES: response.FlowLayerDefaultStyleName
+						STYLES: response.FlowLayerDefaultStyleName,
+						VERSION: "1.1.1"
 					},
 					url: response.EndpointUrl
 				});
@@ -118,13 +120,29 @@ define([
 					serverType: 'geoserver',
 					params: {
 						LAYERS: response.CatchLayerName,
-						STYLES: response.CatchLayerDefaultStyleName
+						STYLES: response.CatchLayerDefaultStyleName,
+						VERSION: "1.1.1"
 					},
 					url: response.EndpointUrl
 				});
 
+				// If there are states used, update the WMS request to include filtering
+				if (self.model.get("state").length > 0) {
+					_.each([flowlineSource, catchmentSource], function (src) {
+						var stateFilter =_.map(this, function (state) {
+							return "STATE_ABBR = ''" + state + "''";
+						}).join(" OR ");
+						src.updateParams({
+							CQL_FILTER: "WITHIN(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "')))"
+						});
+					}, self.model.get("state"));
+				};
+
 				self.flowlineLayer.setSource(flowlineSource);
 				self.catchmentLayer.setSource(catchmentSource);
+
+
+
 			});
 		}
 	});

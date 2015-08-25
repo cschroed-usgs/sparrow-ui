@@ -31,13 +31,15 @@ define([
 			this.selectionModel = options.selectionModel;
 			this.listenTo(this.model, 'change', this.modelChange);
 			BaseView.prototype.initialize.apply(this, arguments);
+			
+			// Automatically pre-select dropdown values based on model values
 			Handlebars.registerHelper('isSelected', function(text, obj) {
 				if (text === obj) {
 					return new Handlebars.SafeString('selected=true');
 				} else {
 					return '';
 				}
-			})
+			});
 		},
 		stateChange: function (evt) {
 			this.model.set("state", $(evt.target).val());
