@@ -130,7 +130,7 @@ define([
 			var regionModel = _.find(this.collection.getRegions(), function (r) {
 				return r.id === region;
 			});
-			var validConstituents = this.collection.getConstituents(regionModel.name);
+			var validConstituents = this.collection.getConstituents(regionModel.id);
 
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);

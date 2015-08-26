@@ -38,18 +38,17 @@ define([
 		/*
 		 * @constructs
 		 * @param {Object} options
-		 *      @prop mapDivId - Id of the div where the map will be rendered.
-		 *      @prop enableZoom {Boolean} - Optional, set to false if the zoom control should be removed. Deafult is true
+		 *      @prop {String} mapDivId - Id of the div where the map will be rendered.
+		 *      @prop {Boolean} enableZoom  - Optional, set to false if the zoom control should be removed. Deafult is true
+		 *      @prop {ModelCollection} collection
+		 *      @prop {SelectionModel} selectionModel
 		 */
 		initialize: function (options) {
-			
-			
-			
 			options.enableZoom = _.has(options, 'enableZoom') ? options.enableZoom : true;
 			this.mapDivId = options.mapDivId;
-			
+
 			selectionModel = options.selectionModel;
-			
+
 			var regionLayers = _.map(regionLayerNames, function (name) {
 				return MapUtils.createRegionalCoverageLayers(name);
 			});
@@ -130,21 +129,22 @@ define([
 				});
 
 				if (selectedRegions.length > 1) {
-					// Multiple regions were selected. Display the disambiguation 
+					// Multiple regions were selected. Display the disambiguation
 					// modal window
 					var dRegionView = new DisambiguateRegionSelectionView({
 						regions: selectedRegions,
 						el: '#page-content-container',
-						selectionModel: selectionModel
+						selectionModel: selectionModel,
+						collection : this.collection
 					});
 					dRegionView.render();
 				} else {
 					selectionModel.set('region', selectedRegions[0].id);
 				}
-			});
+			}, this);
 
 			this.map.addInteraction(clickSelector);
-			
+
 			this.listenTo(selectionModel, 'change:region', _.bind(function () {
 				MapUtils.highlightRegion(this.model.get("region"), this.map);
 			}, {

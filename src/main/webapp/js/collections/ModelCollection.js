@@ -15,7 +15,7 @@ define([
 			});
 			var models = _.map(filteredModels, function (item) {
 				var id, sbId, link, relatedLink, region, extent, constituent;
-				
+
 				var id = _.findWhere(item.tags, {type: 'id'}).name;
 				var sbId = item.id;
 				var link = item.link;
@@ -36,7 +36,7 @@ define([
 					regionId: regionId
 				};
 			});
-			
+
 			return models;
 		},
 
@@ -49,20 +49,20 @@ define([
 			var validModels;
 			if (region) {
 				validModels = _.filter(this.models, function(m) {
-					return (m.attributes.region === region);
+					return (m.attributes.regionId === region);
 				});
 			}
 			else {
 				validModels = this.models;
 			}
-			
+
 			var constArr = _.map(validModels, function(model) {
 				return {
 					id : model.attributes.constituent,
 					name : model.attributes.constituent
 				};
 			});
-			
+
 			return _.uniq(constArr, function (m) {
 				return m.id;
 			});
@@ -84,14 +84,14 @@ define([
 			else {
 				validModels = this.models;
 			}
-			
+
 			var modelArr = _.map(validModels, function(model) {
 				return {
 					id : model.attributes.regionId,
 					name : model.attributes.region
 				};
 			});
-			
+
 			return _.uniq(modelArr, function(m) {
 				return m.id;
 			});

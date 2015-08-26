@@ -1,37 +1,52 @@
 define([
+	'underscore',
 	'handlebars',
 	'views/BaseView',
 	'text!templates/disambiguate_region.html',
 	'bootstrap'
-], function (Handlebars, BaseView, templateText) {
+], function (_, Handlebars, BaseView, templateText) {
 	var view = BaseView.extend({
 		modalId: '#disambiguation-modal',
 		template: Handlebars.compile(templateText),
-		render: function (options) {
+
+		events : {
+			'click .region-btn' : 'updateRegionSelection',
+			'click #button-region-cancel' : 'unsetRegionSelection'
+		},
+
+		render: function () {
 			var html = this.template(this.context);
 			this.$el.append(html);
 
-			this.modal = $(this.modalId).modal(options);
-
-			// Bind to the view's modal window 
-			this.$(this.modalId + ' button').one('click', $.proxy(function (evt) {
-				var buttonId = evt.target.getAttribute('id'),
-						insignificantIdLength = "button-region-".length,
-						regionId = buttonId.substr(insignificantIdLength);
-
-				if (regionId !== 'cancel') {
-					this.selectionModel.set('region', regionId);
-				} else {
-					this.selectionModel.set('region', '');
-				}
-			}, this));
-
-			return this;
+			this.modal = $(this.modalId).modal(this.modalOptions);
 		},
+
+		/*
+		 * @param {Object} options
+		 *      @prop {Array of Object} regions - each object has an id and name property
+		 *      @prop {SelectionModel} selectionModel
+		 *      @prop {ModelCollection} collection
+		 *      @prop {Object} modalOptions - options to use when creating the modal window in this view.
+		 */
 		initialize: function (options) {
 			BaseView.prototype.initialize.apply(this, arguments);
-			this.context.regions = options.regions;
+			this.context.regions = _.map(options.regions, function(r) {
+				return _.extend(r, {
+					constituents : this.collection.getConstituents(r.id)
+				});
+			}, this);
 			this.selectionModel = options.selectionModel;
+			this.modalOptions = options.modalOptions || {};
+
+		},
+
+		updateRegionSelection : function(evt) {
+			var regionId = $(evt.target).data('regionId');
+			this.selectionModel.set('region', regionId);
+		},
+
+		unsetRegionSelection : function() {
+			this.selectionModel.set('region', '');
 		}
 	});
 
