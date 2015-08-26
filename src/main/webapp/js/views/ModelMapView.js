@@ -129,9 +129,6 @@ define([
 
 				self.flowlineLayer.setSource(flowlineSource);
 				self.catchmentLayer.setSource(catchmentSource);
-				
-				
-				
 			});
 		}
 	});

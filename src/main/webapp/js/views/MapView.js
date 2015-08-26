@@ -42,6 +42,9 @@ define([
 		 *      @prop enableZoom {Boolean} - Optional, set to false if the zoom control should be removed. Deafult is true
 		 */
 		initialize: function (options) {
+			
+			
+			
 			options.enableZoom = _.has(options, 'enableZoom') ? options.enableZoom : true;
 			this.mapDivId = options.mapDivId;
 			

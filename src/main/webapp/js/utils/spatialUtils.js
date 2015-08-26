@@ -73,16 +73,15 @@ define([
 	 * @returns {Array} a bounding box extent that covers the states requested
 	 */
 	self.getBoundingBoxForStates = function (states) {
-		var extendedExtent = _.chain(states)
-				.map(function (state) {
-					return self.STATE_BBOXES[state.toUpperCase()];
-				})
-				.reduceRight(function (orig, toExtend) {
-					return ol.extent.extend(orig, toExtend);
-				})
-				.value();
+		var stateBboxes = _.map(states, function (state) {
+			return self.STATE_BBOXES[state.toUpperCase()];
+		});
 		
-		return extendedExtent;
+		var fullExtent = _.reduce(stateBboxes, function (orig, toExtend) {
+			return ol.extent.extend(orig, toExtend);
+		});
+		
+		return fullExtent;
 	};
 
 	return self;
