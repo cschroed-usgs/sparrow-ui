@@ -8,7 +8,7 @@ define([
 	"use strict";
 
 	var view = BaseView.extend({
-		template: Handlebars.compile(searchTemplate),
+		template: Handlebars.compile(searchTemplate)
 	});
 
 	return view;
