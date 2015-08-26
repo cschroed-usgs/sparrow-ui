@@ -9,7 +9,7 @@ define([
 	var self = {};
 	self.ZYX = '/MapServer/tile/{z}/{y}/{x}';
 
-	self.CONUS_EXTENT = [-14819398.304233, -92644.611414691, -6718296.2995848, 9632591.3700111];
+	self.CONUS_EXTENT = [-18341616.56817788, 1526597.395101606, -3196078.0356399175, 8013349.363494803];
 
 	self.GEOSERVER_ENDPOINT = module.config().endpointGeoserver;
 
@@ -105,7 +105,7 @@ define([
 
 	/**
 	 * Selects/highlights a specific region on the map
-	 * 
+	 *
 	 * @param {type} regionId the id of the region to choose
 	 * @returns {undefined}
 	 */

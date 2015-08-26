@@ -1,13 +1,15 @@
 /* jslint browser: true */
 /*global define*/
 define([
-	'underscore',
 	'utils/logger',
 	'ol',
+	'underscore',
 	'views/BaseView',
 	'utils/mapUtils',
+	'utils/spatialUtils',
 	'olLayerSwitcher'
-], function (_, log, ol, BaseView, mapUtils) {
+], function (log, ol, _, BaseView, mapUtils, spatialUtils) {
+
 	"use strict";
 	var view = BaseView.extend({
 		/**
@@ -16,6 +18,10 @@ define([
 		 */
 		render: function () {
 			this.map.setTarget(this.mapDivId);
+			this.getRegionExtentPromise.done(function(extent) {
+				this.map.getView().fit(extent, this.map.getSize());
+			});
+
 			$('#' + this.mapDivId).append('<div id="map-loading-div">Loading model ...</div>');
 			$('#map-loading-div').show();
 			return this;
@@ -23,12 +29,16 @@ define([
 		/*
 		 * @constructs
 		 * @param {Object} options
-		 *      @prop mapDivId - Id of the div where the map will be rendered.
-		 *      @prop enableZoom {Boolean} - Optional, set to false if the zoom control should be removed. Deafult is true
+		 *      @prop {String} mapDivId - Id of the div where the map will be rendered.
+		 *      @prop {Boolean} enableZoom - Optional, set to false if the zoom control should be removed. Deafult is true
+		 *      @prop {String} modelId
+		 *      @prop {String} region
 		 */
 		initialize: function (options) {
 			this.mapDivId = options.mapDivId;
 			this.modelId = options.modelId;
+
+			this.getRegionExtentPromise = spatialUtils.getRegionExtent(options.region, this);
 
 			this.model.on("change", this.updateModelLayer, this);
 
@@ -40,6 +50,7 @@ define([
 				title: 'Catchment',
 				opacity: 0.3
 			});
+
 			this.updateModelLayer();
 			this.map = new ol.Map({
 				view: new ol.View({
@@ -73,6 +84,7 @@ define([
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug('ModelMapView initialized');
 		},
+
 		updateModelLayer: function () {
 			var self = this;
 			var getModelLayerNamesPromise = $.Deferred();
@@ -114,7 +126,7 @@ define([
 					},
 					url: response.EndpointUrl
 				});
-				
+
 				// If there are states used, update the WMS request to include filtering
 				if (self.model.get("state").length > 0) {
 					_.each([flowlineSource, catchmentSource], function (src) {

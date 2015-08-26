@@ -5,7 +5,7 @@
 define([
 	'squire',
 	'backbone',
-	'models/selectionModel',
+	'models/SelectionModel',
 	'collections/ModelCollection'
 ], function(Squire, Backbone, SelectionModel, ModelCollection) {
 
