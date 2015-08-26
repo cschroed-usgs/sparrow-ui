@@ -56,7 +56,7 @@ define([
 		});
 
 		it('getConstituents returns relevant constituents if filtered by region', function () {
-			var c = _.map(coll.getConstituents('Missouri (MRB4)'), function (c) {
+			var c = _.map(coll.getConstituents('mrb04_mrbe2rf1'), function (c) {
 				return c.name;
 			});
 			expect(c.length).toBe(2);
