@@ -85,6 +85,8 @@ define([
 		});
 		
 		return fullExtent;
+	};
+	
 	/*
 	 * @param {String} regionId
 	 * @param {Object] scope - The returned promise will resolve with scope as the context for callback functions.
