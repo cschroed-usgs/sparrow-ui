@@ -1,10 +1,11 @@
 /*jslint browser: true */
 /*global define*/
 define([
+	'ol',
 	'underscore',
 	'jquery',
 	'module'
-], function (_, $, module) {
+], function (ol, _, $, module) {
 	"use strict";
 
 	var self = {};
@@ -63,6 +64,25 @@ define([
 		}
 
 		return deferred;
+	};
+
+	/**
+	 * Given an array of states, provides a bounding box that covers their extent
+	 * 
+	 * @param {Array} states (2 letter abbreviation) required to extend.
+	 * @returns {Array} a bounding box extent that covers the states requested
+	 */
+	self.getBoundingBoxForStates = function (states) {
+		var extendedExtent = _.chain(states)
+				.map(function (state) {
+					return self.STATE_BBOXES[state.toUpperCase()];
+				})
+				.reduceRight(function (orig, toExtend) {
+					return ol.extent.extend(orig, toExtend);
+				})
+				.value();
+		
+		return extendedExtent;
 	};
 
 	return self;
