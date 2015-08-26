@@ -129,11 +129,13 @@ define([
 
 				// If there are states used, update the WMS request to include filtering
 				if (self.model.get("state").length > 0) {
+					var statesExtentBbox = spatialUtils.getBoundingBoxForStates(self.model.get("state"));
 					_.each([flowlineSource, catchmentSource], function (src) {
 						var stateFilter =_.map(this, function (state) {
 							return "STATE_ABBR = ''" + state + "''";
 						}).join(" OR ");
 						src.updateParams({
+							BBOX : statesExtentBbox,
 							CQL_FILTER: "WITHIN(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "')))"
 						});
 					}, self.model.get("state"));
