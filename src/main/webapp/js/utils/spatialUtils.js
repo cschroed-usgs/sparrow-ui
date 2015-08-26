@@ -69,6 +69,24 @@ define([
 		return deferred;
 	};
 
+	/**
+	 * Given an array of states, provides a bounding box that covers their extent
+	 * 
+	 * @param {Array} states (2 letter abbreviation) required to extend.
+	 * @returns {Array} a bounding box extent that covers the states requested
+	 */
+	self.getBoundingBoxForStates = function (states) {
+		var stateBboxes = _.map(states, function (state) {
+			return self.STATE_BBOXES[state.toUpperCase()];
+		});
+		
+		var fullExtent = _.reduce(stateBboxes, function (orig, toExtend) {
+			return ol.extent.extend(orig, toExtend);
+		});
+		
+		return fullExtent;
+	};
+	
 	/*
 	 * @param {String} regionId
 	 * @param {Object] scope - The returned promise will resolve with scope as the context for callback functions.
