@@ -67,7 +67,7 @@ define([
 			var expectedResult = [-13847325.155350128, 3833847.569139617, -8000530.274152562, 5622487.898443287];
 			var actualResult = SpatialUtils.getBoundingBoxForStates(["NY", "CA"]);
 			
-			expect(actualResult).toBe(expectedResult);
+			expect(actualResult).toEqual(expectedResult);
 		});
 
 		afterEach(function () {
