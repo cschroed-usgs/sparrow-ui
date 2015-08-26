@@ -1,9 +1,13 @@
+/* jslint browser: true */
+/* global expect */
+/* global jasmine */
+
 define([
 	'squire',
 	'backbone'
 ], function(Squire, Backbone) {
 	describe('SearchView', function () {
-		var HomeView, SearchView, mapViewInitializeSpy, mapRenderSpy, templateSpy;
+		var SearchView, mapViewInitializeSpy, mapRenderSpy, templateSpy;
 
 		beforeEach(function(done) {
 			$('body').append('<div class=".region-search-container-div"></div>');
@@ -13,12 +17,8 @@ define([
 			var injector = new Squire();
 			mapViewInitializeSpy = jasmine.createSpy('mapViewInitializeSpy');
 			mapRenderSpy = jasmine.createSpy('mapRenderSpy');
-			injector.mock('views/MapView', function() {
-				return Backbone.View;
-			});
-			injector.mock('text!templates/home.html', 'text!templates/region_search.html');
-			injector.require(['views/HomeView', 'views/SearchView'], function(homeView, searchView) {
-				HomeView = homeView;
+			injector.mock('text!templates/region_search.html', 'Template content');
+			injector.require(['views/SearchView'], function(searchView) {
 				SearchView = searchView;
 				done();
 			});

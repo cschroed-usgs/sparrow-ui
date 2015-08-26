@@ -114,10 +114,13 @@
 						isDevelopment: <%= development ? true : false%>
 					},
 					'utils/mapUtils': {
-						'endpointGeoserver' : '<%= getProp("endpoint-geoserver")%>'
+						'endpointGeoserver' : '<%= getProp("endpoint-geoserver")%>',
+					    'conus_extent' : [-18341616.56817788, 1526597.395101606, -3196078.0356399175, 8013349.363494803];
 					},
 					'utils/spatialUtils' : {
 						'endpointGeoserver' : '<%= getProp("endpoint-geoserver")%>'
+				        'conus_extent' : [-18341616.56817788, 1526597.395101606, -3196078.0356399175, 8013349.363494803];
+
 					},
 					'init': {
 						'contextPath': "<%=baseUrl%>/"

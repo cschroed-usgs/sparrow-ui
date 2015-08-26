@@ -135,49 +135,6 @@ define([
 				});
 	};
 
-	self.getRegionExtent = function(regionId, scope) {
-		var WORKSPACE = 'huc8-regional-overlay';
-		var deferred = $.Deferred();
-
-		if (regionId === "national_e2rf1" || regionId === "national_mrb_e2rf1") {
-			deferred.resolveWith(scope, [self.CONUS_EXTENT]);
-		}
-		else {
-			$.ajax({
-				url : self.GEOSERVER_ENDPOINT + WORKSPACE+ '/ows',
-				data : {
-					service: 'WFS',
-					version: '2.0.0',
-					request: 'GetFeature',
-					typeName: WORKSPACE + ':' + regionId,
-					outputFormat: 'application/json'
-				},
-				success : function(data) {
-
-					var features = data.features;
-					if (data.features.length === 1) {
-						var coords = _.map(data.features[0].geometry.coordinates[0][0], function(c) {
-							return [c[1], c[0]];
-						});
-						var polygon = new ol.geom.Polygon([coords], 'XY');
-						var gExtent = polygon.getExtent();
-						var extent = ol.proj.transformExtent(gExtent, ol.proj.get('EPSG:4326'), ol.proj.get('EPSG:3857'));
-						deferred.resolveWith(scope, [extent]);
-					}
-					else {
-						// default fall back
-						deferred.resolveWith(scope, [self.CONUS_EXTENT]);
-					}
-				},
-				error : function() {
-					deferred.rejectWith(scope, arguments);
-				}
-			});
-		}
-
-		return deferred.promise();
-	};
-
 	return self;
 });
 

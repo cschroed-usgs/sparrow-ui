@@ -6,8 +6,9 @@ define([
 	'underscore',
 	'views/BaseView',
 	'utils/mapUtils',
+	'utils/spatialUtils',
 	'olLayerSwitcher'
-], function (log, ol, _, BaseView, mapUtils) {
+], function (log, ol, _, BaseView, mapUtils, spatialUtils) {
 
 	"use strict";
 	var view = BaseView.extend({
@@ -18,8 +19,6 @@ define([
 		render: function () {
 			this.map.setTarget(this.mapDivId);
 			this.getRegionExtentPromise.done(function(extent) {
-				var size = this.map.getSize();
-//				var extent = this.map.getView().calculateExtent(size);
 				this.map.getView().fit(extent, this.map.getSize());
 			});
 
@@ -30,14 +29,16 @@ define([
 		/*
 		 * @constructs
 		 * @param {Object} options
-		 *      @prop mapDivId - Id of the div where the map will be rendered.
-		 *      @prop enableZoom {Boolean} - Optional, set to false if the zoom control should be removed. Deafult is true
+		 *      @prop {String} mapDivId - Id of the div where the map will be rendered.
+		 *      @prop {Boolean} enableZoom - Optional, set to false if the zoom control should be removed. Deafult is true
+		 *      @prop {String} modelId
+		 *      @prop {String} region
 		 */
 		initialize: function (options) {
 			this.mapDivId = options.mapDivId;
 			this.modelId = options.modelId;
 
-			this.getRegionExtentPromise = mapUtils.getRegionExtent(options.region, this);
+			this.getRegionExtentPromise = spatialUtils.getRegionExtent(options.region, this);
 
 			this.model.on("change", this.updateModelLayer, this);
 
@@ -140,9 +141,6 @@ define([
 
 				self.flowlineLayer.setSource(flowlineSource);
 				self.catchmentLayer.setSource(catchmentSource);
-
-
-
 			});
 		}
 	});
