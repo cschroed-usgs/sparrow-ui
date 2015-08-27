@@ -46,6 +46,7 @@ define([
 				router : options.router
 			});
 
+
 			this.mapView = new MapView({
 				mapDivId: 'map-container',
 				enableZoom: false,
@@ -55,6 +56,7 @@ define([
 
 			BaseView.prototype.initialize.apply(this, arguments);
 		},
+		
 		remove: function () {
 			this.navView.remove();
 			this.mapView.remove();
