@@ -6,7 +6,6 @@ define([
 	'bootstrap'
 ], function (_, Handlebars, BaseView, templateText) {
 	var view = BaseView.extend({
-		modalId: '#disambiguation-modal',
 		template: Handlebars.compile(templateText),
 
 		events : {
@@ -18,7 +17,7 @@ define([
 			var html = this.template(this.context);
 			this.$el.append(html);
 
-			this.modal = $(this.modalId).modal(this.modalOptions);
+			this.modal = this.$el.modal(this.modalOptions);
 		},
 
 		/*
@@ -41,7 +40,7 @@ define([
 		},
 
 		updateRegionSelection : function(evt) {
-			var regionId = $(evt.target).data('regionId');
+			var regionId = $(evt.currentTarget).data('regionId');
 			this.selectionModel.set('region', regionId);
 		},
 
