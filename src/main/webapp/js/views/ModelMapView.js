@@ -144,6 +144,12 @@ define([
 				self.flowlineLayer.setSource(flowlineSource);
 				self.catchmentLayer.setSource(catchmentSource);
 			});
+		},
+
+		remove : function() {
+			this.map.setTarget(null);
+			BaseView.prototype.remove.apply(this, arguments);
+			return this;
 		}
 	});
 

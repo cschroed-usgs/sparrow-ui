@@ -28,7 +28,7 @@ define([
 			BaseView.prototype.render.apply(this, arguments);
 			this.$('#map-loading-div').show();
 			this.mapView.render();
-			this.selectionModelView.setElement(this.$('#model-selection-container')).render();
+			this.selectModelView.setElement(this.$('#model-selection-container')).render();
 			this.navView.setElement(this.$('nav')).render();
 			this.mapFilterView.setElement(this.$('#map-sidebar-container')).render();
 			return this;
@@ -50,7 +50,7 @@ define([
 				model : this.mapFilterModel,
 				region : options.region
 			});
-			this.selectionModelView = new SelectModelView({
+			this.selectModelView = new SelectModelView({
 				collection : this.collection,
 				model : this.selectionModel,
 				el : '#model-selection-container',
@@ -69,8 +69,10 @@ define([
 		remove : function () {
 			this.navView.remove();
 			this.mapView.remove();
-			this.selectionModelView.remove();
+			this.selectModelView.remove();
 			this.mapFilterView.remove();
+			BaseView.prototype.remove.apply(this, arguments);
+			return this;
 		}
 	});
 
