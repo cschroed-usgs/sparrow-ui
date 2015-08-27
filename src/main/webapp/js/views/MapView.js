@@ -11,19 +11,6 @@ define([
 ], function (_, log, BaseView, DisambiguateRegionSelectionView, ol, MapUtils) {
 	"use strict";
 
-	var regionLayerNames = [
-		"national_mrb_e2rf1",
-		"mrb01_nhd",
-		"mrb02_mrbe2rf1",
-		"mrb03_mrbe2rf1",
-		"mrb04_mrbe2rf1",
-		"mrb05_mrbe2rf1",
-		"mrb06_mrbe2rf1",
-		"mrb07_mrbe2rf1",
-		"marb_mrbe2rf1",
-		"chesa_nhd"
-	];
-
 	var selectionModel = null;
 
 	var view = BaseView.extend({
@@ -49,18 +36,13 @@ define([
 
 			selectionModel = options.selectionModel;
 
-			var regionLayers = _.map(regionLayerNames, function (name) {
-				return MapUtils.createRegionalCoverageLayers(name);
-			});
-
-
 			this.map = new ol.Map({
 				view: new ol.View({
 					center: ol.extent.getCenter(MapUtils.CONUS_EXTENT),
 					zoom: 4,
 					minZoom: 3
 				}),
-				layers: [
+				layers : [
 					new ol.layer.Group({
 						title: 'Base maps',
 						layers: [
@@ -72,7 +54,7 @@ define([
 					}),
 					new ol.layer.Group({
 						title: 'Regions',
-						layers: regionLayers
+						layers: []
 					})
 				],
 				controls: ol.control.defaults({
@@ -83,68 +65,8 @@ define([
 					})])
 			});
 
-			var hoverSelector = new ol.interaction.Select({
-				condition: ol.events.condition.pointerMove,
-				layers: regionLayers,
-				style: new ol.style.Style({
-					stroke: new ol.style.Stroke({
-						color: [0, 0, 255, 0.75]
-					}),
-					fill: new ol.style.Fill({
-						color: [150, 150, 150, 0.75]
-					})
-				})
-			});
-
-			hoverSelector.setProperties({
-				type: "select",
-				selectType: "hover"
-			});
-
-			// Add on-hover events for features
-			this.map.addInteraction(hoverSelector);
-
-			var clickSelector = new ol.interaction.Select({
-				condition: ol.events.condition.singleClick,
-				multi: true,
-				layers: regionLayers,
-				style: new ol.style.Style({
-					stroke: new ol.style.Stroke({
-						color: [0, 0, 255, 0.75]
-					}),
-					fill: new ol.style.Fill({
-						color: [200, 200, 200, 0.75]
-					})
-				})
-			});
-
-			clickSelector.setProperties({
-				type: "select",
-				selectType: "click"
-			});
-
-			clickSelector.on("select", function (evt) {
-				var selectedFeatures = evt.selected;
-				var selectedRegions = _.map(selectedFeatures, function (f) {
-					return {id: f.getId().split(".")[0], name: f.getProperties().Name};
-				});
-
-				if (selectedRegions.length > 1) {
-					// Multiple regions were selected. Display the disambiguation
-					// modal window
-					this.dRegionView = new DisambiguateRegionSelectionView({
-						regions: selectedRegions,
-						el: '#disambiguation-modal',
-						selectionModel: selectionModel,
-						collection : this.collection
-					});
-					this.dRegionView.render();
-				} else {
-					selectionModel.set('region', selectedRegions[0].id);
-				}
-			}, this);
-
-			this.map.addInteraction(clickSelector);
+			this.updateRegionLayerGroup(this.collection);
+			this.listenTo(this.collection, 'update', this.updateRegionLayerGroup);
 
 			this.listenTo(selectionModel, 'change:region', _.bind(function () {
 				MapUtils.highlightRegion(this.model.get("region"), this.map);
@@ -155,6 +77,91 @@ define([
 
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug("Map View initialized");
+		},
+
+		updateRegionLayerGroup : function(collection) {
+			var regionLayerIds = _.map(collection.getRegions(), function(r) {
+				return r.id;
+			});
+			var regionLayers = _.map(regionLayerIds, function (id) {
+				return MapUtils.createRegionalCoverageLayers(id);
+			});
+
+			// Remove the previous region layer group, create a new one with the new regionLayers
+			var mapGroups = this.map.getLayers();
+			var regionGroup = new ol.layer.Group({
+				title : 'Regions',
+				layers : regionLayers
+			});
+
+			this.map.removeLayer(mapGroups.item(1));
+			this.map.addLayer(regionGroup);
+
+			// Don't add the select interactions if no region layers to interact with
+			if (regionLayerIds.length !== 0) {
+				var hoverSelector = new ol.interaction.Select({
+					condition: ol.events.condition.pointerMove,
+					layers: regionLayers,
+					style: new ol.style.Style({
+						stroke: new ol.style.Stroke({
+							color: [0, 0, 255, 0.75]
+						}),
+						fill: new ol.style.Fill({
+							color: [150, 150, 150, 0.75]
+						})
+					})
+				});
+
+				hoverSelector.setProperties({
+					type: "select",
+					selectType: "hover"
+				});
+
+				// Add on-hover events for features
+				this.map.addInteraction(hoverSelector);
+
+				var clickSelector = new ol.interaction.Select({
+					condition: ol.events.condition.singleClick,
+					multi: true,
+					layers: regionLayers,
+					style: new ol.style.Style({
+						stroke: new ol.style.Stroke({
+							color: [0, 0, 255, 0.75]
+						}),
+						fill: new ol.style.Fill({
+							color: [200, 200, 200, 0.75]
+						})
+					})
+				});
+
+				clickSelector.setProperties({
+					type: "select",
+					selectType: "click"
+				});
+
+				clickSelector.on("select", function (evt) {
+					var selectedFeatures = evt.selected;
+					var selectedRegions = _.map(selectedFeatures, function (f) {
+						return {id: f.getId().split(".")[0], name: f.getProperties().Name};
+					});
+
+					if (selectedRegions.length > 1) {
+						// Multiple regions were selected. Display the disambiguation
+						// modal window
+						this.dRegionView = new DisambiguateRegionSelectionView({
+							regions: selectedRegions,
+							el: '#disambiguation-modal',
+							selectionModel: selectionModel,
+							collection : this.collection
+						});
+						this.dRegionView.render();
+					} else {
+						selectionModel.set('region', selectedRegions[0].id);
+					}
+				}, this);
+
+				this.map.addInteraction(clickSelector);
+			}
 		},
 
 		remove : function() {
