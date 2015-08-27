@@ -53,6 +53,7 @@ define([
 				return MapUtils.createRegionalCoverageLayers(name);
 			});
 
+
 			this.map = new ol.Map({
 				view: new ol.View({
 					center: ol.extent.getCenter(MapUtils.CONUS_EXTENT),
@@ -131,13 +132,13 @@ define([
 				if (selectedRegions.length > 1) {
 					// Multiple regions were selected. Display the disambiguation
 					// modal window
-					var dRegionView = new DisambiguateRegionSelectionView({
+					this.dRegionView = new DisambiguateRegionSelectionView({
 						regions: selectedRegions,
-						el: '#page-content-container',
+						el: '#disambiguation-modal',
 						selectionModel: selectionModel,
 						collection : this.collection
 					});
-					dRegionView.render();
+					this.dRegionView.render();
 				} else {
 					selectionModel.set('region', selectedRegions[0].id);
 				}
@@ -154,8 +155,16 @@ define([
 
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug("Map View initialized");
+		},
+
+		remove : function() {
+			if (_.has(this, 'dRegionView')) {
+				this.dRegionView.remove();
+			}
 		}
 	});
+
+
 
 	return view;
 });
