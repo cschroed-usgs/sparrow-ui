@@ -83,21 +83,22 @@ define([
 			var regionLayerIds = _.map(collection.getRegions(), function(r) {
 				return r.id;
 			});
-
 			var regionLayers = _.map(regionLayerIds, function (id) {
 				return MapUtils.createRegionalCoverageLayers(id);
 			});
-			log.debug('Fetched ' + regionLayers.length + ' regions');
-			if (regionLayers.length !== 0) {
 
-				var mapGroups = this.map.getLayers();
-				this.map.removeLayer(mapGroups.item(1));
-				var regionGroup = new ol.layer.Group({
-					title : 'Regions',
-					layers : regionLayers
-				});
-				this.map.addLayer(regionGroup);
+			// Remove the previous region layer group, create a new one with the new regionLayers
+			var mapGroups = this.map.getLayers();
+			var regionGroup = new ol.layer.Group({
+				title : 'Regions',
+				layers : regionLayers
+			});
 
+			this.map.removeLayer(mapGroups.item(1));
+			this.map.addLayer(regionGroup);
+
+			// Don't add the select interactions if no region layers to interact with
+			if (regionLayerIds.length !== 0) {
 				var hoverSelector = new ol.interaction.Select({
 					condition: ol.events.condition.pointerMove,
 					layers: regionLayers,
