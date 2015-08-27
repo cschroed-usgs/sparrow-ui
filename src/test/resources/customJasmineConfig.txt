@@ -11,6 +11,7 @@ paths: {
 	"underscore": ['/webjars/underscorejs/${version.underscore}/underscore'],
 	"handlebars" : ['/webjars/handlebars/${version.handlebars}/handlebars'],
 	"text": ['/webjars/requirejs-text/${version.require.text}/text'],
+	"bootstrap" : ['/webjars/bootstrap/${version.bootstrap}/js/bootstrap'],
 	"loglevel": ['/webjars/loglevel/${version.loglevel}/loglevel'],
 	"ol": ['/webjars/openlayers/${version.openlayers}/ol-debug'],
 	"olshim": ['/js/vendor/olshim'],
@@ -18,6 +19,7 @@ paths: {
 },
 shim: {
 	"olLayerSwitcher":  ["olshim"],
+	"bootstrap": [ "jquery" ],
 	'sinon' : {
 		'exports' : 'sinon'
 	}
