@@ -161,6 +161,9 @@ define([
 			if (_.has(this, 'dRegionView')) {
 				this.dRegionView.remove();
 			}
+			this.map.setTarget(null);
+			BaseView.prototype.remove.apply(this, arguments);
+			return this;
 		}
 	});
 
