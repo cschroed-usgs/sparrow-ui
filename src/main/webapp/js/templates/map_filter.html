@@ -13,9 +13,30 @@
 		<option value="Water Body 3">Water Body 3</option>
 	</select>
 	
-	<select id="watershed-huc-2">
-		<option value="watershed">Watershed</option>
+	<select id="watershed-huc-2" class="watershed-select">
+		<option value="" disabled selected="true">Choose Watershed</option>
 		{{#each (getHucList 2 hucs)}}
+		<option value="{{this}}">{{this}}</option>
+		{{/each}}
+	</select>
+	
+	<select id="watershed-huc-4" class="watershed-select hidden">
+		<option value="" disabled selected="true">Choose Watershed</option>
+		{{#each (getHucList 4 hucs)}}
+		<option value="{{this}}">{{this}}</option>
+		{{/each}}
+	</select>
+	
+	<select id="watershed-huc-6" class="watershed-select hidden">
+		<option value="" disabled selected="true">Choose Watershed</option>
+		{{#each (getHucList 6 hucs)}}
+		<option value="{{this}}">{{this}}</option>
+		{{/each}}
+	</select>
+	
+	<select id="watershed-huc-8" class="watershed-select hidden">
+		<option value="" disabled selected="true">Choose Watershed</option>
+		{{#each (getHucList 8 hucs)}}
 		<option value="{{this}}">{{this}}</option>
 		{{/each}}
 	</select>

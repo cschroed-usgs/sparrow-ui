@@ -15,7 +15,7 @@ define([
 		events: {
 			'change #state': 'stateChange',
 			'change #receiving-water-body': 'waterBodyChange',
-			'change #watershed': 'waterShedChange',
+			'change .watershed-select': 'waterShedChange',
 			'change #data-series': 'dataSeriesChange',
 			'change #group-result-by': 'groupResultsByChange'
 		},
@@ -64,8 +64,46 @@ define([
 		waterBodyChange: function (evt) {
 			this.model.set("waterBody", $(evt.target).val());
 		},
+		
+		/**
+		 * Based on the dropdown option chosen for a watershed, update the next
+		 * dropdown with valid options and display it
+		 * @param {type} evt
+		 * @returns {undefined}
+		 */
 		waterShedChange: function (evt) {
-			this.model.set("waterShed", $(evt.target).val());
+			// Figure out which watershed select was chosen
+			var val = $(evt.target).val(),
+				waterShedSelects = this.$(".watershed-select");
+			
+			// Update the dropdowns of higher precision based on user's selection
+			var $downstreamSheds = $(waterShedSelects.slice(waterShedSelects.index(evt.target) + 1));
+			
+			// First hide all the downstream sheds
+			$downstreamSheds.addClass('hidden');
+			
+			// Only display options that are valid to the currently selected HUC
+			_.each($downstreamSheds, function (sel) {
+				var $sel = $(sel),
+					$options = $sel.find('option').slice(1);
+				
+				// Hide all options
+				$options.addClass('hidden');
+				
+				// Select the "Select A Watershed" option of the next dropdown
+				$options.prop("selected", false);
+				$sel.find('option').first().prop("selected", true);
+				
+				// Show only valid options
+				$sel.find("option[value^='"+this.val+"']").removeClass('hidden');
+			}, {
+				val : val,
+				model : this.model
+			});
+			
+			this.model.set('waterShed', val);
+			
+			$downstreamSheds.first().removeClass('hidden');
 		},
 		dataSeriesChange: function (evt) {
 			this.model.set("dataSeries", $(evt.target).val());
