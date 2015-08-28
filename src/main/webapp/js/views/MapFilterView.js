@@ -26,6 +26,8 @@ define([
 					).then(function (states, hucs) {
 				this[0].context.states = states;
 				this[0].context.hucs = hucs;
+				this[0].model.set("waterSheds", hucs);
+				
 				_.extend(this[0].context, this[0].model.attributes);
 				BaseView.prototype.render.apply(this[0], arguments);
 			});
