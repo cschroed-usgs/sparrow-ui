@@ -62,7 +62,7 @@ public class ModelResource {
 					.queryParam("parentId", jndiProps.get("sciencebase-sparrow-locator"))
 					.queryParam("max", "1000")
 					.queryParam("format", "json")
-					.queryParam("fields", "tags");
+					.queryParam("fields", "tags, title");
 			Invocation.Builder request = webTarget.request(MediaType.APPLICATION_JSON);
 			response = request.get();
 
