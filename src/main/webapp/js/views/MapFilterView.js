@@ -20,10 +20,14 @@ define([
 			'change #group-result-by': 'groupResultsByChange'
 		},
 		render: function () {
-			SpatialUtils.getStatesForRegion(this.selectionModel.get("region"), this).done(function (states) {
-				this.context.states = states;
-				_.extend(this.context, this.model.attributes);
-				BaseView.prototype.render.apply(this, arguments);
+			$.when(
+					SpatialUtils.getStatesForRegion(this.selectionModel.get("region"), this),
+					SpatialUtils.getHucsForRegion(this.selectionModel.get("region"), this)
+					).then(function (states, hucs) {
+				this[0].context.states = states;
+				this[0].context.hucs = hucs;
+				_.extend(this[0].context, this[0].model.attributes);
+				BaseView.prototype.render.apply(this[0], arguments);
 			});
 			return this;
 		},
@@ -31,14 +35,27 @@ define([
 			this.selectionModel = options.selectionModel;
 			this.listenTo(this.model, 'change', this.modelChange);
 			BaseView.prototype.initialize.apply(this, arguments);
-			
+
 			// Automatically pre-select dropdown values based on model values
-			Handlebars.registerHelper('isSelected', function(text, obj) {
+			Handlebars.registerHelper('isSelected', function (text, obj) {
 				if (text === obj) {
 					return new Handlebars.SafeString('selected=true');
 				} else {
 					return '';
 				}
+			});
+
+			Handlebars.registerHelper('getHucList', function (precision, hucs) {
+				var derivedHucs = _.chain(hucs)
+						.map(function (o) {
+							return o.substr(0, this);
+						}, precision)
+						.uniq()
+						.sortBy()
+						.value();
+				
+				return derivedHucs;
+				
 			});
 		},
 		stateChange: function (evt) {
