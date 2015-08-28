@@ -18,7 +18,7 @@ define([
 		 */
 		render: function () {
 			this.map.setTarget(this.mapDivId);
-			this.getRegionExtentPromise.done(function(extent) {
+			this.getRegionExtentPromise.done(function (extent) {
 				this.map.getView().fit(extent, this.map.getSize());
 			});
 
@@ -52,6 +52,7 @@ define([
 			});
 
 			this.updateModelLayer();
+			
 			this.map = new ol.Map({
 				view: new ol.View({
 					center: ol.extent.getCenter(mapUtils.CONUS_EXTENT),
@@ -84,7 +85,6 @@ define([
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug('ModelMapView initialized');
 		},
-
 		updateModelLayer: function () {
 			var self = this;
 			var getModelLayerNamesPromise = $.Deferred();
@@ -131,22 +131,46 @@ define([
 				if (self.model.get("state").length > 0) {
 					var statesExtentBbox = spatialUtils.getBoundingBoxForStates(self.model.get("state"));
 					_.each([flowlineSource, catchmentSource], function (src) {
-						var stateFilter =_.map(this, function (state) {
+						var stateFilter = _.map(this, function (state) {
 							return "STATE_ABBR = ''" + state + "''";
 						}).join(" OR ");
+						
 						src.updateParams({
-							BBOX : statesExtentBbox,
 							CQL_FILTER: "WITHIN(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "')))"
 						});
 					}, self.model.get("state"));
 				};
 
+				if (self.model.get("waterShed")) {
+					var waterShed = self.model.get("waterShed");
+					var waterSheds = _.filter(self.model.get("waterSheds"), function (ws) {
+						return ws.startsWith(this);
+					}, waterShed);
+					
+					_.each([flowlineSource, catchmentSource], function (src) {
+						var watershedFilter = _.map(this, function (watershed) {
+							return "HUC8 = ''" + watershed + "''";
+						}).join(" OR ");
+						
+						var params = src.getParams();
+						if (params.CQL_FILTER) {
+							params.CQL_FILTER = " AND ";
+						} else {
+							params.CQL_FILTER = "";
+						}
+						
+						
+						src.updateParams({
+							CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-overlay:" + self.model.get("region") + "','the_geom','" + watershedFilter + "')))"
+						});
+					}, waterSheds);
+				}
+
 				self.flowlineLayer.setSource(flowlineSource);
 				self.catchmentLayer.setSource(catchmentSource);
 			});
 		},
-
-		remove : function() {
+		remove: function () {
 			this.map.setTarget(null);
 			BaseView.prototype.remove.apply(this, arguments);
 			return this;

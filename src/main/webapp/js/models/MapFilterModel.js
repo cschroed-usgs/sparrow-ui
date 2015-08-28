@@ -11,7 +11,9 @@ define([
 				waterBody: '',
 				waterShed: '',
 				dataSeries: 'total_yield',
-				groupResultsBy: ''
+				groupResultsBy: '',
+				waterSheds: [],
+				region : ''
 			};
 		}
 	});

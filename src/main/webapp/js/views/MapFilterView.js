@@ -71,10 +71,12 @@ define([
 					).done(function (states, hucs) {
 						this[0].context.states = states;
 						this[0].context.hucs = hucs;
+						this[0].model.set("waterSheds", hucs);
 						deferred.resolveWith(this[0]);
 					}).fail(function() {
 						this[0].context.states = [];
 						this[0].context.hucs = [];
+						this[0].model.set('waterSheds', []);
 						deferred.resolveWith(this[0]);
 					});
 			}

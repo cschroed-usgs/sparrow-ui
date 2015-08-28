@@ -41,3 +41,17 @@ comment tags `{{!-- --}}` or `{{! }}`.
 
 These comments will not make it into the final product and will not be served to 
 the client.
+
+###Geoserver Setup
+We are using Geoserver using the Query Layer plugin. This plugin allows us to filter 
+a geometry based a geometry from another layer. We use this to filter by state, watershed, etc.
+
+The memory limits for this plugin are set somewhat low. In order to remedy this, Geoserver
+needs to run with system variables set higher. To accomplish this, in Tomcat's setenv I also set the following
+
+```
+export QUERY_LAYER_MAX_FEATURES=2000
+export GEOMETRY_COLLECT_MAX_COORDINATES=74000
+```
+
+See [here](http://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html) for more information.
