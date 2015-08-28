@@ -66,14 +66,14 @@ define([
 			var model = this.collection.getModel(this.modelId);
 			if (model) {
 				$.when(
-					SpatialUtils.getStatesForRegion(model.get("region"), this),
-					SpatialUtils.getHucsForRegion(model.get("region"), this)
+					SpatialUtils.getStatesForRegion(model.get("regionId"), this),
+					SpatialUtils.getHucsForRegion(model.get("regionId"), this)
 					).done(function (states, hucs) {
 						this[0].context.states = states;
 						this[0].context.hucs = hucs;
 						this[0].model.set("waterSheds", hucs);
 						deferred.resolveWith(this[0]);
-					}).fail(function() {
+					}).fail(function(args1, args2) {
 						this[0].context.states = [];
 						this[0].context.hucs = [];
 						this[0].model.set('waterSheds', []);

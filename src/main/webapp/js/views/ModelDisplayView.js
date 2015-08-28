@@ -61,7 +61,7 @@ define([
 				mapDivId : 'map-container',
 				modelId : options.modelId,
 				model : this.mapFilterModel,
-				region : options.region
+				collection : this.collection
 			});
 
 			this.mapFilterView = new MapFilterView({

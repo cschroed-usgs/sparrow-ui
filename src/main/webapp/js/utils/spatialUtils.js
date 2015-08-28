@@ -18,7 +18,7 @@ define([
 
 	/**
 	 * Given a specific region id, get the HUC8s in that region
-	 * 
+	 *
 	 * @param {type} regionId the id of the region of interest
 	 * @param {type} context the context of the deferred callback
 	 * @returns {Deferred}
@@ -112,7 +112,7 @@ define([
 
 	/**
 	 * Given an array of states, provides a bounding box that covers their extent
-	 * 
+	 *
 	 * @param {Array} states (2 letter abbreviation) required to extend.
 	 * @returns {Array} a bounding box extent that covers the states requested
 	 */
@@ -137,7 +137,7 @@ define([
 	self.getRegionExtent = function (regionId, scope) {
 		var deferred = $.Deferred();
 
-		if (regionId === "national_e2rf1" || regionId === "national_mrb_e2rf1") {
+		if (!(regionId) || regionId === "national_e2rf1" || regionId === "national_mrb_e2rf1") {
 			deferred.resolveWith(scope, [self.CONUS_EXTENT]);
 		}
 		else {
@@ -151,7 +151,7 @@ define([
 					outputFormat: 'application/json'
 				},
 				success: function (data) {
-					if (data.features.length === 1) {
+					if ((data.features.length)  && (data.features.length === 1)) {
 						var coords = _.map(data.features[0].geometry.coordinates[0][0], function (c) {
 							return [c[1], c[0]];
 						});
