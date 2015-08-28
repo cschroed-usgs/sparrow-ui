@@ -41,6 +41,8 @@ define([
 			});
 			this.mapFilterModel = new MapFilterModel(),
 
+			this.mapFilterModel.set("region", options.region);
+
 			this.navView = new NavView({
 				el : 'nav'
 			});
