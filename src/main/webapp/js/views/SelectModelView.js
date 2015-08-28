@@ -151,7 +151,7 @@ define([
 			var r = this.model.attributes.region;
 			var modelId = this.collection.getId(c, r);
 
-			this.router.navigate(encodeURI('model/' + modelId + '/constituent/' + c + '/region/' + r), {trigger : true});
+			this.router.navigate(encodeURI('model/' + modelId), {trigger : true});
 		}
 	});
 

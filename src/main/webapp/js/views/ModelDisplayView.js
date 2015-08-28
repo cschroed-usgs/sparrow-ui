@@ -43,11 +43,7 @@ define([
 		 */
 		initialize : function (options) {
 			BaseView.prototype.initialize.apply(this, arguments);
-			//TODO: remove this.
-			this.selectionModel = new SelectionModel({
-				constituent : options.constituent,
-				region : options.region
-			});
+
 			this.mapFilterModel = new MapFilterModel(),
 
 			this.navView = new NavView({
@@ -70,8 +66,7 @@ define([
 				el : '#map-sidebar-container',
 				collection : this.collection,
 				modelId : options.modelId,
-				model : this.mapFilterModel,
-				selectionModel : this.selectionModel
+				model : this.mapFilterModel
 			});
 		},
 

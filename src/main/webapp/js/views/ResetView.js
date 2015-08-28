@@ -38,6 +38,9 @@ define([
 			if (model) {
 				this.context.modelTitle = model.get('title');
 			}
+			else {
+				this.context.modelTitle = '';
+			}
 		},
 
 		goHome : function() {

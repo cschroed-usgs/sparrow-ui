@@ -19,22 +19,22 @@ define([
 			'change #data-series': 'dataSeriesChange',
 			'change #group-result-by': 'groupResultsByChange'
 		},
-		render: function () {
-			$.when(
-					SpatialUtils.getStatesForRegion(this.selectionModel.get("region"), this),
-					SpatialUtils.getHucsForRegion(this.selectionModel.get("region"), this)
-					).then(function (states, hucs) {
-				this[0].context.states = states;
-				this[0].context.hucs = hucs;
-				_.extend(this[0].context, this[0].model.attributes);
-				BaseView.prototype.render.apply(this[0], arguments);
+
+		render : function() {
+			this.listenTo(this.collection, 'update', function() {
+				this.updateContext().done(function() {
+					BaseView.prototype.render.apply(this, arguments);
+				});
+			}, this);
+			this.updateContext().done(function() {
+				BaseView.prototype.render.apply(this, arguments);
 			});
-			return this;
 		},
 		initialize: function (options) {
-			this.selectionModel = options.selectionModel;
-			this.listenTo(this.model, 'change', this.modelChange);
 			BaseView.prototype.initialize.apply(this, arguments);
+			this.modelId = options.modelId;
+			this.context = this.model.attributes;
+			this.listenTo(this.model, 'change', this.modelChange);
 
 			// Automatically pre-select dropdown values based on model values
 			Handlebars.registerHelper('isSelected', function (text, obj) {
@@ -53,18 +53,47 @@ define([
 						.uniq()
 						.sortBy()
 						.value();
-				
+
 				return derivedHucs;
-				
+
 			});
 		},
+		/*
+		 * Returns a promise that is resolved when the context has been updated
+		 */
+		updateContext : function() {
+			var deferred = $.Deferred();
+			var model = this.collection.getModel(this.modelId);
+			if (model) {
+				$.when(
+					SpatialUtils.getStatesForRegion(model.get("region"), this),
+					SpatialUtils.getHucsForRegion(model.get("region"), this)
+					).done(function (states, hucs) {
+						this[0].context.states = states;
+						this[0].context.hucs = hucs;
+						deferred.resolveWith(this[0]);
+					}).fail(function() {
+						this[0].context.states = [];
+						this[0].context.hucs = [];
+						deferred.resolveWith(this[0]);
+					});
+			}
+			else {
+				this.context.states = [];
+				this.context.hucs = [];
+				deferred.resolveWith(this);
+			}
+
+			return deferred.promise();
+		},
+
 		stateChange: function (evt) {
 			this.model.set("state", $(evt.target).val());
 		},
 		waterBodyChange: function (evt) {
 			this.model.set("waterBody", $(evt.target).val());
 		},
-		
+
 		/**
 		 * Based on the dropdown option chosen for a watershed, update the next
 		 * dropdown with valid options and display it
@@ -75,34 +104,34 @@ define([
 			// Figure out which watershed select was chosen
 			var val = $(evt.target).val(),
 				waterShedSelects = this.$(".watershed-select");
-			
+
 			// Update the dropdowns of higher precision based on user's selection
 			var $downstreamSheds = $(waterShedSelects.slice(waterShedSelects.index(evt.target) + 1));
-			
+
 			// First hide all the downstream sheds
 			$downstreamSheds.addClass('hidden');
-			
+
 			// Only display options that are valid to the currently selected HUC
 			_.each($downstreamSheds, function (sel) {
 				var $sel = $(sel),
 					$options = $sel.find('option').slice(1);
-				
+
 				// Hide all options
 				$options.addClass('hidden');
-				
+
 				// Select the "Select A Watershed" option of the next dropdown
 				$options.prop("selected", false);
 				$sel.find('option').first().prop("selected", true);
-				
+
 				// Show only valid options
 				$sel.find("option[value^='"+this.val+"']").removeClass('hidden');
 			}, {
 				val : val,
 				model : this.model
 			});
-			
+
 			this.model.set('waterShed', val);
-			
+
 			$downstreamSheds.first().removeClass('hidden');
 		},
 		dataSeriesChange: function (evt) {
