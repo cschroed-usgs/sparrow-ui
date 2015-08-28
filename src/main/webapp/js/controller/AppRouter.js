@@ -59,7 +59,8 @@ define([
 				collection : this.modelCollection,
 				modelId : modelId,
 				constituent : constituent,
-				region : region
+				region : region,
+				router : this
 			});
 		},
 

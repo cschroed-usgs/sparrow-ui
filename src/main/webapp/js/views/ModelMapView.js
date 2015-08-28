@@ -102,7 +102,7 @@ define([
 				error: function (jqxhr, textStatus) {
 					log.debug('Error in retrieving model layers');
 					getModelLayerNamesPromise.reject(textStatus);
-					$('#map-loading-div').hide();
+//					$('#map-loading-div').hide();
 					// TODO - Let's not do alerts. Need something less abrasive
 					alert('Error retrieving model information from server');
 				}
