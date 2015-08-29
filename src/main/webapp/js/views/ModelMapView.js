@@ -148,9 +148,7 @@ define([
 					}, waterShed);
 					
 					_.each([flowlineSource, catchmentSource], function (src) {
-						var watershedFilter = _.map(this, function (watershed) {
-							return "HUC8 = ''" + watershed + "''";
-						}).join(" OR ");
+						var watershedFilter = "HUC8 LIKE ''" + waterShed + "%''";
 						
 						var params = src.getParams();
 						if (params.CQL_FILTER) {
@@ -159,9 +157,8 @@ define([
 							params.CQL_FILTER = "";
 						}
 						
-						
 						src.updateParams({
-							CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-overlay:" + self.model.get("region") + "','the_geom','" + watershedFilter + "')))"
+							CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + self.model.get("region") + "','the_geom','" + watershedFilter + "')))"
 						});
 					}, waterSheds);
 				}
