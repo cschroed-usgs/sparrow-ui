@@ -12,8 +12,7 @@ define([
 				waterShed: '',
 				dataSeries: 'total_yield',
 				groupResultsBy: '',
-				waterSheds: [],
-				region : ''
+				waterSheds: []
 			};
 		}
 	});
