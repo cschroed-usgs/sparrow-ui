@@ -19,6 +19,7 @@ define([
 				var id = _.findWhere(item.tags, {type: 'id'}).name;
 				var sbId = item.id;
 				var link = item.link;
+				var title = item.title;
 				var relatedLink = item.relatedItems.link.url;
 				var region = _.findWhere(item.tags, {type: 'region'}).name;
 				var extent = _.findWhere(item.tags, {type: 'extent'}).name;
@@ -27,6 +28,7 @@ define([
 
 				return {
 					id: id,
+					title : title,
 					sbId: sbId,
 					link: link,
 					relatedLink: relatedLink,
@@ -114,6 +116,16 @@ define([
 			else {
 				return undefined;
 			}
+		},
+
+		/*
+		 * @param {String} modelId
+		 * @return {SparrowModel} - Return the metadata for modelId or undefined if modelId is not in the collection
+		 */
+		getModel : function(modelId) {
+			return _.find(this.models, function(model) {
+				return (model.attributes.id === modelId);
+			});
 		}
 	});
 

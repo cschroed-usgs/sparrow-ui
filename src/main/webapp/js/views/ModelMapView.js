@@ -18,13 +18,26 @@ define([
 		 */
 		render: function () {
 			this.map.setTarget(this.mapDivId);
-			this.getRegionExtentPromise.done(function (extent) {
-				this.map.getView().fit(extent, this.map.getSize());
-			});
+			this.listenTo(this.collection, 'update', function(collection) {
+				this.updateRegionExtent(collection);
+			}, this);
+
+			this.updateRegionExtent(this.collection);
 
 			$('#' + this.mapDivId).append('<div id="map-loading-div">Loading model ...</div>');
 			$('#map-loading-div').show();
 			return this;
+		},
+
+		updateRegionExtent : function(collection) {
+			var metadata = collection.getModel(this.modelId);
+			var regionId = '';
+			if (metadata) {
+				regionId = metadata.attributes.regionId;
+			}
+			spatialUtils.getRegionExtent(regionId, this).done(function(extent) {
+				this.map.getView().fit(extent, this.map.getSize());
+			});
 		},
 		/*
 		 * @constructs
@@ -32,13 +45,11 @@ define([
 		 *      @prop {String} mapDivId - Id of the div where the map will be rendered.
 		 *      @prop {Boolean} enableZoom - Optional, set to false if the zoom control should be removed. Deafult is true
 		 *      @prop {String} modelId
-		 *      @prop {String} region
+		 *      @prop {ModelCollection} collection
 		 */
 		initialize: function (options) {
 			this.mapDivId = options.mapDivId;
 			this.modelId = options.modelId;
-
-			this.getRegionExtentPromise = spatialUtils.getRegionExtent(options.region, this);
 
 			this.model.on("change", this.updateModelLayer, this);
 
@@ -52,7 +63,7 @@ define([
 			});
 
 			this.updateModelLayer();
-			
+
 			this.map = new ol.Map({
 				view: new ol.View({
 					center: ol.extent.getCenter(mapUtils.CONUS_EXTENT),
@@ -134,7 +145,7 @@ define([
 						var stateFilter = _.map(this, function (state) {
 							return "STATE_ABBR = ''" + state + "''";
 						}).join(" OR ");
-						
+
 						src.updateParams({
 							CQL_FILTER: "WITHIN(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "')))"
 						});
@@ -146,17 +157,18 @@ define([
 					var waterSheds = _.filter(self.model.get("waterSheds"), function (ws) {
 						return ws.startsWith(this);
 					}, waterShed);
-					
+
 					_.each([flowlineSource, catchmentSource], function (src) {
+
 						var watershedFilter = "HUC8 LIKE ''" + waterShed + "%''";
-						
+
 						var params = src.getParams();
 						if (params.CQL_FILTER) {
 							params.CQL_FILTER = " AND ";
 						} else {
 							params.CQL_FILTER = "";
 						}
-						
+
 						src.updateParams({
 							CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + self.model.get("region") + "','the_geom','" + watershedFilter + "')))"
 						});

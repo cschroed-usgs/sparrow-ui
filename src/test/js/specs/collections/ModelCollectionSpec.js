@@ -110,6 +110,26 @@ define([
 			expect(coll.getId('TN', '')).not.toBeDefined();
 		});
 
+		it('Expects getModel to return the model which has an id of modelId', function() {
+			expect(coll.getModel('57').attributes).toEqual({
+					id: '57',
+					title: undefined,
+					sbId: '55d22e13e4b0518e35468a8f',
+					link: {
+						rel: 'self',
+						url: 'https://www.sciencebase.gov/catalog/item/55d22e13e4b0518e35468a8f'
+					},
+					relatedLink: 'https://www.sciencebase.gov/catalog/itemLinks?itemId=55d22e13e4b0518e35468a8f',
+					region: 'Missouri (MRB4)', extent: 'Region (MRB) - Default for state selection',
+					constituent: 'TN',
+					regionId: 'mrb04_mrbe2rf1'
+			});
+		});
+
+		it('Expects getModel to return undefined if modelId is not in the collection', function() {
+			expect(coll.getModel('junk')).not.toBeDefined();
+		});
+
 		afterEach(function () {
 			this.server.restore();
 		});

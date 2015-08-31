@@ -13,7 +13,7 @@ define([
 	var applicationRouter = Backbone.Router.extend({
 		routes: {
 			'': 'homeView',
-			'model/:modelId/constituent/:constituent/region/:region' : 'modelDisplayView'
+			'model/:modelId' : 'modelDisplayView'
 		},
 
 		applicationContextDiv : '#page-content-container',
@@ -51,15 +51,12 @@ define([
 			});
 		},
 
-		modelDisplayView : function(modelId, constituent, region) {
-			log.trace('Routing to model display view for model ' + modelId + ', constituent ' + constituent +
-				' and region ' + region);
+		modelDisplayView : function(modelId) {
+			log.trace('Routing to model display view for model ' + modelId);
 
 			this.showView(ModelDisplayView, {
 				collection : this.modelCollection,
-				modelId : modelId,
-				constituent : constituent,
-				region : region
+				modelId : modelId
 			});
 		},
 

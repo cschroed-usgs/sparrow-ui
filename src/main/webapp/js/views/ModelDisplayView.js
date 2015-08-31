@@ -7,12 +7,11 @@ define([
 	'views/BaseView',
 	'views/NavView',
 	'views/ModelMapView',
-	'views/SelectModelView',
+	'views/ResetView',
 	'views/MapFilterView',
-	'views/SearchView',
 	'utils/logger',
 	'text!templates/home.html'
-], function (Handlebars, SelectionModel, MapFilterModel, BaseView, NavView, ModelMapView, SelectModelView, MapFilterView, SearchView, log, hbTemplate) {
+], function (Handlebars, SelectionModel, MapFilterModel, BaseView, NavView, ModelMapView, ResetView, MapFilterView, log, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -28,17 +27,23 @@ define([
 			BaseView.prototype.render.apply(this, arguments);
 			this.$('#map-loading-div').show();
 			this.mapView.render();
-			this.selectModelView.setElement(this.$('#model-selection-container')).render();
+			this.resetView.setElement(this.$('#model-selection-container')).render();
 			this.navView.setElement(this.$('nav')).render();
 			this.mapFilterView.setElement(this.$('#map-sidebar-container')).render();
 			return this;
 		},
 
+		/*
+		 * @constructs
+		 * @param {Object} options
+		 *     @prop {String} el - selector where the view should be rendered
+		 *     @prop {String} modelId - id of the model to be viewed
+		 *     @prop {ModelCollection} collection - application meta data.
+		 *     @prop {AppRouter} router
+		 */
 		initialize : function (options) {
-			this.selectionModel = new SelectionModel({
-				constituent : options.constituent,
-				region : options.region
-			});
+			BaseView.prototype.initialize.apply(this, arguments);
+
 			this.mapFilterModel = new MapFilterModel(),
 
 			this.mapFilterModel.set("region", options.region);
@@ -46,32 +51,31 @@ define([
 			this.navView = new NavView({
 				el : 'nav'
 			});
+			this.resetView = new ResetView({
+				el : 'model-selection-container',
+				modelId : options.modelId,
+				collection : this.collection,
+				router : this.router
+			});
 			this.mapView = new ModelMapView({
 				mapDivId : 'map-container',
 				modelId : options.modelId,
 				model : this.mapFilterModel,
-				region : options.region
+				collection : this.collection
 			});
-			this.selectModelView = new SelectModelView({
-				collection : this.collection,
-				model : this.selectionModel,
-				el : '#model-selection-container',
-				disabled : true
-			});
+
 			this.mapFilterView = new MapFilterView({
 				el : '#map-sidebar-container',
 				collection : this.collection,
 				modelId : options.modelId,
-				model : this.mapFilterModel,
-				selectionModel : this.selectionModel
+				model : this.mapFilterModel
 			});
-			BaseView.prototype.initialize.apply(this, arguments);
 		},
 
 		remove : function () {
 			this.navView.remove();
 			this.mapView.remove();
-			this.selectModelView.remove();
+			this.resetView.remove();
 			this.mapFilterView.remove();
 			BaseView.prototype.remove.apply(this, arguments);
 			return this;
