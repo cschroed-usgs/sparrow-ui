@@ -44,9 +44,7 @@ define([
 		initialize : function (options) {
 			BaseView.prototype.initialize.apply(this, arguments);
 
-			this.mapFilterModel = new MapFilterModel(),
-
-			this.mapFilterModel.set("region", options.region);
+			this.mapFilterModel = new MapFilterModel();
 
 			this.navView = new NavView({
 				el : 'nav'

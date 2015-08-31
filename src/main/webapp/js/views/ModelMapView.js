@@ -51,7 +51,8 @@ define([
 			this.mapDivId = options.mapDivId;
 			this.modelId = options.modelId;
 
-			this.model.on("change", this.updateModelLayer, this);
+			this.listenTo(this.model, "change", this.updateModelLayer);
+			this.listenTo(this.collection, 'update', this.updateModelLayer);
 
 			this.flowlineLayer = new ol.layer.Tile({
 				title: 'Flowline',
@@ -98,6 +99,9 @@ define([
 		},
 		updateModelLayer: function () {
 			var self = this;
+			var thisModel = this.collection.getModel(this.modelId);
+			this.regionId = (thisModel) ? thisModel.attributes.regionId : '';
+
 			var getModelLayerNamesPromise = $.Deferred();
 			$.ajax({
 				url: 'data/prediction',
@@ -152,7 +156,7 @@ define([
 					}, self.model.get("state"));
 				};
 
-				if (self.model.get("waterShed")) {
+				if (self.model.get("waterShed") && (self.regionId)) {
 					var waterShed = self.model.get("waterShed");
 					var waterSheds = _.filter(self.model.get("waterSheds"), function (ws) {
 						return ws.startsWith(this);
@@ -170,7 +174,7 @@ define([
 						}
 
 						src.updateParams({
-							CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + self.model.get("region") + "','the_geom','" + watershedFilter + "')))"
+							CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + self.regionId + "','the_geom','" + watershedFilter + "')))"
 						});
 					}, waterSheds);
 				}
