@@ -4,11 +4,12 @@ define([
 	'utils/logger',
 	'ol',
 	'underscore',
+	'models/PredictionModel',
 	'views/BaseView',
 	'utils/mapUtils',
 	'utils/spatialUtils',
 	'olLayerSwitcher'
-], function (log, ol, _, BaseView, mapUtils, spatialUtils) {
+], function (log, ol, _, PredictionModel, BaseView, mapUtils, spatialUtils) {
 
 	"use strict";
 	var view = BaseView.extend({
@@ -46,12 +47,16 @@ define([
 		 *      @prop {Boolean} enableZoom - Optional, set to false if the zoom control should be removed. Deafult is true
 		 *      @prop {String} modelId
 		 *      @prop {ModelCollection} collection
+		 *      @prop {MapFilterModel} model
 		 */
 		initialize: function (options) {
 			this.mapDivId = options.mapDivId;
 			this.modelId = options.modelId;
 
-			this.listenTo(this.model, "change", this.updateModelLayer);
+			this.predictionModel = new PredictionModel();
+
+			this.listenTo(this.model, 'change:dataSeries', this.updatePredictionModel);
+			this.listenTo(this.model, "change:state change:waterBody change:waterShed change:waterSheds", this.updateModelLayer);
 			this.listenTo(this.collection, 'update', this.updateModelLayer);
 
 			this.flowlineLayer = new ol.layer.Tile({
@@ -63,7 +68,7 @@ define([
 				opacity: 0.3
 			});
 
-			this.updateModelLayer();
+			this.updatePredictionModel();
 
 			this.map = new ol.Map({
 				view: new ol.View({
@@ -97,91 +102,86 @@ define([
 			BaseView.prototype.initialize.apply(this, arguments);
 			log.debug('ModelMapView initialized');
 		},
-		updateModelLayer: function () {
+
+		updatePredictionModel : function() {
 			var self = this;
+			this.predictionModel.fetch({data : {
+				'model-id' : this.modelId,
+				'data-series' : this.model.get('dataSeries')
+			}}).done(function() {
+				log.debug('Updated predictionModel');
+				self.updateModelLayer();
+			}).fail(function(){
+				log.debug('Unable to retrieve predictionModel');
+				alert('Unable to retrieve predictionModel');
+			}).always(function() {
+				$('#map-loading-div').hide();
+			});
+		},
+
+		updateModelLayer: function () {
 			var thisModel = this.collection.getModel(this.modelId);
 			this.regionId = (thisModel) ? thisModel.attributes.regionId : '';
 
-			var getModelLayerNamesPromise = $.Deferred();
-			$.ajax({
-				url: 'data/prediction',
-				data: {
-					'model-id': this.modelId,
-					'data-series': this.model.get("dataSeries")
+			var geoserverEndpoint = this.predictionModel.get('geoserverEndpoint');
+
+			var flowlineSource = new ol.source.TileWMS({
+				serverType: 'geoserver',
+				params: {
+					LAYERS: this.predictionModel.get('flowlineLayerName'),
+					STYLES: this.predictionModel.get('flowlineStyleName'),
+					VERSION: "1.1.1"
 				},
-				success: function (response) {
-					log.debug('Got model layers');
-					getModelLayerNamesPromise.resolve(response[0]);
-					$('#map-loading-div').hide();
+				url: geoserverEndpoint
+			});
+			var catchmentSource = new ol.source.TileWMS({
+				serverType: 'geoserver',
+				params: {
+					LAYERS: this.predictionModel.get('catchmentLayerName'),
+					STYLES: this.predictionModel.get('catchmentStyleName'),
+					VERSION: "1.1.1"
 				},
-				error: function (jqxhr, textStatus) {
-					log.debug('Error in retrieving model layers');
-					getModelLayerNamesPromise.reject(textStatus);
-					$('#map-loading-div').hide();
-					// TODO - Let's not do alerts. Need something less abrasive
-					alert('Error retrieving model information from server');
-				}
+				url: geoserverEndpoint
 			});
-			getModelLayerNamesPromise.done(function (response) {
-				var flowlineSource = new ol.source.TileWMS({
-					serverType: 'geoserver',
-					params: {
-						LAYERS: response.FlowLayerName,
-						STYLES: response.FlowLayerDefaultStyleName,
-						VERSION: "1.1.1"
-					},
-					url: response.EndpointUrl
-				});
-				var catchmentSource = new ol.source.TileWMS({
-					serverType: 'geoserver',
-					params: {
-						LAYERS: response.CatchLayerName,
-						STYLES: response.CatchLayerDefaultStyleName,
-						VERSION: "1.1.1"
-					},
-					url: response.EndpointUrl
-				});
 
-				// If there are states used, update the WMS request to include filtering
-				if (self.model.get("state").length > 0) {
-					var statesExtentBbox = spatialUtils.getBoundingBoxForStates(self.model.get("state"));
-					_.each([flowlineSource, catchmentSource], function (src) {
-						var stateFilter = _.map(this, function (state) {
-							return "STATE_ABBR = ''" + state + "''";
-						}).join(" OR ");
+			// If there are states used, update the WMS request to include filtering
+			if (this.model.get("state").length > 0) {
+				_.each([flowlineSource, catchmentSource], function (src) {
+					var stateFilter = _.map(this, function (state) {
+						return "STATE_ABBR = ''" + state + "''";
+					}).join(" OR ");
 
-						src.updateParams({
-							CQL_FILTER: "WITHIN(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "')))"
-						});
-					}, self.model.get("state"));
-				};
+					src.updateParams({
+						CQL_FILTER: "WITHIN(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "')))"
+					});
+				}, this.model.get("state"));
+			};
 
-				if (self.model.get("waterShed") && (self.regionId)) {
-					var waterShed = self.model.get("waterShed");
-					var waterSheds = _.filter(self.model.get("waterSheds"), function (ws) {
-						return ws.startsWith(this);
-					}, waterShed);
+			if (this.model.get("waterShed") && (this.regionId)) {
+				var waterShed = this.model.get("waterShed");
+				var waterSheds = _.filter(this.model.get("waterSheds"), function (ws) {
+					return ws.startsWith(this);
+				}, waterShed);
 
-					_.each([flowlineSource, catchmentSource], function (src) {
+				_.each([flowlineSource, catchmentSource], function (src) {
 
-						var watershedFilter = "HUC8 LIKE ''" + waterShed + "%''";
+					var watershedFilter = "HUC8 LIKE ''" + waterShed + "%''";
 
-						var params = src.getParams();
-						if (params.CQL_FILTER) {
-							params.CQL_FILTER = " AND ";
-						} else {
-							params.CQL_FILTER = "";
-						}
+					var params = src.getParams();
+					if (params.CQL_FILTER) {
+						params.CQL_FILTER = " AND ";
+					} else {
+						params.CQL_FILTER = "";
+					}
 
-						src.updateParams({
-							CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + self.regionId + "','the_geom','" + watershedFilter + "')))"
-						});
-					}, waterSheds);
-				}
+					src.updateParams({
+						CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + this.regionId + "','the_geom','" + watershedFilter + "')))"
+					});
+				}, waterSheds);
+			}
 
-				self.flowlineLayer.setSource(flowlineSource);
-				self.catchmentLayer.setSource(catchmentSource);
-			});
+			this.flowlineLayer.setSource(flowlineSource);
+			this.catchmentLayer.setSource(catchmentSource);
 		},
 		remove: function () {
 			this.map.setTarget(null);
