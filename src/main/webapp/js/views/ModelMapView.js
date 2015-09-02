@@ -116,7 +116,7 @@ define([
 		 */
 		updatePredictionModel : function() {
 			//NOTE: Don't put #map-loading-div jquery element in a variable. The view may not be
-			// rendered when this is called but may be when we the fetch is complete
+			// rendered when this is called but may be when the fetch is complete
 			var self = this;
 
 			$('#map-loading-div').show();
