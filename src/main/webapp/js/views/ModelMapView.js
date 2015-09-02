@@ -26,13 +26,20 @@ define([
 			this.updateRegionExtent(this.collection);
 
 			$('#' + this.mapDivId).append('<div id="map-loading-div">Loading model ...</div>');
-			$('#map-loading-div').show();
+			if (!this.predictionModel.geoserverEndpoint) {
+				$('#map-loading-div').show();
+			}
 			return this;
 		},
 
+		/*
+		 * Gets the extent of the region of the model.
+		 * @param {ModelCollection} collection
+		 */
 		updateRegionExtent : function(collection) {
 			var metadata = collection.getModel(this.modelId);
 			var regionId = '';
+
 			if (metadata) {
 				regionId = metadata.attributes.regionId;
 			}
@@ -53,6 +60,7 @@ define([
 			this.mapDivId = options.mapDivId;
 			this.modelId = options.modelId;
 
+			// This model handles fetching the layer names and styles.
 			this.predictionModel = new PredictionModel();
 
 			this.listenTo(this.model, 'change:dataSeries', this.updatePredictionModel);
@@ -103,8 +111,15 @@ define([
 			log.debug('ModelMapView initialized');
 		},
 
+		/*
+		 * Fetch the prediction model and then update the model layer
+		 */
 		updatePredictionModel : function() {
+			//NOTE: Don't put #map-loading-div jquery element in a variable. The view may not be
+			// rendered when this is called but may be when we the fetch is complete
 			var self = this;
+
+			$('#map-loading-div').show();
 			this.predictionModel.fetch({data : {
 				'model-id' : this.modelId,
 				'data-series' : this.model.get('dataSeries')
@@ -119,10 +134,13 @@ define([
 			});
 		},
 
+		/*
+		 * Update the flowline and catchment source's using the current contents of the
+		 * predictionModel and map filter model (model).
+		 */
 		updateModelLayer: function () {
 			var thisModel = this.collection.getModel(this.modelId);
-			this.regionId = (thisModel) ? thisModel.attributes.regionId : '';
-
+			var regionId = (thisModel) ? thisModel.attributes.regionId : '';
 			var geoserverEndpoint = this.predictionModel.get('geoserverEndpoint');
 
 			var flowlineSource = new ol.source.TileWMS({
@@ -157,7 +175,8 @@ define([
 				}, this.model.get("state"));
 			};
 
-			if (this.model.get("waterShed") && (this.regionId)) {
+			// If there are watershed filters, update the WMS request to include filtering.
+			if (this.model.get("waterShed") && (regionId)) {
 				var waterShed = this.model.get("waterShed");
 				var waterSheds = _.filter(this.model.get("waterSheds"), function (ws) {
 					return ws.startsWith(this);
@@ -175,16 +194,18 @@ define([
 					}
 
 					src.updateParams({
-						CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + this.regionId + "','the_geom','" + watershedFilter + "')))"
+						CQL_FILTER: params.CQL_FILTER +"WITHIN(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + regionId + "','the_geom','" + watershedFilter + "')))"
 					});
 				}, waterSheds);
 			}
 
+			// Update the sources for flowline and catchment layers.
 			this.flowlineLayer.setSource(flowlineSource);
 			this.catchmentLayer.setSource(catchmentSource);
 		},
+
 		remove: function () {
-			this.map.setTarget(null);
+			this.map.setTarget(null); // Needed to clean up ol 3 map.
 			BaseView.prototype.remove.apply(this, arguments);
 			return this;
 		}
