@@ -24,6 +24,8 @@ define([
 				var region = _.findWhere(item.tags, {type: 'region'}).name;
 				var extent = _.findWhere(item.tags, {type: 'extent'}).name;
 				var constituent = _.findWhere(item.tags, {type: 'constituent'}).name;
+				var constituentNameParam = _.findWhere(item.tags, {type: 'constituent-name'});
+				var constituentName = (constituentNameParam) ? constituentNameParam.name : constituent;
 				var regionId = _.findWhere(item.tags, {type: 'regionId'}).name;
 
 				return {
@@ -35,6 +37,7 @@ define([
 					region: region,
 					extent: extent,
 					constituent: constituent,
+					constituentName : constituentName,
 					regionId: regionId
 				};
 			});
@@ -61,7 +64,7 @@ define([
 			var constArr = _.map(validModels, function(model) {
 				return {
 					id : model.attributes.constituent,
-					name : model.attributes.constituent
+					name : model.attributes.constituentName
 				};
 			});
 

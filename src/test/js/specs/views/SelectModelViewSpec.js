@@ -21,19 +21,22 @@ define([
 				id : 'id1',
 				region : 'Region 1',
 				regionId : 'region1',
-				constituent : 'TN'
+				constituent : 'TN',
+				constituentName : 'Total Nitrogen'
 			},
 			{
 				id : 'id2',
 				region : 'Region 2',
 				regionId : 'region2',
-				constituent : 'TN'
+				constituent : 'TN',
+				constituentName : 'Total Nitrogen'
 			},
 			{
 				id : 'id3',
 				region : 'Region 1',
 				regionId : 'region1',
-				constituent : 'TP'
+				constituent : 'TP',
+				constituentName : 'Total Phosphorus'
 			}
 		];
 
@@ -107,12 +110,12 @@ define([
 			});
 			expect(view.context.constituents.length).toBe(2);
 			expect(view.context.constituents[0]).toEqual({
-				text : 'TN',
+				text : 'Total Nitrogen',
 				value : 'TN',
 				selected : false
 			});
 			expect(view.context.constituents[1]).toEqual({
-				text : 'TP',
+				text : 'Total Phosphorus',
 				value : 'TP',
 				selected : false
 			});
@@ -208,7 +211,7 @@ define([
 			selectionModel.set('region', 'region2');
 			expect(updateMenuOptionsSpy).toHaveBeenCalled();
 			expect(updateMenuOptionsSpy.calls.mostRecent().args[0]).toEqual([{
-					text : 'TN',
+					text : 'Total Nitrogen',
 					value : 'TN',
 					selected : false
 			}]);

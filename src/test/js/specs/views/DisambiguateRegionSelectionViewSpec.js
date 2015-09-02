@@ -21,31 +21,36 @@ define([
 				id : 'id1',
 				region : 'Region 1',
 				regionId : 'region1',
-				constituent : 'TN'
+				constituent : 'TN',
+				constituentName : 'Total Nitrogen'
 			},
 			{
 				id : 'id2',
 				region : 'Region 2',
 				regionId : 'region2',
-				constituent : 'TN'
+				constituent : 'TN',
+				constituentName : 'Total Nitrogen'
 			},
 			{
 				id : 'id3',
 				region : 'Region 1',
 				regionId : 'region1',
-				constituent : 'TP'
+				constituent : 'TP',
+				constituentName : 'Total Phosphorus'
 			},
 			{
 				id : 'id4',
 				region : 'Region 3',
 				regionId : 'region3',
-				constituent : 'TDS'
+				constituent : 'TDS',
+				constituentName : 'Total DS'
 			},
 			{
 				id : 'id5',
 				region : 'Region 3',
 				regionId : 'region3',
-				constituent : 'TP'
+				constituent : 'TP',
+				constituentName : 'Total Phosphorus'
 			}
 		];
 
@@ -77,8 +82,8 @@ define([
 			expect(view.context.regions.length).toBe(2);
 			expect(view.context.regions[0].id).toEqual('region1');
 			expect(view.context.regions[0].constituents.length).toBe(2);
-			expect(view.context.regions[0].constituents).toContain({id: 'TN', name : 'TN'});
-			expect(view.context.regions[0].constituents).toContain({id: 'TP', name : 'TP'});
+			expect(view.context.regions[0].constituents).toContain({id: 'TN', name : 'Total Nitrogen'});
+			expect(view.context.regions[0].constituents).toContain({id: 'TP', name : 'Total Phosphorus'});
 		});
 
 		it('Expects the template to be rendered with the context', function() {
