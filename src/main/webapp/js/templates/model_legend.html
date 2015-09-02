@@ -1,0 +1,18 @@
+<div id="legend">
+	<h4>Legend</h4>
+	{{#each bins}}
+	<div class="legend-bin">
+		<span class="bin-color" style="background-color:{{color}};">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+		<span class="bin-values">
+		{{#if low}}
+			{{#if high}}{{else}}>{{/if}}
+			{{low}}
+		{{else}}<{{/if}}
+		{{#if high}}
+			{{#if low}}-{{else}}{{/if}}
+			{{high}}
+		{{/if}}	
+		</span>
+	</div>
+	{{/each}}
+</div>
