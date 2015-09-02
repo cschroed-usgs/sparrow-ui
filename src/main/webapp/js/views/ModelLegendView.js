@@ -17,16 +17,16 @@ define([
 		/*
 		 * @param {Object} options
 		 *     @prop {PredictionModel} model
+		 *     @prop {Jquery selector} el
 		 */
 		initialize: function(options) {
 			BaseView.prototype.initialize.apply(this, arguments);
-			this.listenTo(this.model, 'change', this.getLayerSlds);
-			this.getLayerSlds();
+			this.listenTo(this.model, 'change', this.updateLegendBins);
+			this.updateLegendBins();
 		},
 
-		getLayerSlds : function() {
+		updateLegendBins : function() {
 			var endpoint = this.model.get('geoserverEndpoint');
-			var getSld;
 
 			if (endpoint) {
 				// Fetch the sld
@@ -47,6 +47,11 @@ define([
 							});
 						});
 						this.context.bins = bins;
+						this.render();
+					},
+					error : function() {
+						log.debug('Error retrieving style sheet');
+						this.context.bins = [];
 						this.render();
 					}
 				});
