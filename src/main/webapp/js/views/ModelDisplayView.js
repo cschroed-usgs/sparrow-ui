@@ -2,16 +2,17 @@
 /*global define*/
 define([
 	'handlebars',
-	'models/SelectionModel',
 	'models/MapFilterModel',
+	'models/PredictionModel',
 	'views/BaseView',
 	'views/NavView',
 	'views/ModelMapView',
+	'views/ModelLegendView',
 	'views/ResetView',
 	'views/MapFilterView',
 	'utils/logger',
 	'text!templates/home.html'
-], function (Handlebars, SelectionModel, MapFilterModel, BaseView, NavView, ModelMapView, ResetView, MapFilterView, log, hbTemplate) {
+], function (Handlebars, MapFilterModel, PredictionModel, BaseView, NavView, ModelMapView, ModelLegendView, ResetView, MapFilterView, log, hbTemplate) {
 	"use strict";
 
 	var view = BaseView.extend({
@@ -27,6 +28,7 @@ define([
 			BaseView.prototype.render.apply(this, arguments);
 			this.$('#map-loading-div').show();
 			this.mapView.render();
+			this.legendView.setElement(this.$('#legend-container')).render();
 			this.resetView.setElement(this.$('#model-selection-container')).render();
 			this.navView.setElement(this.$('nav')).render();
 			this.mapFilterView.setElement(this.$('#map-sidebar-container')).render();
@@ -45,6 +47,7 @@ define([
 			BaseView.prototype.initialize.apply(this, arguments);
 
 			this.mapFilterModel = new MapFilterModel();
+			this.predictionModel = new PredictionModel();
 
 			this.navView = new NavView({
 				el : 'nav'
@@ -59,7 +62,12 @@ define([
 				mapDivId : 'map-container',
 				modelId : options.modelId,
 				model : this.mapFilterModel,
-				collection : this.collection
+				collection : this.collection,
+				predictionModel : this.predictionModel
+			});
+			this.legendView = new ModelLegendView({
+				el : '#legend-container',
+				model : this.predictionModel
 			});
 
 			this.mapFilterView = new MapFilterView({

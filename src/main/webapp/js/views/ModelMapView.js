@@ -4,12 +4,11 @@ define([
 	'utils/logger',
 	'ol',
 	'underscore',
-	'models/PredictionModel',
 	'views/BaseView',
 	'utils/mapUtils',
 	'utils/spatialUtils',
 	'olLayerSwitcher'
-], function (log, ol, _, PredictionModel, BaseView, mapUtils, spatialUtils) {
+], function (log, ol, _, BaseView, mapUtils, spatialUtils) {
 
 	"use strict";
 	var view = BaseView.extend({
@@ -55,13 +54,14 @@ define([
 		 *      @prop {String} modelId
 		 *      @prop {ModelCollection} collection
 		 *      @prop {MapFilterModel} model
+		 *      @prop {PredictionModel} predictionModel
 		 */
 		initialize: function (options) {
 			this.mapDivId = options.mapDivId;
 			this.modelId = options.modelId;
 
 			// This model handles fetching the layer names and styles.
-			this.predictionModel = new PredictionModel();
+			this.predictionModel = options.predictionModel;
 
 			this.listenTo(this.model, 'change:dataSeries', this.updatePredictionModel);
 			this.listenTo(this.model, "change:state change:waterBody change:waterShed change:waterSheds", this.updateModelLayer);
