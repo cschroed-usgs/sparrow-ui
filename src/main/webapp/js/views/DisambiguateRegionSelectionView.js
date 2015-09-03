@@ -42,10 +42,12 @@ define([
 		updateRegionSelection : function(evt) {
 			var regionId = $(evt.currentTarget).data('regionId');
 			this.selectionModel.set('region', regionId);
+			this.remove();
 		},
 
 		unsetRegionSelection : function() {
 			this.selectionModel.set('region', '');
+			this.remove();
 		}
 	});
 
