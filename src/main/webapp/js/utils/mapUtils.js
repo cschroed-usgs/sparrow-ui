@@ -107,6 +107,7 @@ define([
 	 * Selects/highlights a specific region on the map
 	 *
 	 * @param {type} regionId the id of the region to choose
+	 * @param {ol.map} map
 	 * @returns {undefined}
 	 */
 	self.highlightRegion = function (regionId, map) {
@@ -124,14 +125,6 @@ define([
 				})
 				.each(function (l) {
 					l.setVisible(false);
-				});
-
-		_.chain(map.getInteractions().getArray())
-				.filter(function (s) {
-					return s.getProperties().type === "select";
-				})
-				.each(function (s) {
-					s.getFeatures().clear();
 				});
 	};
 
