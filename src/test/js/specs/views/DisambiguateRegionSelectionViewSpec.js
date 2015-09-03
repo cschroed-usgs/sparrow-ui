@@ -72,29 +72,18 @@ define([
 			this.$testDiv.remove();
 		});
 
-		it('At initialization should retrieve the constituents for each region from the collection', function() {
+		it('Expects the template to be rendered with the regions and constituents', function() {
 			var view = new DisambiguateRegionSelectionView({
 				selectionModel : model,
-				regions : [{ id: 'region1', name: 'Region 1'}, {id : 'region3', name: 'Region 3'}],
-				collection : collection,
-				el : '#test-div'
-			});
-			expect(view.context.regions.length).toBe(2);
-			expect(view.context.regions[0].id).toEqual('region1');
-			expect(view.context.regions[0].constituents.length).toBe(2);
-			expect(view.context.regions[0].constituents).toContain({id: 'TN', name : 'Total Nitrogen'});
-			expect(view.context.regions[0].constituents).toContain({id: 'TP', name : 'Total Phosphorus'});
-		});
-
-		it('Expects the template to be rendered with the context', function() {
-			var view = new DisambiguateRegionSelectionView({
-				selectionModel : model,
-				regions : [{ id: 'region1', name: 'Region 1'}, {id : 'region3', name: 'Region 3'}],
 				collection : collection,
 				el : '#test-div'
 			});
 			spyOn(view, 'template').and.callThrough();
-			view.render();
+			view.show([{ id: 'region1', name: 'Region 1'}, {id : 'region3', name: 'Region 3'}]);
+			expect(view.context.regions.length).toBe(2);
+			expect(view.context.regions[0].constituents.length).toBe(2);
+			expect(view.context.regions[0].constituents).toContain({id: 'TN', name : 'Total Nitrogen'});
+			expect(view.context.regions[0].constituents).toContain({id: 'TP', name : 'Total Phosphorus'});
 			expect(view.template).toHaveBeenCalledWith(view.context);
 			expect(this.$testDiv.html()).toEqual('Template content');
 		});
