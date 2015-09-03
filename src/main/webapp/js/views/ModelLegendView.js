@@ -14,18 +14,28 @@ define([
 
 		template : Handlebars.compile(hbTemplate),
 
+		LEGEND_TITLE : {
+			total_yield : 'kg&#9679;km<sup>-2</sup>&#9679;yr<sup>-1</sup>',
+			incremental_yield : 'kg&#9679;km<sup>-2</sup>&#9679;yr<sup>-1</sup>',
+			decayed_incremental : 'kg&#9679;year<sup>-1</sup>',
+			total_concentration : 'mg&#9679;L<sup>-1</sup>'
+		},
+
 		/*
 		 * @param {Object} options
 		 *     @prop {PredictionModel} model
+		 *     @prop {MapFilterModel} mapFilterModel
 		 *     @prop {Jquery selector} el
 		 */
 		initialize: function(options) {
 			BaseView.prototype.initialize.apply(this, arguments);
+			this.mapFilterModel = options.mapFilterModel;
 			this.listenTo(this.model, 'change', this.updateLegendBins);
 			this.updateLegendBins();
 		},
 
 		updateLegendBins : function() {
+			this.context.title = this.LEGEND_TITLE[this.mapFilterModel.get('dataSeries')]
 			var endpoint = this.model.get('geoserverEndpoint');
 
 			if (endpoint) {

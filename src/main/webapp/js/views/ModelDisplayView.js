@@ -67,7 +67,8 @@ define([
 			});
 			this.legendView = new ModelLegendView({
 				el : '#legend-container',
-				model : this.predictionModel
+				model : this.predictionModel,
+				mapFilterModel : this.mapFilterModel
 			});
 
 			this.mapFilterView = new MapFilterView({
