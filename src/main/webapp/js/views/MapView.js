@@ -97,51 +97,17 @@ define([
 			this.map.removeLayer(mapGroups.item(1));
 			this.map.addLayer(regionGroup);
 
-			// Don't add the select interactions if no region layers to interact with
+			// Don't add the click handler if no region layers to interact with
 			if (regionLayerIds.length !== 0) {
-				var hoverSelector = new ol.interaction.Select({
-					condition: ol.events.condition.pointerMove,
-					layers: regionLayers,
-					style: new ol.style.Style({
-						stroke: new ol.style.Stroke({
-							color: [0, 0, 255, 0.75]
-						}),
-						fill: new ol.style.Fill({
-							color: [150, 150, 150, 0.75]
-						})
-					})
-				});
+				this.map.on('click', function(ev) {
+					var selectedFeatures = [];
+					var selectedRegions;
+					this.map.forEachFeatureAtPixel(ev.pixel, function(feature, layer) {
+						selectedFeatures.push(feature);
+						return false;
+					});
 
-				hoverSelector.setProperties({
-					type: "select",
-					selectType: "hover"
-				});
-
-				// Add on-hover events for features
-				this.map.addInteraction(hoverSelector);
-
-				var clickSelector = new ol.interaction.Select({
-					condition: ol.events.condition.singleClick,
-					multi: true,
-					layers: regionLayers,
-					style: new ol.style.Style({
-						stroke: new ol.style.Stroke({
-							color: [0, 0, 255, 0.75]
-						}),
-						fill: new ol.style.Fill({
-							color: [200, 200, 200, 0.75]
-						})
-					})
-				});
-
-				clickSelector.setProperties({
-					type: "select",
-					selectType: "click"
-				});
-
-				clickSelector.on("select", function (evt) {
-					var selectedFeatures = evt.selected;
-					var selectedRegions = _.map(selectedFeatures, function (f) {
+					selectedRegions = _.map(selectedFeatures, function (f) {
 						return {id: f.getId().split(".")[0], name: f.getProperties().Name};
 					});
 
@@ -155,12 +121,10 @@ define([
 							collection : this.collection
 						});
 						this.dRegionView.render();
-					} else {
+					} else if (selectedRegions.length === 1) {
 						selectionModel.set('region', selectedRegions[0].id);
 					}
 				}, this);
-
-				this.map.addInteraction(clickSelector);
 			}
 		},
 
