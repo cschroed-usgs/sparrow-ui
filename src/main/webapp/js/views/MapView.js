@@ -65,6 +65,12 @@ define([
 					})])
 			});
 
+			this.dRegionView = new DisambiguateRegionSelectionView({
+				el: '#disambiguation-modal',
+				selectionModel: selectionModel,
+				collection : this.collection
+			});
+
 			this.updateRegionLayerGroup(this.collection);
 			this.listenTo(this.collection, 'update', this.updateRegionLayerGroup);
 
@@ -114,13 +120,8 @@ define([
 					if (selectedRegions.length > 1) {
 						// Multiple regions were selected. Display the disambiguation
 						// modal window
-						this.dRegionView = new DisambiguateRegionSelectionView({
-							regions: selectedRegions,
-							el: '#disambiguation-modal',
-							selectionModel: selectionModel,
-							collection : this.collection
-						});
-						this.dRegionView.render();
+						this.dRegionView.show(selectedRegions);
+
 					} else if (selectedRegions.length === 1) {
 						selectionModel.set('region', selectedRegions[0].id);
 					}
@@ -129,9 +130,7 @@ define([
 		},
 
 		remove : function() {
-			if (_.has(this, 'dRegionView')) {
-				this.dRegionView.remove();
-			}
+			this.dRegionView.remove();
 			this.map.setTarget(null);
 			BaseView.prototype.remove.apply(this, arguments);
 			return this;
