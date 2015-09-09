@@ -8,8 +8,8 @@
 			<div class="btn-group-vertical" role="group" aria-label="Region Selection Group">
 				{{#each regions}}
 				<button type="button" data-region-id="{{this.id}}" class="btn btn-default region-btn" data-dismiss="modal">
-					{{this.name}}
-					<span class="text-info">(Available constituents: 
+                                    <strong class="text-info">{{this.name}}</strong>
+					<span>(Available constituents: 
 					{{#each this.constituents}}{{this.name}}{{#if @last}}{{else}},{{/if}}{{/each}})
 					</span>
 				</button>
