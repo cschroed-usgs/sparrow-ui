@@ -129,13 +129,13 @@ define([
 				validRegions = this.collection.getRegions();
 				$select
 					.find('option:first')
-					.attr('disabled', 'disabled')
+					.prop('disabled', true)
 					.html('Select A Constituent');
 			} else {
 				validRegions = this.collection.getRegions(constituent);
 				$select
 					.find('option:first')
-					.removeAttr('disabled')
+					.prop('disabled', false)
 					.html('Clear Selection');
 			}
 
@@ -152,7 +152,7 @@ define([
 				validConstituents = this.collection.getConstituents();
 				$select
 					.find('option:first')
-					.removeAttr('disabled')
+					.prop('disabled', true)
 					.html('Select A Region');
 			} else {
 				var regionModel = _.find(this.collection.getRegions(), function (r) {
@@ -163,7 +163,7 @@ define([
 				
 				$select
 					.find('option:first')
-					.removeAttr('disabled')
+					.prop('disabled', false)
 					.html('Clear Selection');
 			}
 			
