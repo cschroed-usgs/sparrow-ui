@@ -119,27 +119,62 @@ define([
 			}
 		},
 		updateConstituent: function (model) {
-			var constituent = model.get('constituent');
-			var validRegions = this.collection.getRegions(constituent);
+			var constituent = model.get('constituent'),
+				$select = this.$('.constituent-select'),
+				validRegions;
+			
+			$select.val(constituent);
+			
+			if (!constituent) {
+				validRegions = this.collection.getRegions();
+				$select
+					.find('option:first')
+					.prop('disabled', true)
+					.html('Select A Constituent');
+			} else {
+				validRegions = this.collection.getRegions(constituent);
+				$select
+					.find('option:first')
+					.prop('disabled', false)
+					.html('Clear Selection');
+			}
 
 			this.regionSelectView.updateMenuOptions(this._menuOptions(validRegions, model.get('region')));
-			this.$('.constituent-select').val(constituent);
 		},
 		updateRegion: function (model) {
-			var region = model.get('region');
-			var regionModel = _.find(this.collection.getRegions(), function (r) {
-				return r.id === region;
-			});
+			var region = model.get('region'),
+				$select = this.$('.region-select'),
+				validConstituents;
+		
+			$select.val(region);
 			
-			var validConstituents = this.collection.getConstituents(regionModel.id);
+			if (!region) {
+				validConstituents = this.collection.getConstituents();
+				$select
+					.find('option:first')
+					.prop('disabled', true)
+					.html('Select A Region');
+			} else {
+				var regionModel = _.find(this.collection.getRegions(), function (r) {
+					return r.id === region;
+				});
+
+				validConstituents = this.collection.getConstituents(regionModel.id);
+				
+				$select
+					.find('option:first')
+					.prop('disabled', false)
+					.html('Clear Selection');
+			}
+			
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
-			this.$('.region-select').val(region);
 		},
 		changeConstituent: function (ev) {
 			var value = ev.currentTarget.value;
 			log.debug("New constituent chosen: " + value);
 			this.model.set('constituent', value);
 		},
+		
 		changeRegion: function (ev) {
 			var value = ev.currentTarget.value;
 			log.debug("New region chosen: " + value);
