@@ -85,8 +85,8 @@ define([
 			log.debug("Map View initialized");
 		},
 
-		updateRegionLayerGroup : function(collection) {
-			var regionLayerIds = _.map(collection.getRegions(), function(r) {
+		updateRegionLayerGroup : function (collection) {
+			var regionLayerIds = _.map(collection.getRegions(), function (r) {
 				return r.id;
 			});
 			var regionLayers = _.map(regionLayerIds, function (id) {
@@ -105,10 +105,10 @@ define([
 
 			// Don't add the click handler if no region layers to interact with
 			if (regionLayerIds.length !== 0) {
-				this.map.on('click', function(ev) {
+				this.map.on('click', function (ev) {
 					var selectedFeatures = [];
 					var selectedRegions;
-					this.map.forEachFeatureAtPixel(ev.pixel, function(feature, layer) {
+					this.map.forEachFeatureAtPixel(ev.pixel, function (feature) {
 						selectedFeatures.push(feature);
 						return false;
 					});
@@ -129,7 +129,7 @@ define([
 			}
 		},
 
-		remove : function() {
+		remove : function () {
 			this.dRegionView.remove();
 			this.map.setTarget(null);
 			BaseView.prototype.remove.apply(this, arguments);

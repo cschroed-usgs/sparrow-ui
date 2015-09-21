@@ -1,4 +1,5 @@
 /*jslint browser: true */
+/*global define*/
 define([
 	"underscore",
 	"ol",
@@ -113,10 +114,11 @@ define([
 	self.highlightRegion = function (regionId, map) {
 		// I want only the vector layers which are part of the "regions" group
 		var vectorlayers = _.find(map.getLayers().getArray(), function (g) {
-			return g.get("title").toLowerCase() === "regions";
-		}).getLayersArray();
+				return g.get("title").toLowerCase() === "regions";
+			}).getLayersArray();
 
-		_.chain(vectorlayers)
+		if (regionId) {
+			_.chain(vectorlayers)
 				.each(function (l) {
 					l.setVisible(true);
 				})
@@ -126,6 +128,12 @@ define([
 				.each(function (l) {
 					l.setVisible(false);
 				});
+		} else {
+			_.each(vectorlayers, function (l) {
+				l.setVisible(true);
+			});
+		}
+		
 	};
 
 	return self;
