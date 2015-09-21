@@ -77,9 +77,9 @@ define([
 		 * @param {String} selectedOption
 		 * @returns {Array of Objects} - suitable for feeding the SelectMenuView.updateMenuOptions
 		 */
-		_menuOptions : function(optionList, selectedOption) {
+		_menuOptions : function (optionList, selectedOption) {
 			selectedOption = selectedOption ? selectedOption : '';
-			return _.map(optionList, function(option) {
+			return _.map(optionList, function (option) {
 				return {
 					text : option.name,
 					value : option.id,
@@ -89,7 +89,7 @@ define([
 
 		},
 
-		updateContext : function(collection) {
+		updateContext : function (collection) {
 			this.context.constituents = this._menuOptions(collection.getConstituents(), this.model.get('constituent'));
 			this.context.regions = this._menuOptions(collection.getRegions(), this.model.get('region'));
 		},
@@ -130,8 +130,8 @@ define([
 			var regionModel = _.find(this.collection.getRegions(), function (r) {
 				return r.id === region;
 			});
+			
 			var validConstituents = this.collection.getConstituents(regionModel.id);
-
 			this.constituentSelectView.updateMenuOptions(this._menuOptions(validConstituents, model.get('constituent')));
 			this.$('.region-select').val(region);
 		},
@@ -146,7 +146,7 @@ define([
 			this.model.set('region', value);
 		},
 
-		goToModelDisplayPage : function() {
+		goToModelDisplayPage : function () {
 			var c = this.model.attributes.constituent;
 			var r = this.model.attributes.region;
 			var modelId = this.collection.getId(c, r);

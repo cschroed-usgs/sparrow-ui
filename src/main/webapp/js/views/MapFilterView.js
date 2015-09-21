@@ -1,4 +1,5 @@
 /*jslint browser: true */
+/*global define*/
 define([
 	'underscore',
 	'jquery',
@@ -20,13 +21,13 @@ define([
 			'change #group-result-by': 'groupResultsByChange'
 		},
 
-		render : function() {
-			this.listenTo(this.collection, 'update', function() {
-				this.updateContext().done(function() {
+		render : function () {
+			this.listenTo(this.collection, 'update', function () {
+				this.updateContext().done(function () {
 					BaseView.prototype.render.apply(this, arguments);
 				});
 			}, this);
-			this.updateContext().done(function() {
+			this.updateContext().done(function () {
 				BaseView.prototype.render.apply(this, arguments);
 			});
 		},
@@ -61,7 +62,7 @@ define([
 		/*
 		 * Returns a promise that is resolved when the context has been updated
 		 */
-		updateContext : function() {
+		updateContext : function () {
 			var deferred = $.Deferred();
 			var model = this.collection.getModel(this.modelId);
 			if (model) {
@@ -73,7 +74,7 @@ define([
 						this[0].context.hucs = hucs;
 						this[0].model.set("waterSheds", hucs);
 						deferred.resolveWith(this[0]);
-					}).fail(function(args1, args2) {
+					}).fail(function () {
 						this[0].context.states = [];
 						this[0].context.hucs = [];
 						this[0].model.set('waterSheds', []);
@@ -126,7 +127,7 @@ define([
 				$sel.find('option').first().prop("selected", true);
 
 				// Show only valid options
-				$sel.find("option[value^='"+this.val+"']").removeClass('hidden');
+				$sel.find("option[value^='" + this.val + "']").removeClass('hidden');
 			}, {
 				val : val,
 				model : this.model
