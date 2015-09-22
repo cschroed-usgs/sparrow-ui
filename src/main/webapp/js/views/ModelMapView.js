@@ -73,7 +73,7 @@ define([
 			});
 			this.catchmentLayer = new ol.layer.Tile({
 				title: 'Catchment',
-				opacity: 0.3
+				opacity: 0.75
 			});
 
 			this.updatePredictionModel();
@@ -142,12 +142,11 @@ define([
 			var thisModel = this.collection.getModel(this.modelId);
 			var regionId = (thisModel) ? thisModel.attributes.regionId : '';
 			var geoserverEndpoint = this.predictionModel.get('geoserverEndpoint');
-
+			
 			var flowlineSource = new ol.source.TileWMS({
 				serverType: 'geoserver',
 				params: {
 					LAYERS: this.predictionModel.get('flowlineLayerName'),
-					STYLES: this.predictionModel.get('flowlineStyleName'),
 					VERSION: "1.1.1"
 				},
 				url: geoserverEndpoint
@@ -156,7 +155,6 @@ define([
 				serverType: 'geoserver',
 				params: {
 					LAYERS: this.predictionModel.get('catchmentLayerName'),
-					STYLES: this.predictionModel.get('catchmentStyleName'),
 					VERSION: "1.1.1"
 				},
 				url: geoserverEndpoint
