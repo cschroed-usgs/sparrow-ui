@@ -52,8 +52,14 @@ define([
 							MapUtils.createStamenTonerBaseLayer(true)
 						]
 					}),
+					// There's a bit of a hack here. Typically, I'd set the title
+					// property of the layer group here. However, because the 
+					// layer switcher uses the title property in order to decide
+					// whether or not to display the layer group in the layer switcher,
+					// I don't include that in the group here. This is done again
+					// in the updateRegionLayerGroup() function.
 					new ol.layer.Group({
-						title: 'Regions',
+						id: "regions",
 						layers: []
 					})
 				],
@@ -76,7 +82,7 @@ define([
 
 			this.listenTo(selectionModel, 'change:region', _.bind(function () {
 				var vectorLayers = _.find(this.map.getLayers().getArray(), function (g) {
-					return g.get("title").toLowerCase() === "regions";
+					return g.get("id") && g.get("id").toLowerCase() === "regions";
 				}).getLayersArray();
 				
 				MapUtils.highlightRegion(this.model.get("region"), vectorLayers);
@@ -100,8 +106,8 @@ define([
 			// Remove the previous region layer group, create a new one with the new regionLayers
 			var mapGroups = this.map.getLayers();
 			var regionGroup = new ol.layer.Group({
-				title : 'Regions',
-				layers : regionLayers
+				layers : regionLayers,
+				id: "regions"
 			});
 
 			this.map.removeLayer(mapGroups.item(1));
