@@ -33,8 +33,8 @@
 		<title>Sparrow UI</title>
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("css/bootstrap" + (development ? "" : ".min") + ".css")%>" />
 		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/<%= org.webjars.AssetLocator.getWebJarPath("ol.css")%>" />
-		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>.css" />
-                <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
+		<link type="text/css" rel="stylesheet" href="<%=baseUrl%>/js/vendor/ol3-layerswitcher/<%= getProp("version.olLayerSwitcher")%>/ol3-layerswitcher<%= resourceSuffix%>.css" />
+		<link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
         <link type="text/css" rel="stylesheet" href="<%= baseUrl%>/css/custom.css" />
 	</head>
 	<body>
@@ -138,7 +138,7 @@
 					"loglevel": ['<%=baseUrl%>/webjars/loglevel/<%= getProp("version.loglevel")%>/loglevel<%= development ? "" : ".min"%>'],
 					"ol": ['<%=baseUrl%>/webjars/openlayers/<%= getProp("version.openlayers")%>/ol<%= development ? "-debug" : ""%>'],
 					"olshim": ['<%=baseUrl%>/js/vendor/olshim'],
-					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher<%= resourceSuffix%>']
+					"olLayerSwitcher": ['<%=baseUrl%>/js/vendor/ol3-layerswitcher/<%= getProp("version.olLayerSwitcher")%>/ol3-layerswitcher<%= resourceSuffix%>']
 				},
 				shim: {
 					"olLayerSwitcher": ["olshim"],

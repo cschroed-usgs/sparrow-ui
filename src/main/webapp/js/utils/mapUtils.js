@@ -25,8 +25,12 @@ define([
 	});
 
 	self.createRegionalCoverageLayers = function (layerTitle) {
+		// I specifically do not give these layers titles because the LayerSwitcher
+		// control will use the existence of a 'title' property to decide whether
+		// or not to display these layers in the switcher. I do not want these layers
+		// displayed in the layer switcher
 		var layer = new ol.layer.Vector({
-			title: layerTitle,
+			id: layerTitle, 
 			visible: true,
 			updateWhileInteracting: true,
 			source: new ol.source.Vector({
@@ -36,7 +40,7 @@ define([
 			}),
 			style: self.defaultRegionStyle
 		});
-
+		
 		return layer;
 	};
 
@@ -118,7 +122,7 @@ define([
 					l.setVisible(true);
 				})
 				.filter(function (l) {
-					return l.getProperties("id").title !== regionId;
+					return l.getProperties().id !== regionId;
 				})
 				.each(function (l) {
 					l.setVisible(false);

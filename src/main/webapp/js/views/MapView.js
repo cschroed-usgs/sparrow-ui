@@ -63,7 +63,7 @@ define([
 					new ol.control.LayerSwitcher({
 						tipLabel: 'Switch base layers'
 					})])
-			});
+				});
 
 			this.dRegionView = new DisambiguateRegionSelectionView({
 				el: '#disambiguation-modal',

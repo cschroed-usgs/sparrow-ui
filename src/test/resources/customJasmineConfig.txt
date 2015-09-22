@@ -15,7 +15,7 @@ paths: {
 	"loglevel": ['/webjars/loglevel/${version.loglevel}/loglevel'],
 	"ol": ['/webjars/openlayers/${version.openlayers}/ol-debug'],
 	"olshim": ['/js/vendor/olshim'],
-	"olLayerSwitcher": ['/js/vendor/ol3-layerswitcher/1.0.1/ol3-layerswitcher']
+	"olLayerSwitcher": ['/js/vendor/ol3-layerswitcher/${version.olLayerSwitcher}/ol3-layerswitcher']
 },
 shim: {
 	"olLayerSwitcher":  ["olshim"],
