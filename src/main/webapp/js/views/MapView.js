@@ -75,7 +75,11 @@ define([
 			this.listenTo(this.collection, 'update', this.updateRegionLayerGroup);
 
 			this.listenTo(selectionModel, 'change:region', _.bind(function () {
-				MapUtils.highlightRegion(this.model.get("region"), this.map);
+				var vectorLayers = _.find(this.map.getLayers().getArray(), function (g) {
+					return g.get("title").toLowerCase() === "regions";
+				}).getLayersArray();
+				
+				MapUtils.highlightRegion(this.model.get("region"), vectorLayers);
 			}, {
 				map : this.map,
 				model : selectionModel

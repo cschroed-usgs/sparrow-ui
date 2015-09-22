@@ -108,17 +108,12 @@ define([
 	 * Selects/highlights a specific region on the map
 	 *
 	 * @param {type} regionId the id of the region to choose
-	 * @param {ol.map} map
+	 * @param {ol.Collection.<ol.layer.Base>} vectorLayers
 	 * @returns {undefined}
 	 */
-	self.highlightRegion = function (regionId, map) {
-		// I want only the vector layers which are part of the "regions" group
-		var vectorlayers = _.find(map.getLayers().getArray(), function (g) {
-				return g.get("title").toLowerCase() === "regions";
-			}).getLayersArray();
-
+	self.highlightRegion = function (regionId, vectorLayers) {
 		if (regionId) {
-			_.chain(vectorlayers)
+			_.chain(vectorLayers)
 				.each(function (l) {
 					l.setVisible(true);
 				})
@@ -129,7 +124,7 @@ define([
 					l.setVisible(false);
 				});
 		} else {
-			_.each(vectorlayers, function (l) {
+			_.each(vectorLayers, function (l) {
 				l.setVisible(true);
 			});
 		}
