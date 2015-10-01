@@ -150,7 +150,8 @@ Model Selector Styles
 }
 
 #model-selection-container button.explore-model,
-#model-selection-container button.reset-button{
+#model-selection-container button.reset-button,
+#filter-container button.reset-button {
     padding:0 15px;
     background:@blue;
     border:@border;
@@ -161,6 +162,10 @@ Model Selector Styles
     font-size:.9em;
 }
 
+#filter-container button.reset-button {
+	display: none;
+}
+
 .reset-button{
     margin-left:10px;
 }
@@ -168,7 +173,9 @@ Model Selector Styles
 #model-selection-container button.explore-model:hover,
 #model-selection-container button.explore-model:focus,
 #model-selection-container button.reset-button:hover,
-#model-selection-container button.reset-button:focus{
+#model-selection-container button.reset-button:focus,
+#filter-container button.reset-button:hover,
+#filter-container button.reset-button:focus{
     background:#fff;
     border:@border;
     color:@blue;

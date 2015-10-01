@@ -18,7 +18,8 @@ define([
 			'change #receiving-water-body': 'waterBodyChange',
 			'change .watershed-select': 'waterShedChange',
 			'change #data-series': 'dataSeriesChange',
-			'change #group-result-by': 'groupResultsByChange'
+			'change #group-result-by': 'groupResultsByChange',
+			'click #button-reset-view-filter': 'resetFilterView'
 		},
 
 		render : function () {
@@ -145,6 +146,40 @@ define([
 		},
 		modelChange: function (model) {
 			log.debug("Map Filter model changed to " + JSON.stringify(model.attributes));
+			// TODO - As more filtering options come through, add them here
+			var waterShed = model.get('waterShed'), // String
+				states = model.get('state'); // Array
+		
+			if (waterShed || states.length > 0) {
+				this.$("#button-reset-view-filter").show();
+			} else {
+				this.$("#button-reset-view-filter").hide();
+			}
+		},
+		resetFilterView: function () {
+			this.$('#state')
+					.find('option:selected')
+					.prop('selected', false);
+
+			this.$('.watershed-select').each(function (idx, sel) {
+				var $sel = $(sel);
+				$sel
+					.find('option:selected')
+					.prop('selected', false);
+				$sel
+					.find('option:first')
+					.prop('selected', true);
+			
+				if (idx !== 0) {
+					$sel.hide();
+				}
+			});
+			
+			this.$('#data-series')
+					.find('option:first')
+					.prop('selected', true);
+			
+			this.model.reset();
 		}
 	});
 
