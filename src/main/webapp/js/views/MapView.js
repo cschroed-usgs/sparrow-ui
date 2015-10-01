@@ -117,6 +117,19 @@ define([
 
 			// Don't add the click handler if no region layers to interact with
 			if (regionLayerIds.length !== 0) {
+				
+				this.map.on('pointermove', function (ev) {
+					var hit = this.forEachFeatureAtPixel(ev.pixel, function () {
+						return true;
+					});
+					
+					if (hit) {
+						this.getTargetElement().style.cursor = 'pointer';
+					} else {
+						this.getTargetElement().style.cursor = '';
+					}
+				});
+				
 				this.map.on('click', function (ev) {
 					var selectedFeatures = [];
 					var selectedRegions;
