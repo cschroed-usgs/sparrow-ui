@@ -6,21 +6,21 @@
 		<option value="{{this}}">{{this}}</option>
 		{{/each}}
 	</select>
-	
+
 	<select id="watershed-huc-2" class="watershed-select">
 		<option value="" disabled selected="true">Filter By HUC02 ...</option>
 		{{#each (getHucList 2 hucs)}}
 		<option value="{{this}}">{{this}}</option>
 		{{/each}}
 	</select>
-	
+
 	<select id="watershed-huc-4" class="watershed-select hidden">
 		<option value="" disabled selected="true">Filter By HUC04 ...</option>
 		{{#each (getHucList 4 hucs)}}
 		<option value="{{this}}">{{this}}</option>
 		{{/each}}
 	</select>
-	
+
 	<select id="watershed-huc-8" class="watershed-select hidden">
 		<option value="" disabled selected="true">Filter By HUC08 ...</option>
 		{{#each (getHucList 8 hucs)}}
@@ -36,6 +36,10 @@
 		<option value="decayed_incremental" {{isSelected "decayed_incremental" dataSeries}} >Incremental Load</option>
 		<option value="total_concentration" {{isSelected "total_concentration" dataSeries}} >Flow-weighted Concentration</option>
 	</select>
+
+	<span>
+		<button id="button-reset-view-filter" class="btn btn-default reset-button">Reset</button>
+	</span>
 	<!--<p>Group Results by:</p>
 	<select id="group-result-by">
 		<option value="group-catchment">Catchment</option>

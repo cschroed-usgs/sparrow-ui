@@ -14,6 +14,9 @@ define([
 				groupResultsBy: '',
 				waterSheds: []
 			};
+		},
+		reset : function () {
+			this.set(this.defaults());
 		}
 	});
 
