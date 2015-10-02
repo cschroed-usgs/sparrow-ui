@@ -93,9 +93,78 @@ define([
 
 		stateChange: function (evt) {
 			this.model.set("state", $(evt.target).val());
+			this.validateHucSelectionsForStates();
 		},
 		waterBodyChange: function (evt) {
 			this.model.set("waterBody", $(evt.target).val());
+		},
+
+		/**
+		 * Asynchronously verifies that the selected HUC(s) are valid for the 
+		 * state chosen. If not, scale back the HUC selection to a valid one if
+		 * possible. Otherwise, deselect all HUC selections
+		 * 
+		 * @returns {Promise}
+		 */
+		validateHucSelectionsForStates: function () {
+			// Ensure that the currently chosen HUC actually exists within the state(s) chosen
+			var hucsForStatesPromise = SpatialUtils.getHucsForStates(this.model.get("state"), this);
+			
+			$.when(hucsForStatesPromise).done(function (hucs) {
+				// Go backwards through the visible HUC dropdowns, checking if 
+				// the selected HUC (if any) is valid for the state(s) chosen.
+				// If not, deselect it and hide the dropdown (don't hide the first dropdown)
+				var waterShedSelects = this.$(".watershed-select:visible");
+				var validHucFound = false;
+				for (var wsIdx = waterShedSelects.length - 1 ;!validHucFound && wsIdx > -1;wsIdx--) {
+					var $waterShedSelect = $(waterShedSelects[wsIdx]),
+						$waterShedChosenOption = $waterShedSelect.find('option:selected');
+					
+					if (!$waterShedChosenOption.prop('disabled')) {
+						// The current dropdown actually has something enabled
+						var hit = _.find(hucs, function (h) {
+							var chosenOption = $waterShedChosenOption.val();
+							// Test against HUC 2, 6 and 8
+							return h.substring(0, chosenOption.length) === chosenOption;
+						});
+						
+						if (!hit) {
+							// HUC not available for this state
+							// Reset the watershed selectbox and hide it if it's
+							// not the first one
+							$waterShedSelect
+									.find('option:selected')
+									.prop('selected', false);
+							
+							$waterShedSelect
+									.find('option:first')
+									.prop('selected', true);
+							
+							if (wsIdx !== 0) {
+								$waterShedSelect.addClass('hidden');
+							}
+						} else {
+							validHucFound = true;
+						}
+					}
+				}
+				
+				// After processing, find if we have a HUC selected by finding the
+				// last visible selectbox and seeing if there's a HUC selected. 
+				// If so, update the model with that HUC, otherwise reset the model's
+				// HUC content with nothing
+				if (validHucFound) {
+					var val = this.$(".watershed-select:visible").
+							find('option:selected:not([disabled])')
+							.last()
+							.val();
+					this.model.set('waterShed', val);
+				} else {
+					this.model.set('waterShed', '');
+				}
+			});
+			
+			return hucsForStatesPromise;
 		},
 
 		/**
@@ -146,7 +215,9 @@ define([
 		},
 		modelChange: function (model) {
 			log.debug("Map Filter model changed to " + JSON.stringify(model.attributes));
+			
 			// TODO - As more filtering options come through, add them here
+			
 			var waterShed = model.get('waterShed'), // String
 				states = model.get('state'); // Array
 		
