@@ -186,7 +186,7 @@ define([
 
 					var params = src.getParams();
 					if (params.CQL_FILTER) {
-						params.CQL_FILTER = " AND ";
+						params.CQL_FILTER += " AND ";
 					} else {
 						params.CQL_FILTER = "";
 					}
