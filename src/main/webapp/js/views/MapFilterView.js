@@ -103,6 +103,114 @@ define([
 		},
 
 		/**
+		 * Based on the dropdown option chosen for a watershed, update the next
+		 * dropdown with valid options and display it
+		 * @param {type} evt
+		 * @returns {undefined}
+		 */
+		waterShedChange: function (evt) {
+			// Figure out which watershed select was chosen
+			var val = $(evt.target).val(),
+				waterShedSelects = this.$(".watershed-select");
+
+			// Update the dropdowns of higher precision based on user's selection
+			var $downstreamSheds = $(waterShedSelects.slice(waterShedSelects.index(evt.target) + 1));
+
+			// First hide all the downstream sheds
+			$downstreamSheds.addClass('hidden');
+
+			// Only display options that are valid to the currently selected HUC
+			_.each($downstreamSheds, function (sel) {
+				var $sel = $(sel),
+					$options = $sel.find('option').slice(1);
+
+				// Hide all options
+				$options.addClass('hidden');
+
+				// Select the "Select A Watershed" option of the next dropdown
+				$options.prop("selected", false);
+				$sel.find('option').first().prop("selected", true);
+
+				// Show only valid options
+				$sel.find("option[value^='" + this.val + "']").removeClass('hidden');
+			}, {
+				val : val,
+				model : this.model
+			});
+
+			this.model.set('waterShed', val);
+
+			$downstreamSheds.first().removeClass('hidden');
+			
+			this.validateStatesSelectionsForHuc();
+		},
+		dataSeriesChange: function (evt) {
+			this.model.set("dataSeries", $(evt.target).val());
+		},
+		groupResultsByChange: function (evt) {
+			this.model.set("groupResultsBy", $(evt.target).val());
+		},
+		modelChange: function (model) {
+			// TODO - As more filtering options come through, add them here
+			var waterShed = model.get('waterShed'), // String
+				states = model.get('state'); // Array
+		
+			if (waterShed || states.length > 0) {
+				this.$("#button-reset-view-filter").show();
+			} else {
+				this.$("#button-reset-view-filter").hide();
+			}
+		},
+		
+		/**
+		 * Asynchronously finds which states correspond to the HUC selected.
+		 * 
+		 * If states in the multiselect are chosen but are not valid for the huc, 
+		 * they are deselected. Also, invalid states are disabled in the select
+		 * 
+		 * @returns {Promise}
+		 */
+		validateStatesSelectionsForHuc: function () {
+			var statesForHucPromise = SpatialUtils.getStatesForHuc(this.model.get("waterShed"), this);
+			
+			// TODO - Add notification of ongoing state verification based on HUC selection
+			
+			$.when(statesForHucPromise)
+					.done(function (states) {
+						var chosenStateCount = this.model.get('state').length,
+							$options = this.$('#state').find('option');
+							
+						_.each($options, function (option) {
+							var $option = $(option);
+							
+							$option.prop('disabled', false); // May be disabled again later
+							
+							if (this.states.indexOf($option.val()) === -1) {
+								$option.prop({
+									selected : false,
+									disabled : true
+								});
+							}
+						}, {
+							context : this,
+							states : states
+						});
+						
+						var $selectedStates = _.map(this.$('#state').find('option:selected'), function (o) {
+							return $(o).val();
+						});
+						if ($selectedStates.length !== chosenStateCount) {
+							 this.model.set('state', $selectedStates);
+						}
+					})
+					.always(function () {
+						// TODO - Remove notification about state verification
+					});
+					
+			return statesForHucPromise;
+		},
+		
+		/**
 		 * Asynchronously verifies that the selected HUC(s) are valid for the 
 		 * state chosen. If not, scale back the HUC selection to a valid one if
 		 * possible. Otherwise, deselect all HUC selections
@@ -176,67 +284,6 @@ define([
 			});
 			
 			return hucsForStatesPromise;
-		},
-
-		/**
-		 * Based on the dropdown option chosen for a watershed, update the next
-		 * dropdown with valid options and display it
-		 * @param {type} evt
-		 * @returns {undefined}
-		 */
-		waterShedChange: function (evt) {
-			// Figure out which watershed select was chosen
-			var val = $(evt.target).val(),
-				waterShedSelects = this.$(".watershed-select");
-
-			// Update the dropdowns of higher precision based on user's selection
-			var $downstreamSheds = $(waterShedSelects.slice(waterShedSelects.index(evt.target) + 1));
-
-			// First hide all the downstream sheds
-			$downstreamSheds.addClass('hidden');
-
-			// Only display options that are valid to the currently selected HUC
-			_.each($downstreamSheds, function (sel) {
-				var $sel = $(sel),
-					$options = $sel.find('option').slice(1);
-
-				// Hide all options
-				$options.addClass('hidden');
-
-				// Select the "Select A Watershed" option of the next dropdown
-				$options.prop("selected", false);
-				$sel.find('option').first().prop("selected", true);
-
-				// Show only valid options
-				$sel.find("option[value^='" + this.val + "']").removeClass('hidden');
-			}, {
-				val : val,
-				model : this.model
-			});
-
-			this.model.set('waterShed', val);
-
-			$downstreamSheds.first().removeClass('hidden');
-		},
-		dataSeriesChange: function (evt) {
-			this.model.set("dataSeries", $(evt.target).val());
-		},
-		groupResultsByChange: function (evt) {
-			this.model.set("groupResultsBy", $(evt.target).val());
-		},
-		modelChange: function (model) {
-			log.debug("Map Filter model changed to " + JSON.stringify(model.attributes));
-			
-			// TODO - As more filtering options come through, add them here
-			
-			var waterShed = model.get('waterShed'), // String
-				states = model.get('state'); // Array
-		
-			if (waterShed || states.length > 0) {
-				this.$("#button-reset-view-filter").show();
-			} else {
-				this.$("#button-reset-view-filter").hide();
-			}
 		},
 		resetFilterView: function () {
 			this.$('#state')
