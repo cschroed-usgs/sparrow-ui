@@ -286,6 +286,10 @@ define([
 			return hucsForStatesPromise;
 		},
 		resetFilterView: function () {
+			this.$('#state').find('option').each(function (idx, opt) {
+				$(opt).prop('disabled', false);
+			});
+			
 			this.$('#state')
 					.find('option:selected')
 					.prop('selected', false);
