@@ -47,7 +47,7 @@ define([
 			}
 		});
 
-		return deferred;
+		return deferred.promise();
 	},
 
 	self.getHucsForStates = function (states, context) {
@@ -81,7 +81,7 @@ define([
 			}
 		});
 
-		return deferred;
+		return deferred.promise();
 	};
 
 	/**
