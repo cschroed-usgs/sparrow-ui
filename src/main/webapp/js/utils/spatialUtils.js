@@ -32,10 +32,6 @@ define([
 				outputFormat: 'application/json',
 				cql_filter: cqlFilter
 			},
-			context: {
-				that: context || this,
-				deferred: deferred
-			},
 			success: function (data) {
 				var states = _.chain(data.features)
 						.map(function (f) {
@@ -44,10 +40,10 @@ define([
 						.flatten()
 						.unique()
 						.value();
-				this.deferred.resolveWith(this.that, [states]);
+				deferred.resolveWith(context, [states]);
 			},
 			error: function () {
-				this.deferred.rejectWith(this.that, arguments);
+				deferred.rejectWith(context, arguments);
 			}
 		});
 
@@ -70,10 +66,6 @@ define([
 				outputFormat: 'application/json',
 				cql_filter: cqlFilter
 			},
-			context: {
-				that: context || this,
-				deferred: deferred
-			},
 			success: function (data) {
 				var hucs = _.chain(data.features)
 						.map(function (f) {
@@ -82,10 +74,10 @@ define([
 						.sortBy()
 						.value();
 
-				this.deferred.resolveWith(this.that, [hucs]);
+				deferred.resolveWith(context, [hucs]);
 			},
 			error: function () {
-				this.deferred.rejectWith(this.that, arguments);
+				deferred.rejectWith(context, arguments);
 			}
 		});
 
