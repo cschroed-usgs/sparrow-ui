@@ -149,7 +149,7 @@ define([
 			}
 		});
 
-		return deferred.proimse();
+		return deferred.promise();
 	};
 
 	/**
