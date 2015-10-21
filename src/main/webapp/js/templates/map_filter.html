@@ -1,12 +1,14 @@
 <div id="filter-container">
+    <div id="interestArea">
 	<p>Choose Area of Interest&nbsp;</p>
+        <p class="sub">Filter by State</p>
 	<span class="fa fa-question" aria-hidden="true"></span>
 	<select id="state" size="5" multiple="true">
 		{{#each states}}
 		<option value="{{this}}">{{this}}</option>
 		{{/each}}
 	</select>
-
+        <p class="sub">Filter by Watershed</p>
 	<select id="watershed-huc-2" class="watershed-select">
 		<option value="" disabled selected="true">Filter By HUC02 ...</option>
 		{{#each (getHucList 2 hucs)}}
@@ -27,19 +29,25 @@
 		<option value="{{this}}">{{this}}</option>
 		{{/each}}
 	</select>
-
-	<p>Choose a Data Series&nbsp;</p>
-	<span class="fa fa-question" aria-hidden="true"></span>
-	<select id="data-series">
-		<option value="total_yield" {{isSelected "total_yield" dataSeries}} >Total Yield</option>
-		<option value="incremental_yield" {{isSelected "incremental_yield" dataSeries}} >Incremental Yield</option>
-		<option value="decayed_incremental" {{isSelected "decayed_incremental" dataSeries}} >Incremental Load</option>
-		<option value="total_concentration" {{isSelected "total_concentration" dataSeries}} >Flow-weighted Concentration</option>
-	</select>
-
-	<span>
-		<button id="button-reset-view-filter" class="btn btn-default reset-button">Reset</button>
+        
+        <span>
+		<button id="button-reset-view-filter" class="btn btn-default reset-button">Clear Filters</button>
 	</span>
+        
+    </div>
+        
+        <div id="dataSeries">
+            <p>Choose a Data Series&nbsp;</p>
+            <span class="fa fa-question" aria-hidden="true"></span>
+            <select id="data-series">
+                    <option value="total_yield" {{isSelected "total_yield" dataSeries}} >Total Yield</option>
+                    <option value="incremental_yield" {{isSelected "incremental_yield" dataSeries}} >Incremental Yield</option>
+                    <option value="decayed_incremental" {{isSelected "decayed_incremental" dataSeries}} >Incremental Load</option>
+                    <option value="total_concentration" {{isSelected "total_concentration" dataSeries}} >Flow-weighted Concentration</option>
+            </select>
+        </div>
+
+	
 	<!--<p>Group Results by:</p>
 	<select id="group-result-by">
 		<option value="group-catchment">Catchment</option>

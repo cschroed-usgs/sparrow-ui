@@ -152,12 +152,12 @@ Model Selector Styles
 #model-selection-container button.explore-model,
 #model-selection-container button.reset-button,
 #filter-container button.reset-button {
-    padding:0 15px;
+    padding:0 10px;
     background:@blue;
     border:@border;
     border-radius:5px;
     color:#fff;
-    height:23px;
+    height:28px;
     border-radius:2px;
     font-size:.9em;
 }
@@ -213,26 +213,37 @@ Map Sidebar Styles
     position:absolute;
     top:72px;
     left:10px;
-    box-shadow:@box-shadow;
 }
 
-#filter-container,
+#interestArea,
+#dataSeries,
 #download-container{
     background:@gray;
     border:@border;
     border-radius:@borderRadius;
     padding:5px;
+    box-shadow:@box-shadow;
+}
+
+#dataSeries{
+    margin-top:10px;
 }
 
 #filter-container{
     width:186px;
     min-height:100px;
+    text-align:center;
 }
 
 #filter-container p{
     float:left;
     font-size:.9em;
     font-weight:bold;
+}
+
+p.sub{
+    font-size:.8em !important;
+    font-weight:normal !important;
 }
 
 #filter-container .glyphicon-question-sign{
