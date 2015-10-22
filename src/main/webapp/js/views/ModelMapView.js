@@ -161,7 +161,7 @@ define([
 			});
 
 			// If there are states used, update the WMS request to include filtering
-			if (this.model.get("state").length > 0) {
+			if (!_.isEmpty(this.model.get("state"))) {
 				_.each([flowlineSource, catchmentSource], function (src) {
 					var stateFilter = _.map(this, function (state) {
 						return "STATE_ABBR = ''" + state + "''";
