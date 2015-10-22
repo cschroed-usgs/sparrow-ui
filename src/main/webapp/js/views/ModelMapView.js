@@ -168,8 +168,7 @@ define([
 					}).join(" OR ");
 
 					src.updateParams({
-						CQL_FILTER: "(OVERLAPS(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "')))"
-						+ " OR WITHIN(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "'))))"
+						CQL_FILTER: "(INTERSECTS(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "'))))"
 					});
 				}, this.model.get("state"));
 			};
@@ -194,8 +193,7 @@ define([
 
 					src.updateParams({
 						CQL_FILTER: params.CQL_FILTER 
-								+ "(OVERLAPS(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + regionId + "','the_geom','" + watershedFilter + "')))"
-								+ " OR WITHIN(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + regionId + "','the_geom','" + watershedFilter + "'))))"
+								+ "(INTERSECTS(the_geom, collectGeometries(queryCollection('huc8-simplified-overlay:" + regionId + "','the_geom','" + watershedFilter + "'))))"
 					});
 				}, waterSheds);
 			}
