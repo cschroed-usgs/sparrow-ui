@@ -93,10 +93,7 @@ define([
 
 		stateChange: function (evt) {
 			this.model.set("state", $(evt.target).val());
-			
-			if (this.model.get('waterShed') !== '') {
-				this.validateHucSelectionsForStates();
-			}
+			this.validateHucSelectionsForStates();
 		},
 		waterBodyChange: function (evt) {
 			this.model.set("waterBody", $(evt.target).val());
@@ -161,7 +158,33 @@ define([
 				this.$("#button-reset-view-filter").hide();
 			}
 		},
-		
+		updateHucOptions : function(states){
+			var chosenStateCount = this.model.get('state').length,
+				$options = this.$('#state').find('option');
+
+						_.each($options, function (option) {
+							var $option = $(option);
+
+							$option.prop('disabled', false); // May be disabled again later
+
+							if (this.states.indexOf($option.val()) === -1) {
+								$option.prop({
+									selected : false,
+									disabled : true
+								});
+							}
+						}, {
+							context : this,
+							states : states
+						});
+
+						var $selectedStates = _.map(this.$('#state').find('option:selected'), function (o) {
+							return $(o).val();
+						});
+						if ($selectedStates.length !== chosenStateCount) {
+							 this.model.set('state', $selectedStates);
+						}
+		},
 		/**
 		 * Asynchronously finds which states correspond to the HUC selected.
 		 * 
@@ -176,33 +199,7 @@ define([
 			// TODO - Add notification of ongoing state verification based on HUC selection
 			
 			$.when(statesForHucPromise)
-					.done(function (states) {
-						var chosenStateCount = this.model.get('state').length,
-							$options = this.$('#state').find('option');
-							
-						_.each($options, function (option) {
-							var $option = $(option);
-							
-							$option.prop('disabled', false); // May be disabled again later
-							
-							if (this.states.indexOf($option.val()) === -1) {
-								$option.prop({
-									selected : false,
-									disabled : true
-								});
-							}
-						}, {
-							context : this,
-							states : states
-						});
-						
-						var $selectedStates = _.map(this.$('#state').find('option:selected'), function (o) {
-							return $(o).val();
-						});
-						if ($selectedStates.length !== chosenStateCount) {
-							 this.model.set('state', $selectedStates);
-						}
-					})
+					.done(this.updateHucOptionsfunction)
 					.always(function () {
 						// TODO - Remove notification about state verification
 					});
@@ -223,26 +220,33 @@ define([
 			
 			// TODO - Create notification that HUC selection is being verified
 			$.when(hucsForStatesPromise)
-					.done(function (hucs) {
+					.done(function (hucsForStates) {
 						// Go backwards through the visible HUC dropdowns, checking if 
 						// the selected HUC (if any) is valid for the state(s) chosen.
 						// If not, deselect it and hide the dropdown (don't hide the first dropdown)
-						var waterShedSelects = this.$(".watershed-select:visible"),
-							validHucFound = false,
-							findValidHucOption = function (huc) {
-								var chosenOption = $waterShedChosenOption.val();
-								// Test against HUC 2, 6 and 8
-								return huc.substring(0, chosenOption.length) === chosenOption;
-							};
+						var HUC_2_ID = "watershed-huc-2";
+						var waterShedSelects = this.$("#watershed-huc-8,#watershed-huc-4,#"+ HUC_2_ID).filter(":visible");
+						var findValidHucOption = function (potentialHuc) {
+							var chosenHuc = this.waterShedChosenOption;
+							// Test against HUC 2, 6 and 8
+							return potentialHuc.substring(0, chosenHuc.length) === chosenHuc;
+						},
+						//some option elements are user-facing instructions, and should be ignored
+						notUserInstructions = function(option){
+							return "USER_INSTRUCTIONS" != option.value;
+						},
+						validHucFound = false;
 
-						for (var wsIdx = waterShedSelects.length - 1 ;!validHucFound && wsIdx > -1;wsIdx--) {
-							var $waterShedSelect = $(waterShedSelects[wsIdx]),
-								$waterShedChosenOption = $waterShedSelect.find('option:selected');
-
-							if (!$waterShedChosenOption.prop('disabled')) {
-								// The current dropdown actually has something enabled
-								var hit = _.find(hucs, findValidHucOption);
-
+						_.find(waterShedSelects, function(waterShedSelect){
+							var $waterShedSelect = $(waterShedSelect),
+							// get the selection from the current dropdown 
+							waterShedChosenOption = _.chain($waterShedSelect.find('option:selected'))
+								.filter(notUserInstructions)
+								.pluck('value')
+								.first()
+								.value();
+							if(_.isString(waterShedChosenOption)){
+								var hit = _.find(hucsForStates, findValidHucOption, {waterShedChosenOption:waterShedChosenOption});
 								if (!hit) {
 									// HUC not available for this state
 									// Reset the watershed selectbox and hide it if it's
@@ -255,14 +259,16 @@ define([
 											.find('option:first')
 											.prop('selected', true);
 
-									if (wsIdx !== 0) {
+									if (HUC_2_ID !== $waterShedSelect.attr('id')) {
 										$waterShedSelect.addClass('hidden');
 									}
 								} else {
+									//break
 									validHucFound = true;
 								}
 							}
-						}
+							return validHucFound;
+						});
 
 						// After processing, find if we have a HUC selected by finding the
 						// last visible selectbox and seeing if there's a HUC selected. 
@@ -284,6 +290,20 @@ define([
 			});
 			
 			return hucsForStatesPromise;
+		},
+		updateHucOptionsEnablement: function(hucToOptionElement, hucsToEnable){
+			hucToOptionElement.keys().forEach(function(huc){
+				var optionElement = $(hucToOptionElement[huc]);
+				var optionShouldBeEnabled = hucsToEnable[huc];
+				if(optionShouldBeEnabled){
+					optionElement.attr('disabled', false);
+				} else {
+					optionElement.prop('selected', false);
+					optionElement.attr('disabled', true);
+					optionElement.class('hidden');
+				}
+				
+			});
 		},
 		resetFilterView: function () {
 			this.$('#state').find('option').each(function (idx, opt) {

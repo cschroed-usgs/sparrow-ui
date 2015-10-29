@@ -10,21 +10,21 @@
 	</select>
         <p class="sub">Filter by Watershed</p>
 	<select id="watershed-huc-2" class="watershed-select">
-		<option value="" disabled selected="true">Filter By HUC02 ...</option>
+		<option value="USER_INSTRUCTIONS" disabled selected="true">Filter By HUC02 ...</option>
 		{{#each (getHucList 2 hucs)}}
 		<option value="{{this}}">{{this}}</option>
 		{{/each}}
 	</select>
 
 	<select id="watershed-huc-4" class="watershed-select hidden">
-		<option value="" disabled selected="true">Filter By HUC04 ...</option>
+		<option value="USER_INSTRUCTIONS" disabled selected="true">Filter By HUC04 ...</option>
 		{{#each (getHucList 4 hucs)}}
 		<option value="{{this}}">{{this}}</option>
 		{{/each}}
 	</select>
 
 	<select id="watershed-huc-8" class="watershed-select hidden">
-		<option value="" disabled selected="true">Filter By HUC08 ...</option>
+		<option value="USER_INSTRUCTIONS" disabled selected="true">Filter By HUC08 ...</option>
 		{{#each (getHucList 8 hucs)}}
 		<option value="{{this}}">{{this}}</option>
 		{{/each}}

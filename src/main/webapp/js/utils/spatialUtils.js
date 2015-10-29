@@ -77,11 +77,14 @@ define([
 	 */
 	self.getHucsForStates = function (states, context) {
 		var deferred = $.Deferred();
-		
-		var cqlFilter = "States IN ('" + states.join("','") + "')";
+		var stateFilter = _.map(states, function (state) {
+			return "STATE_ABBR = ''" + state + "''";
+		}).join(" OR ");
+
+		var cqlFilter = "(INTERSECTS(the_geom, collectGeometries(queryCollection('reference:states','the_geom','" + stateFilter + "'))))";
 		
 		$.ajax({
-			url: self.GEOSERVER_ENDPOINT + self.workspace + '/ows',
+			url: self.GEOSERVER_ENDPOINT + 'ows',
 			data: {
 				service: 'WFS',
 				version: '2.0.0',
