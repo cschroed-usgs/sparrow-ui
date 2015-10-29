@@ -10,6 +10,39 @@ define([
 	'text!templates/map_filter.html'
 ], function (_, $, log, SpatialUtils, BaseView, Handlebars, filterTemplate) {
 	"use strict";
+	/**
+	 * (Disables and hides) or (enables and reveals) option elements based on the hucsToEnable list
+	 * @param {Array<HTMLOptionElement} hucOptionElements the option elements for one level of hucs in the ui (only level 2, or level 4, etc)
+	 * @param {Object} hucsToEnable a list of HUC-8's that should be enabled and visible
+	 * @returns {undefined}
+	 */
+	var updateHucOptionsEnablement = function (hucOptionElements, hucsToEnable) {
+		//presume first option's value's length is representative of all others
+		var hucLevel = hucOptionElements[0].value.length;
+		//build a list of unique hucs that are pertinent to the current huc level
+		var hucsToEnableAtThisLevel = _.unique(_.map(hucsToEnable, function(huc){
+			return huc.substring(0,hucLevel);
+		}));
+		//make a psuedo-set out of a map. All keys map to true.
+		var hucsToEnableSet = _.object(hucsToEnableAtThisLevel, _.map(hucsToEnableAtThisLevel, function(){return true}));
+		
+		hucOptionElements.forEach(function (optionElement) {
+			var huc = optionElement.value;
+			optionElement = $(optionElement);
+			var optionShouldBeEnabled = _.has(hucsToEnableSet, huc);
+			if (optionShouldBeEnabled) {
+				optionElement.attr('disabled', false);
+				optionElement.removeClass('hidden');
+			} else {
+				if (optionElement.prop('selected')) {
+					optionElement.prop('selected', false);
+					optionElement.getParent().find('options:first').prop('selected', true);
+				}
+				optionElement.attr('disabled', true);
+				optionElement.addClass('hidden');
+			}
+		});
+	};
 
 	var view = BaseView.extend({
 		template: Handlebars.compile(filterTemplate),
@@ -238,13 +271,18 @@ define([
 						validHucFound = false;
 
 						_.find(waterShedSelects, function(waterShedSelect){
-							var $waterShedSelect = $(waterShedSelect),
+							var $waterShedSelect = $(waterShedSelect);
 							// get the selection from the current dropdown 
-							waterShedChosenOption = _.chain($waterShedSelect.find('option:selected'))
+							var waterShedOptions = _.filter($waterShedSelect.find('option'), notUserInstructions);
+							
+							updateHucOptionsEnablement(waterShedOptions, hucsForStates);
+							
+							var waterShedChosenOption = _.chain($waterShedSelect.find('option:selected'))
 								.filter(notUserInstructions)
 								.pluck('value')
 								.first()
 								.value();
+							
 							if(_.isString(waterShedChosenOption)){
 								var hit = _.find(hucsForStates, findValidHucOption, {waterShedChosenOption:waterShedChosenOption});
 								if (!hit) {
@@ -291,20 +329,7 @@ define([
 			
 			return hucsForStatesPromise;
 		},
-		updateHucOptionsEnablement: function(hucToOptionElement, hucsToEnable){
-			hucToOptionElement.keys().forEach(function(huc){
-				var optionElement = $(hucToOptionElement[huc]);
-				var optionShouldBeEnabled = hucsToEnable[huc];
-				if(optionShouldBeEnabled){
-					optionElement.attr('disabled', false);
-				} else {
-					optionElement.prop('selected', false);
-					optionElement.attr('disabled', true);
-					optionElement.class('hidden');
-				}
-				
-			});
-		},
+		updateHucOptionsEnablement: updateHucOptionsEnablement,
 		resetFilterView: function () {
 			this.$('#state').find('option').each(function (idx, opt) {
 				$(opt).prop('disabled', false);
