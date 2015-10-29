@@ -34,11 +34,6 @@ define([
 				optionElement.attr('disabled', false);
 				optionElement.removeClass('hidden');
 			} else {
-				if (optionElement.prop('selected')) {
-					optionElement.prop('selected', false);
-					optionElement.parent().find('option:first').prop('selected', true);
-					
-				}
 				optionElement.attr('disabled', true);
 				optionElement.addClass('hidden');
 			}
@@ -259,17 +254,12 @@ define([
 						// the selected HUC (if any) is valid for the state(s) chosen.
 						// If not, deselect it and hide the dropdown (don't hide the first dropdown)
 						var HUC_2_ID = "watershed-huc-2";
-						var waterShedSelects = this.$("#watershed-huc-8,#watershed-huc-4,#"+ HUC_2_ID).filter(":visible");
-						var findValidHucOption = function (potentialHuc) {
-							var chosenHuc = this.waterShedChosenOption;
-							// Test against HUC 2, 6 and 8
-							return potentialHuc.substring(0, chosenHuc.length) === chosenHuc;
-						},
+						var waterShedSelects = this.$('.watershed-select').filter(":visible").reverse();
 						//some option elements are user-facing instructions, and should be ignored
-						notUserInstructions = function(option){
+						var notUserInstructions = function(option){
 							return "USER_INSTRUCTIONS" != option.value;
-						},
-						validHucFound = false;
+						};
+						var validHucFound = false;
 
 						_.find(waterShedSelects, function(waterShedSelect){
 							var $waterShedSelect = $(waterShedSelect);
@@ -285,29 +275,14 @@ define([
 								.value();
 							
 							if(_.isString(waterShedChosenOption)){
-								var hit = _.find(hucsForStates, findValidHucOption, {waterShedChosenOption:waterShedChosenOption});
-								if (!hit) {
-									// HUC not available for this state
-									// Reset the watershed selectbox and hide it if it's
-									// not the first one
-									$waterShedSelect
-											.find('option:selected')
-											.prop('selected', false);
-
-									$waterShedSelect
-											.find('option:first')
-											.prop('selected', true);
-
-									if (HUC_2_ID !== $waterShedSelect.attr('id')) {
-										$waterShedSelect.addClass('hidden');
-									}
-								} else {
-									//break
-									validHucFound = true;
-								}
+								validHucFound = true;
+								return validHucFound;
+							} else {
+								$waterShedSelect.find('option:first').prop('selected', true);
+								$waterShedSelect.addClass('hidden');
 							}
-							return validHucFound;
 						});
+						this.$('#' + HUC_2_ID).removeClass('hidden');
 
 						// After processing, find if we have a HUC selected by finding the
 						// last visible selectbox and seeing if there's a HUC selected. 
