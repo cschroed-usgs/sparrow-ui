@@ -36,7 +36,8 @@ define([
 			} else {
 				if (optionElement.prop('selected')) {
 					optionElement.prop('selected', false);
-					optionElement.getParent().find('options:first').prop('selected', true);
+					optionElement.parent().find('option:first').prop('selected', true);
+					
 				}
 				optionElement.attr('disabled', true);
 				optionElement.addClass('hidden');
