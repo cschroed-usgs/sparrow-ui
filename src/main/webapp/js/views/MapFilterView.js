@@ -185,7 +185,7 @@ define([
 			var waterShed = model.get('waterShed'), // String
 				states = model.get('state'); // Array
 		
-			if (waterShed || states.length > 0) {
+			if (waterShed || !_.isEmpty(states)) {
 				this.$("#button-reset-view-filter").show();
 			} else {
 				this.$("#button-reset-view-filter").hide();
