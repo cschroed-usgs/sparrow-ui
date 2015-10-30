@@ -13,29 +13,35 @@ define([
 	/**
 	 * (Disables and hides) or (enables and reveals) option elements based on the hucsToEnable list
 	 * @param {Array<HTMLOptionElement} hucOptionElements the option elements for one level of hucs in the ui (only level 2, or level 4, etc)
-	 * @param {Object} hucsToEnable a list of HUC-8's that should be enabled and visible
+	 * @param {Object} hucsInStates a list of huc-8's for a state
+	 * @param {String} currentHuc name of the current huc. Used to filter out hucs within states that don't intersect with higher-order huc selections.
 	 * @returns {undefined}
 	 */
-	var updateHucOptionsEnablement = function (hucOptionElements, hucsToEnable) {
+	var updateHucOptionsEnablement = function (hucOptionElements, hucsInStates, currentHuc) {
 		//presume first option's value's length is representative of all others
 		var hucLevel = hucOptionElements[0].value.length;
 		//build a list of unique hucs that are pertinent to the current huc level
-		var hucsToEnableAtThisLevel = _.unique(_.map(hucsToEnable, function(huc){
-			return huc.substring(0,hucLevel);
-		}));
-		//make a psuedo-set out of a map. All keys map to true.
-		var hucsToEnableSet = _.object(hucsToEnableAtThisLevel, _.map(hucsToEnableAtThisLevel, function(){return true}));
+		var hucsToEnableAtThisLevel = _.chain(hucsInStates)
+			.map(function(huc){
+				return huc.substring(0,hucLevel);
+			})
+			.unique()
+			.filter(function(huc){
+				return huc.startsWith(currentHuc);
+			})
+			.value();
+		//make a psuedo-set out of a map.
+		var hucsToEnableSet = _.object(hucsToEnableAtThisLevel, hucsToEnableAtThisLevel);
 		
 		hucOptionElements.forEach(function (optionElement) {
 			var huc = optionElement.value;
 			optionElement = $(optionElement);
 			var optionShouldBeEnabled = _.has(hucsToEnableSet, huc);
 			if (optionShouldBeEnabled) {
-				optionElement.attr('disabled', false);
 				optionElement.removeClass('hidden');
 			} else {
-				optionElement.attr('disabled', true);
 				optionElement.addClass('hidden');
+				optionElement.prop('selected', false);
 			}
 		});
 	};
@@ -107,7 +113,7 @@ define([
 					}).fail(function () {
 						this[0].context.states = [];
 						this[0].context.hucs = [];
-						this[0].model.set('waterSheds', []);
+						this[0].model.set('waterShed', '');
 						deferred.resolveWith(this[0]);
 					});
 			}
@@ -182,37 +188,33 @@ define([
 				states = model.get('state'); // Array
 		
 			if (waterShed || !_.isEmpty(states)) {
-				this.$("#button-reset-view-filter").show();
+				this.$("#button-reset-view-filter").removeClass('hidden');
 			} else {
-				this.$("#button-reset-view-filter").hide();
+				this.$("#button-reset-view-filter").addClass('hidden');
 			}
 		},
-		updateHucOptions : function(states){
+		updateStateOptionEnablement : function(states){
 			var chosenStateCount = this.model.get('state').length,
 				$options = this.$('#state').find('option');
 
-						_.each($options, function (option) {
-							var $option = $(option);
+				_.each($options, function (option) {
+					var $option = $(option);
 
-							$option.prop('disabled', false); // May be disabled again later
-
-							if (this.states.indexOf($option.val()) === -1) {
-								$option.prop({
-									selected : false,
-									disabled : true
-								});
-							}
-						}, {
-							context : this,
-							states : states
+					$option.removeClass('hidden');//may be conditionally hidden again later
+					if (states.indexOf($option.val()) === -1) {
+						$option.prop({
+							selected : false
 						});
+						$option.addClass('hidden');
+					}
+				});
 
-						var $selectedStates = _.map(this.$('#state').find('option:selected'), function (o) {
-							return $(o).val();
-						});
-						if ($selectedStates.length !== chosenStateCount) {
-							 this.model.set('state', $selectedStates);
-						}
+				var $selectedStates = _.map(this.$('#state').find('option:selected'), function (o) {
+					return $(o).val();
+				});
+				if ($selectedStates.length !== chosenStateCount) {
+					 this.model.set('state', $selectedStates);
+				}
 		},
 		/**
 		 * Asynchronously finds which states correspond to the HUC selected.
@@ -228,7 +230,7 @@ define([
 			// TODO - Add notification of ongoing state verification based on HUC selection
 			
 			$.when(statesForHucPromise)
-					.done(this.updateHucOptionsfunction)
+					.done(this.updateStateOptionEnablement)
 					.always(function () {
 						// TODO - Remove notification about state verification
 					});
@@ -246,7 +248,7 @@ define([
 		validateHucSelectionsForStates: function () {
 			// Ensure that the currently chosen HUC actually exists within the state(s) chosen
 			var hucsForStatesPromise = SpatialUtils.getHucsForStates(this.model.get("state"), this);
-			
+			var model = this.model;
 			// TODO - Create notification that HUC selection is being verified
 			$.when(hucsForStatesPromise)
 					.done(function (hucsForStates) {
@@ -254,19 +256,19 @@ define([
 						// the selected HUC (if any) is valid for the state(s) chosen.
 						// If not, deselect it and hide the dropdown (don't hide the first dropdown)
 						var HUC_2_ID = "watershed-huc-2";
-						var waterShedSelects = this.$('.watershed-select').filter(":visible").reverse();
+						var waterShedSelects = this.$('.watershed-select').filter(":visible").toArray().reverse();
 						//some option elements are user-facing instructions, and should be ignored
 						var notUserInstructions = function(option){
-							return "USER_INSTRUCTIONS" != option.value;
+							return "USER_INSTRUCTIONS" !== option.value;
 						};
 						var validHucFound = false;
-
+						var $mostRecentlyInvalidatedWaterShedSelect;
 						_.find(waterShedSelects, function(waterShedSelect){
 							var $waterShedSelect = $(waterShedSelect);
 							// get the selection from the current dropdown 
 							var waterShedOptions = _.filter($waterShedSelect.find('option'), notUserInstructions);
-							
-							updateHucOptionsEnablement(waterShedOptions, hucsForStates);
+							var currentHuc = model.get('waterShed');
+							updateHucOptionsEnablement(waterShedOptions, hucsForStates, currentHuc);
 							
 							var waterShedChosenOption = _.chain($waterShedSelect.find('option:selected'))
 								.filter(notUserInstructions)
@@ -275,11 +277,17 @@ define([
 								.value();
 							
 							if(_.isString(waterShedChosenOption)){
+								if($mostRecentlyInvalidatedWaterShedSelect){
+									$mostRecentlyInvalidatedWaterShedSelect.removeClass('hidden');
+								}
 								validHucFound = true;
 								return validHucFound;
 							} else {
 								$waterShedSelect.find('option:first').prop('selected', true);
-								$waterShedSelect.addClass('hidden');
+								if($mostRecentlyInvalidatedWaterShedSelect){
+									$mostRecentlyInvalidatedWaterShedSelect.addClass('hidden');
+								}
+								$mostRecentlyInvalidatedWaterShedSelect = $waterShedSelect;
 							}
 						});
 						this.$('#' + HUC_2_ID).removeClass('hidden');
@@ -290,7 +298,7 @@ define([
 						// HUC content with nothing
 						if (validHucFound) {
 							var val = this.$(".watershed-select:visible")
-									.find('option:selected:not([disabled])')
+									.find('option:selected:visible')
 									.last()
 									.val();
 							this.model.set('waterShed', val);
@@ -307,27 +315,14 @@ define([
 		},
 		updateHucOptionsEnablement: updateHucOptionsEnablement,
 		resetFilterView: function () {
-			this.$('#state').find('option').each(function (idx, opt) {
-				$(opt).prop('disabled', false);
-			});
+			this.$('#state').find('option').removeClass('hidden');
 			
 			this.$('#state')
 					.find('option:selected')
 					.prop('selected', false);
-
-			this.$('.watershed-select').each(function (idx, sel) {
-				var $sel = $(sel);
-				$sel
-					.find('option:selected')
-					.prop('selected', false);
-				$sel
-					.find('option:first')
-					.prop('selected', true);
-			
-				if (idx !== 0) {
-					$sel.hide();
-				}
-			});
+			this.$('.watershed-select option:selected').prop('selected', false);
+			this.$('.watershed-select option:first').prop('selected', true);
+			this.$('.watershed-select').not(':first').addClass('hidden');
 			
 			this.$('#data-series')
 					.find('option:first')
