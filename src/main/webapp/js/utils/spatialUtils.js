@@ -46,13 +46,16 @@ define([
 				cql_filter: cqlFilter
 			},
 			success: function (data) {
-				var states = _.chain(data.features)
+				var statesList = _.chain(data.features)
 						.map(function (f) {
 							return f.properties.States.split(',');
 						})
 						.flatten()
 						.unique()
 						.value();
+				
+				//create a pseudo-set
+				var states = _.object(statesList, _.map(statesList, function(){return true;}));
 				deferred.resolveWith(context, [states]);
 			},
 			error: function () {

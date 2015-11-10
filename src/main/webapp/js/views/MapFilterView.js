@@ -7,21 +7,80 @@ define([
 	'utils/spatialUtils',
 	'views/BaseView',
 	'handlebars',
-	'text!templates/map_filter.html'
-], function (_, $, log, SpatialUtils, BaseView, Handlebars, filterTemplate) {
+	'text!templates/map_filter.html',
+	'AppEvents'
+], function (_, $, log, SpatialUtils, BaseView, Handlebars, filterTemplate, AppEvents) {
 	"use strict";
 
 	var view = BaseView.extend({
 		template: Handlebars.compile(filterTemplate),
 		events: {
-			'change #state': 'stateChange',
+			'change #state': 'statesChanged',
+//			'change #interestArea :input' : 'spatialFiltersChanged',
 			'change #receiving-water-body': 'waterBodyChange',
-			'change .watershed-select': 'waterShedChange',
+			'change .watershed-select': 'watershedChanged',
 			'change #data-series': 'dataSeriesChange',
 			'change #group-result-by': 'groupResultsByChange',
 			'click #button-reset-view-filter': 'resetFilterView'
 		},
-
+		statesChanged : function(ev) {
+			//jquery might return an array or a string, so ensure it's an array
+			var selectedStates = _.flatten([this.$('#state :selected').val()]);
+			this.model.set('state', selectedStates.join(','));
+			this.disableSpatialFilterElements();
+			SpatialUtils.getHucsForStates(selectedStates, this)
+				.done(function(enabledHucs){
+					this.model.set('')
+					this.updateWatershedFilterElements(enabledHucs);
+			})
+				.always(this.enableSpatialFilterElements);
+		},
+		watershedChanged : function(ev) {
+			//select the last enabled and selected watershed option.
+			//Must use :enabled to filter out the option element that displays instructions to the user
+			var selectedWatershedElt = this.$('.watershed-select :enabled:selected:last');
+			var selectedWatershed = selectedWatershedElt.val();
+			var nextSelect = selectedWatershedElt.parent().next('select');
+			nextSelect.removeClass('hidden');
+			nextSelect.find("option[value^='" + selectedWatershed + "']").removeClass('hidden');
+			nextSelect.find('option').not("option[value^='" + selectedWatershed + "']").addClass('hidden');
+			this.disableSpatialFilterElements();
+			this.model.set('waterShed', selectedWatershed);
+			
+			SpatialUtils.getStatesForHuc(selectedWatershed, this)
+				.done(function(enabledStates){
+					AppEvents.trigger(AppEvents.spatialFilters.finalized);
+					this.updateStateFilterElements(enabledStates);
+				})
+				.always(this.enableSpatialFilterElements);
+		},
+		enableSpatialFilterElements : function() {
+			this.toggleSpatialFilterElements(false);
+		},
+		disableSpatialFilterElements : function() {
+			this.toggleSpatialFilterElements(true);
+		},
+		toggleSpatialFilterElements : function(disabled) {
+			$('#interestArea :input').prop({disabled: disabled});
+		},
+		updateWatershedFilterElements : function(enabledWatersheds) {
+			log.debug('enabledWatersheds');
+		},
+		updateStateFilterElements : function(enabledStateElements) {
+			var stateElts = this.$('#state option');
+			_.each(stateElts, function(stateElt){
+				var $stateElt = $(stateElt);
+				var shouldBeDisabled = !_.has(enabledStateElements, $stateElt.val());
+				if(shouldBeDisabled){
+					$stateElt.addClass('hidden');
+				} else {
+					$stateElt.removeClass('hidden');
+				}
+				$stateElt.prop({
+					'disabled': shouldBeDisabled
+				});
+			});
+		},
 		render : function () {
 			this.listenTo(this.collection, 'update', function () {
 				this.updateContext().done(function () {
@@ -89,14 +148,6 @@ define([
 			}
 
 			return deferred.promise();
-		},
-
-		stateChange: function (evt) {
-			this.model.set("state", $(evt.target).val());
-			
-			if (this.model.get('waterShed') !== '') {
-				this.validateHucSelectionsForStates();
-			}
 		},
 		waterBodyChange: function (evt) {
 			this.model.set("waterBody", $(evt.target).val());

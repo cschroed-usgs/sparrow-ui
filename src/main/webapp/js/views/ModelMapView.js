@@ -7,8 +7,9 @@ define([
 	'views/BaseView',
 	'utils/mapUtils',
 	'utils/spatialUtils',
-	'olLayerSwitcher'
-], function (log, ol, _, BaseView, mapUtils, spatialUtils) {
+	'olLayerSwitcher',
+	'AppEvents'
+], function (log, ol, _, BaseView, mapUtils, spatialUtils, olLayerSwitcher, AppEvents) {
 
 	"use strict";
 	var view = BaseView.extend({
@@ -64,7 +65,7 @@ define([
 			this.predictionModel = options.predictionModel;
 
 			this.listenTo(this.model, 'change:dataSeries', this.updatePredictionModel);
-			this.listenTo(this.model, "change:state change:waterBody change:waterShed change:waterSheds", this.updateModelLayer);
+			this.listenTo(AppEvents, AppEvents.spatialFilters.finalized, this.updateModelLayer);
 			this.listenTo(this.collection, 'update', this.updateModelLayer);
 
 			this.flowlineLayer = new ol.layer.Tile({
