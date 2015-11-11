@@ -25,25 +25,33 @@ define([
 		},
 		statesChanged : function(ev) {
 			//jquery might return an array or a string, so ensure it's an array
-			var selectedStates = _.flatten([this.$('#state :selected').val()]);
-			this.model.set('state', selectedStates.join(','));
+			var selectedStates = _.map(this.$('#state :selected'), 
+				function(selectedStateElt){
+					return $(selectedStateElt).val();
+				}
+			);
+			this.model.set('state', selectedStates);
 			this.disableSpatialFilterElements();
 			SpatialUtils.getHucsForStates(selectedStates, this)
 				.done(function(enabledHucs){
-					this.model.set('')
-					this.updateWatershedFilterElements(enabledHucs);
-			})
+					AppEvents.trigger(AppEvents.spatialFilters.finalized);
+					this.updateWatershedFilterElements(enabledHucs, this.model.get('waterShed').length);
+				})
 				.always(this.enableSpatialFilterElements);
 		},
-		watershedChanged : function(ev) {
+		/**
+		 * Based on the dropdown option chosen for a watershed, update the next
+		 * dropdown with valid options and display it
+		 * @param {jQuery.Event} ev jQuery Event
+		 * @returns {undefined}
+		 */
+		watershedChanged : function (ev) {
 			//select the last enabled and selected watershed option.
 			//Must use :enabled to filter out the option element that displays instructions to the user
-			var selectedWatershedElt = this.$('.watershed-select :enabled:selected:last');
+			var selectedWatershedElt = $(ev.target);
 			var selectedWatershed = selectedWatershedElt.val();
-			var nextSelect = selectedWatershedElt.parent().next('select');
-			nextSelect.removeClass('hidden');
-			nextSelect.find("option[value^='" + selectedWatershed + "']").removeClass('hidden');
-			nextSelect.find('option').not("option[value^='" + selectedWatershed + "']").addClass('hidden');
+			var nextSelect = selectedWatershedElt.next('select');
+//			this.setUpNextWatershedSelect(nextSelect, selectedWatershed);
 			this.disableSpatialFilterElements();
 			this.model.set('waterShed', selectedWatershed);
 			
@@ -54,19 +62,58 @@ define([
 				})
 				.always(this.enableSpatialFilterElements);
 		},
-		enableSpatialFilterElements : function() {
+		setUpNextWatershedSelect : function (nextSelect, selectedWatershed) {
+			nextSelect.removeClass('hidden');
+			nextSelect.find("option[value^='" + selectedWatershed + "']").removeClass('hidden');
+			nextSelect.find('option').not("option[value^='" + selectedWatershed + "']").addClass('hidden');
+		},
+		enableSpatialFilterElements : function () {
 			this.toggleSpatialFilterElements(false);
 		},
-		disableSpatialFilterElements : function() {
+		disableSpatialFilterElements : function () {
 			this.toggleSpatialFilterElements(true);
 		},
-		toggleSpatialFilterElements : function(disabled) {
+		toggleSpatialFilterElements : function (disabled) {
 			$('#interestArea :input').prop({disabled: disabled});
 		},
-		updateWatershedFilterElements : function(enabledWatersheds) {
-			log.debug('enabledWatersheds');
+		/**
+		 * 
+		 * @param {Object} enabledWatersheds a set of String hucs
+		 * @param {Number} order the order (2,4,8) of the watershed
+		 * @returns {undefined}
+		 */
+		updateWatershedFilterElements : function (enabledWatersheds, order) {
+			var $watershedSelects = _.map(this.$('.watershed-select'), $);
+			
+			_.each($watershedSelects, function($watershedSelect){
+				
+				var currentSelectOrder = $watershedSelect.find('option:last').val().length;
+				//create a set of watersheds for this order
+				var enabledWatershedsForThisOrder = _.chain(enabledWatersheds)
+					.map(function(enabledWatershed){
+						return enabledWatershed.substring(0, currentSelectOrder);
+					})
+					.uniq()
+					.value();
+				enabledWatershedsForThisOrder = _.object(enabledWatershedsForThisOrder, _.map(enabledWatershedsForThisOrder, function(){return true;}));
+				//grab all watershed options except for the option that presents instructions to the user
+				var $watershedOptions = _.map($watershedSelect.find('option[value!=""]'), $);
+				_.each($watershedOptions, function($watershedOption){
+					if(_.has(enabledWatershedsForThisOrder, $watershedOption.val())){
+						$watershedOption.removeClass('hidden');
+					} else {
+						$watershedOption.addClass('hidden');
+					}
+				});
+			});
+			var downstreamWatershedElements = [];
+			for(var i=order+2; i <= 8; i+=2){
+				downstreamWatershedElements.push($('#watershed-huc-' + order));
+			}
+			
+			
 		},
-		updateStateFilterElements : function(enabledStateElements) {
+		updateStateFilterElements : function (enabledStateElements) {
 			var stateElts = this.$('#state option');
 			_.each(stateElts, function(stateElt){
 				var $stateElt = $(stateElt);
@@ -151,49 +198,6 @@ define([
 		},
 		waterBodyChange: function (evt) {
 			this.model.set("waterBody", $(evt.target).val());
-		},
-
-		/**
-		 * Based on the dropdown option chosen for a watershed, update the next
-		 * dropdown with valid options and display it
-		 * @param {type} evt
-		 * @returns {undefined}
-		 */
-		waterShedChange: function (evt) {
-			// Figure out which watershed select was chosen
-			var val = $(evt.target).val(),
-				waterShedSelects = this.$(".watershed-select");
-
-			// Update the dropdowns of higher precision based on user's selection
-			var $downstreamSheds = $(waterShedSelects.slice(waterShedSelects.index(evt.target) + 1));
-
-			// First hide all the downstream sheds
-			$downstreamSheds.addClass('hidden');
-
-			// Only display options that are valid to the currently selected HUC
-			_.each($downstreamSheds, function (sel) {
-				var $sel = $(sel),
-					$options = $sel.find('option').slice(1);
-
-				// Hide all options
-				$options.addClass('hidden');
-
-				// Select the "Select A Watershed" option of the next dropdown
-				$options.prop("selected", false);
-				$sel.find('option').first().prop("selected", true);
-
-				// Show only valid options
-				$sel.find("option[value^='" + this.val + "']").removeClass('hidden');
-			}, {
-				val : val,
-				model : this.model
-			});
-
-			this.model.set('waterShed', val);
-
-			$downstreamSheds.first().removeClass('hidden');
-			
-			this.validateStatesSelectionsForHuc();
 		},
 		dataSeriesChange: function (evt) {
 			this.model.set("dataSeries", $(evt.target).val());
