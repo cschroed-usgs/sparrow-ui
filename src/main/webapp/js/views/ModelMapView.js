@@ -140,7 +140,6 @@ define([
 		 * predictionModel and map filter model (model).
 		 */
 		updateModelLayer: function () {
-			log.debug(AppEvents.customProp);
 			var thisModel = this.collection.getModel(this.modelId);
 			var regionId = (thisModel) ? thisModel.attributes.regionId : '';
 			var geoserverEndpoint = this.predictionModel.get('geoserverEndpoint');

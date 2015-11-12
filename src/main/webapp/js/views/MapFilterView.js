@@ -264,7 +264,6 @@ define([
 					.prop('selected', true);
 			
 			this.model.reset();
-			AppEvents.customProp = 'blah';
 			AppEvents.trigger(AppEvents.spatialFilters.finalized);
 		}
 	});
