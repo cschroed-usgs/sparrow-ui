@@ -35,12 +35,22 @@ define([
 			var selectedStates = this.getSelectedStates();
 			this.model.set('state', selectedStates);
 			this.disableSpatialFilterElements();
-			SpatialUtils.getHucsForStates(selectedStates, this)
+			var selectedWatershed = this.model.get('waterShed');
+			if(_.isEmpty(selectedWatershed)){
+				SpatialUtils.getHucsForStates(selectedStates, this)
 				.done(function(enabledHucs){
 					AppEvents.trigger(AppEvents.spatialFilters.finalized);
-					this.updateWatershedFilterElements(enabledHucs, this.model.get('waterShed').length);
+					this.updateWatershedFilterElements(enabledHucs, selectedWatershed.length);
 				})
 				.always(this.enableSpatialFilterElements);
+			} else {
+				SpatialUtils.getHucsForStatesAndHuc(selectedStates, selectedWatershed, this)
+					.done(function(enabledHucs){
+						AppEvents.trigger(AppEvents.spatialFilters.finalized);
+						this.updateWatershedFilterElements(enabledHucs, selectedWatershed.length);
+					})
+					.always(this.enableSpatialFilterElements);
+			}
 		},
 		/**
 		 * Based on the dropdown option chosen for a watershed, update the next
