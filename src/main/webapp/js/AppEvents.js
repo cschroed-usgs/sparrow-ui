@@ -9,7 +9,7 @@ define([
 				finalized : 'spatialFiltersFinalized'
 			}
 		};
-		var extendedEvents = _.extend(events, Backbone.Events);
-		return extendedEvents;
+		
+		return _.extend(events, Backbone.Events);
 	}
 );
