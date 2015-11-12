@@ -16,20 +16,23 @@ define([
 		template: Handlebars.compile(filterTemplate),
 		events: {
 			'change #state': 'statesChanged',
-//			'change #interestArea :input' : 'spatialFiltersChanged',
 			'change #receiving-water-body': 'waterBodyChange',
 			'change .watershed-select': 'watershedChanged',
 			'change #data-series': 'dataSeriesChange',
 			'change #group-result-by': 'groupResultsByChange',
 			'click #button-reset-view-filter': 'resetFilterView'
 		},
-		statesChanged : function(ev) {
-			//jquery might return an array or a string, so ensure it's an array
+		getSelectedStates : function(){
 			var selectedStates = _.map(this.$('#state :selected'), 
 				function(selectedStateElt){
 					return $(selectedStateElt).val();
 				}
 			);
+			return selectedStates;
+		},
+		statesChanged : function() {
+			//jquery might return an array or a string, so ensure it's an array
+			var selectedStates = this.getSelectedStates();
 			this.model.set('state', selectedStates);
 			this.disableSpatialFilterElements();
 			SpatialUtils.getHucsForStates(selectedStates, this)
@@ -51,21 +54,38 @@ define([
 			var selectedWatershedElt = $(ev.target);
 			var selectedWatershed = selectedWatershedElt.val();
 			var nextSelect = selectedWatershedElt.next('select');
-//			this.setUpNextWatershedSelect(nextSelect, selectedWatershed);
 			this.disableSpatialFilterElements();
 			this.model.set('waterShed', selectedWatershed);
 			
 			SpatialUtils.getStatesForHuc(selectedWatershed, this)
 				.done(function(enabledStates){
-					AppEvents.trigger(AppEvents.spatialFilters.finalized);
 					this.updateStateFilterElements(enabledStates);
+					AppEvents.trigger(AppEvents.spatialFilters.finalized);
+					var selectedStates = this.getSelectedStates();
+					if(_.isEmpty(selectedStates)){
+						this.setUpNextWatershedSelect(nextSelect, selectedWatershed);
+						this.enableSpatialFilterElements();
+					} else {
+						SpatialUtils.getHucsForStatesAndHuc(selectedStates, selectedWatershed, this)
+							.done(function(enabledHucs){
+								this.updateWatershedFilterElements(enabledHucs, selectedWatershed.length);
+							})
+							.always(this.enableSpatialFilterElements);
+					}
 				})
-				.always(this.enableSpatialFilterElements);
+				.fail(this.enableSpatialFilterElements);
 		},
 		setUpNextWatershedSelect : function (nextSelect, selectedWatershed) {
 			nextSelect.removeClass('hidden');
+			nextSelect.find('option[value=""]').prop({'selected': true});
 			nextSelect.find("option[value^='" + selectedWatershed + "']").removeClass('hidden');
 			nextSelect.find('option').not("option[value^='" + selectedWatershed + "']").addClass('hidden');
+			
+			//handle special case
+			var lastSelect = nextSelect.next('select');
+			if(!_.isEmpty(lastSelect)){
+				lastSelect.addClass('hidden');
+			}
 		},
 		enableSpatialFilterElements : function () {
 			this.toggleSpatialFilterElements(false);
@@ -79,39 +99,44 @@ define([
 		/**
 		 * 
 		 * @param {Object} enabledWatersheds a set of String hucs
-		 * @param {Number} order the order (2,4,8) of the watershed
+		 * @param {Number} order the order (0,2,4,8) of the watershed.
+		 *	Corner case: 0 is interpreted as no huc selected
 		 * @returns {undefined}
 		 */
 		updateWatershedFilterElements : function (enabledWatersheds, order) {
+			//if order is zero, then no watershed is selected, so 
+			//only update the first dropdown (order 2)
+			var nextOrder = order === 0 ? 2 : order*2;
 			var $watershedSelects = _.map(this.$('.watershed-select'), $);
-			
 			_.each($watershedSelects, function($watershedSelect){
-				
-				var currentSelectOrder = $watershedSelect.find('option:last').val().length;
-				//create a set of watersheds for this order
-				var enabledWatershedsForThisOrder = _.chain(enabledWatersheds)
-					.map(function(enabledWatershed){
-						return enabledWatershed.substring(0, currentSelectOrder);
-					})
-					.uniq()
-					.value();
-				enabledWatershedsForThisOrder = _.object(enabledWatershedsForThisOrder, _.map(enabledWatershedsForThisOrder, function(){return true;}));
-				//grab all watershed options except for the option that presents instructions to the user
 				var $watershedOptions = _.map($watershedSelect.find('option[value!=""]'), $);
-				_.each($watershedOptions, function($watershedOption){
-					if(_.has(enabledWatershedsForThisOrder, $watershedOption.val())){
-						$watershedOption.removeClass('hidden');
-					} else {
-						$watershedOption.addClass('hidden');
-					}
-				});
+				var currentSelectOrder = $watershedSelect.find('option:last').val().length;
+				if(currentSelectOrder <= nextOrder){
+					$watershedSelect.removeClass('hidden');
+					
+					var enabledWatershedsForThisOrder = _.map(enabledWatersheds, function (enabledWatershed) {
+						return enabledWatershed.substring(0, currentSelectOrder);
+					});
+
+					enabledWatershedsForThisOrder = SpatialUtils.makeSetFromArray(enabledWatershedsForThisOrder);
+					//grab all watershed options except for the option that presents instructions to the user
+
+					_.each($watershedOptions, function ($watershedOption) {
+						if (_.has(enabledWatershedsForThisOrder, $watershedOption.val())) {
+							$watershedOption.removeClass('hidden');
+						} else {
+							$watershedOption.addClass('hidden');
+						}
+					});
+				} else {
+					$watershedSelect.addClass('hidden');
+					_.each($watershedOptions, function($watershedOption){
+						$watershedOption.prop({'selected': false});
+					});
+				}
+				
+				
 			});
-			var downstreamWatershedElements = [];
-			for(var i=order+2; i <= 8; i+=2){
-				downstreamWatershedElements.push($('#watershed-huc-' + order));
-			}
-			
-			
 		},
 		updateStateFilterElements : function (enabledStateElements) {
 			var stateElts = this.$('#state option');
@@ -341,33 +366,29 @@ define([
 			return hucsForStatesPromise;
 		},
 		resetFilterView: function () {
-			this.$('#state').find('option').each(function (idx, opt) {
-				$(opt).prop('disabled', false);
-			});
+			this.$('#state option').prop({
+				'selected': false,
+				'disabled': false
+			}).removeClass('hidden');
 			
-			this.$('#state')
-					.find('option:selected')
-					.prop('selected', false);
-
 			this.$('.watershed-select').each(function (idx, sel) {
 				var $sel = $(sel);
+				$sel.find('option').removeClass('hidden');
 				$sel
 					.find('option:selected')
 					.prop('selected', false);
 				$sel
 					.find('option:first')
 					.prop('selected', true);
-			
-				if (idx !== 0) {
-					$sel.hide();
-				}
 			});
-			
+			this.$('.watershed-select').addClass('hidden');
+			this.$('.watershed-select:first').removeClass('hidden');
 			this.$('#data-series')
 					.find('option:first')
 					.prop('selected', true);
 			
 			this.model.reset();
+			AppEvents.trigger(AppEvents.spatialFilters.finalized);
 		}
 	});
 
